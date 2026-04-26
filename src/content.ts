@@ -1,10 +1,13 @@
 export type CardType =
   | 'hero'
-  | 'status'
+  | 'certifications'
   | 'social'
   | 'about'
   | 'experience'
-  | 'project';
+  | 'project'
+  | 'education'
+  | 'vision'
+  | 'skills';
 
 export interface CardLayout {
   column: string;
@@ -19,6 +22,7 @@ export interface CardBase {
   summary: string;
   placementClass: string;
   layout: CardLayout;
+  nonClickable?: boolean;
 }
 
 export interface SocialLink {
@@ -48,16 +52,35 @@ export interface ExternalLink {
   href: string;
 }
 
+export interface CertItem {
+  name: string;
+  issuer: string;
+  date: string;
+  badge?: string;
+}
+
+export interface EducationEntry {
+  degree: string;
+  institution: string;
+  dates: string;
+  details: string;
+  modules: string[];
+}
+
+export interface SkillCategory {
+  label: string;
+  items: string[];
+}
+
 export interface HeroCard extends CardBase {
   type: 'hero';
   name: string;
   subtitle: string;
 }
 
-export interface StatusCard extends CardBase {
-  type: 'status';
-  statusText: string;
-  statusSubtitle: string;
+export interface CertificationsCard extends CardBase {
+  type: 'certifications';
+  certs: CertItem[];
 }
 
 export interface SocialCard extends CardBase {
@@ -85,13 +108,32 @@ export interface ProjectCard extends CardBase {
   links: ExternalLink[];
 }
 
+export interface EducationCard extends CardBase {
+  type: 'education';
+  entries: EducationEntry[];
+}
+
+export interface VisionCard extends CardBase {
+  type: 'vision';
+  body: string[];
+  goals: string[];
+}
+
+export interface SkillsCard extends CardBase {
+  type: 'skills';
+  categories: SkillCategory[];
+}
+
 export type PortfolioCard =
   | HeroCard
-  | StatusCard
+  | CertificationsCard
   | SocialCard
   | AboutCard
   | ExperienceCard
-  | ProjectCard;
+  | ProjectCard
+  | EducationCard
+  | VisionCard
+  | SkillsCard;
 
 export const portfolioCards: PortfolioCard[] = [
   {
@@ -99,9 +141,10 @@ export const portfolioCards: PortfolioCard[] = [
     type: 'hero',
     label: 'Intro',
     title: 'Kian Tamjidi',
-    summary: 'Computer Science Student | Software Engineer | Aspiring Product Designer',
+    summary: 'Computer Science Student · Software Engineer · Aspiring Product Designer',
     placementClass: 'place-hero',
-    name: 'Your Name',
+    nonClickable: true,
+    name: 'Kian Tamjidi',
     subtitle: 'Developer & Product Designer',
     layout: {
       column: 'span 8',
@@ -109,14 +152,34 @@ export const portfolioCards: PortfolioCard[] = [
     },
   },
   {
-    id: 'status',
-    type: 'status',
-    label: 'Status',
-    title: 'Open to opportunities',
-    summary: 'Full-time & internships',
-    placementClass: 'place-status',
-    statusText: 'Open to opportunities',
-    statusSubtitle: 'Full-time & internships',
+    id: 'certifications',
+    type: 'certifications',
+    label: 'Certifications',
+    title: 'Credentials',
+    summary: 'Verified skills across cloud, AI, and engineering.',
+    placementClass: 'place-certifications',
+    certs: [
+      {
+        name: 'AWS Certified Cloud Practitioner',
+        issuer: 'Amazon Web Services',
+        date: '2024',
+      },
+      {
+        name: 'Google AI Essentials',
+        issuer: 'Google',
+        date: '2024',
+      },
+      {
+        name: 'Meta Front-End Developer Certificate',
+        issuer: 'Meta',
+        date: '2023',
+      },
+      {
+        name: 'CS50x: Introduction to Computer Science',
+        issuer: 'Harvard / edX',
+        date: '2022',
+      },
+    ],
     layout: {
       column: 'span 4',
     },
@@ -175,6 +238,46 @@ export const portfolioCards: PortfolioCard[] = [
     },
   },
   {
+    id: 'vision',
+    type: 'vision',
+    label: "Where I'm going",
+    title: 'The next chapter',
+    summary: 'What I want to build, and the kind of work that drives me forward.',
+    placementClass: 'place-vision',
+    body: [
+      "I want to work at the intersection of ambitious product ideas and the engineering discipline to ship them reliably. I'm drawn to teams that treat craft and speed as compatible — not opposing — forces.",
+    ],
+    goals: [
+      'Join a product team building something genuinely novel',
+      'Deepen expertise in AI-native interfaces and tooling',
+      'Ship products that measurably improve how people work',
+      'Eventually lead product strategy on a focused team',
+    ],
+    layout: {
+      column: 'span 3',
+    },
+  },
+  {
+    id: 'education',
+    type: 'education',
+    label: 'Education',
+    title: 'Where I studied',
+    summary: 'Formal foundations in computing, design, and systems thinking.',
+    placementClass: 'place-education',
+    entries: [
+      {
+        degree: 'BSc Computer Science',
+        institution: 'University of Exeter',
+        dates: '2022 - 2025',
+        details: 'First Class Honours (predicted). Dissertation on adaptive UI personalisation using reinforcement learning.',
+        modules: ['Algorithms & Data Structures', 'Human-Computer Interaction', 'Machine Learning', 'Software Engineering', 'Databases'],
+      },
+    ],
+    layout: {
+      column: 'span 4',
+    },
+  },
+  {
     id: 'experience',
     type: 'experience',
     label: 'Experience',
@@ -212,6 +315,39 @@ export const portfolioCards: PortfolioCard[] = [
     ],
     layout: {
       column: 'span 7',
+    },
+  },
+  {
+    id: 'skills',
+    type: 'skills',
+    label: 'Skills',
+    title: 'What I use',
+    summary: 'Languages, tools, and the practices that connect them.',
+    placementClass: 'place-skills',
+    categories: [
+      {
+        label: 'Languages',
+        items: ['TypeScript', 'Python', 'JavaScript', 'SQL', 'HTML / CSS'],
+      },
+      {
+        label: 'AI Tools',
+        items: ['OpenAI API', 'LangChain', 'Vertex AI', 'Hugging Face'],
+      },
+      {
+        label: 'Dev Tools',
+        items: ['React', 'Next.js', 'Node.js', 'Docker', 'Git', 'PostgreSQL'],
+      },
+      {
+        label: 'Design',
+        items: ['Figma', 'Framer', 'Prototyping', 'Design Systems'],
+      },
+      {
+        label: 'Soft Skills',
+        items: ['Product Thinking', 'Stakeholder Comms', 'Estimation', 'Cross-functional Collab'],
+      },
+    ],
+    layout: {
+      column: 'span 5',
     },
   },
   {
@@ -269,7 +405,7 @@ export const portfolioCards: PortfolioCard[] = [
     type: 'project',
     label: 'Project 03',
     title: 'Briefcase AI',
-    summary: 'An assistant for summarizing project context before meetings.',
+    summary: 'An assistant for summarising project context before meetings.',
     placementClass: 'place-project-03',
     imageTitle: 'Briefcase AI Preview',
     description:

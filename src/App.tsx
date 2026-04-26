@@ -53,15 +53,20 @@ function ModalBody({ card }: { card: PortfolioCard }) {
     );
   }
 
-  if (card.type === 'status') {
+  if (card.type === 'certifications') {
     return (
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <div className="status-line modal-status-line">
-          <span className="status-dot" aria-hidden="true" />
-          <span>{card.statusText}</span>
-        </div>
-        <p className="modal-text">{card.statusSubtitle}</p>
-      </motion.section>
+      <div className="modal-list">
+        {card.certs.map((cert) => (
+          <motion.div className="cert-row" key={cert.name} variants={modalItemVariants}>
+            <div className="cert-badge" aria-hidden="true">✦</div>
+            <div>
+              <h3 className="modal-row-title">{cert.name}</h3>
+              <p className="modal-row-subtitle">{cert.issuer}</p>
+              <p className="cert-date">{cert.date}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     );
   }
 
@@ -108,6 +113,71 @@ function ModalBody({ card }: { card: PortfolioCard }) {
               <li key={b}>
                 <span className="belief-dot" aria-hidden="true" />
                 <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.section>
+      </>
+    );
+  }
+
+  if (card.type === 'skills') {
+    return (
+      <div className="skills-grid">
+        {card.categories.map((cat) => (
+          <motion.div className="skill-category" key={cat.label} variants={modalItemVariants}>
+            <p className="skill-category-label">{cat.label}</p>
+            <div className="tag-row">
+              {cat.items.map((item) => (
+                <span className="tag" key={item}>{item}</span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+
+  if (card.type === 'education') {
+    return (
+      <>
+        {card.entries.map((entry) => (
+          <motion.div key={entry.degree} variants={modalItemVariants}>
+            <motion.section className="modal-section" variants={modalItemVariants}>
+              <p className="timeline-role">{entry.degree}</p>
+              <p className="timeline-company">{entry.institution}</p>
+              <p className="timeline-dates">{entry.dates}</p>
+              <p className="modal-text" style={{ marginTop: '8px' }}>{entry.details}</p>
+            </motion.section>
+            <motion.section className="modal-section" style={{ marginTop: '12px' }} variants={modalItemVariants}>
+              <h3 className="modal-row-title">Key Modules</h3>
+              <div className="tag-row" style={{ marginTop: '10px' }}>
+                {entry.modules.map((m) => (
+                  <span className="tag" key={m}>{m}</span>
+                ))}
+              </div>
+            </motion.section>
+          </motion.div>
+        ))}
+      </>
+    );
+  }
+
+  if (card.type === 'vision') {
+    return (
+      <>
+        {card.body.map((p) => (
+          <motion.section className="modal-section" key={p} variants={modalItemVariants}>
+            <p className="modal-text">{p}</p>
+          </motion.section>
+        ))}
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <h3 className="modal-row-title">Goals</h3>
+          <ul className="belief-list">
+            {card.goals.map((g) => (
+              <li key={g}>
+                <span className="belief-dot" aria-hidden="true" />
+                <span>{g}</span>
               </li>
             ))}
           </ul>
@@ -225,13 +295,6 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
             <p className="card-label">{card.label}</p>
             <h2 className="card-title">{card.title}</h2>
             <p className="card-summary">{card.summary}</p>
-            {card.type === 'status' && (
-              <div className="status-line">
-                <span className="status-dot" aria-hidden="true" />
-                <span>{card.statusText}</span>
-              </div>
-            )}
-            {card.type === 'project' && <span className="project-accent" aria-hidden="true" />}
           </div>
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
@@ -266,6 +329,18 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   );
 }
 
+/* ─── Card inner content (shared between grid & flip front) ──────── */
+
+function CardInner({ card }: { card: PortfolioCard }) {
+  return (
+    <>
+      <p className="card-label">{card.label}</p>
+      <h2 className="card-title">{card.title}</h2>
+      <p className="card-summary">{card.summary}</p>
+    </>
+  );
+}
+
 /* ─── App ────────────────────────────────────────────────────────── */
 
 function App() {
@@ -284,8 +359,6 @@ function App() {
   /* Flip state */
   interface FlipState { cardId: string; fromRect: FromRect; }
   const [flipState, setFlipState] = useState<FlipState | null>(null);
-  // Keeps the grid card invisible through the flip-back exit animation.
-  // Cleared only when AnimatePresence signals the exit is complete.
   const [closedCardId, setClosedCardId] = useState<string | null>(null);
 
   const activeCard = useMemo(
@@ -333,6 +406,20 @@ function App() {
         <section className="portfolio-grid" aria-label="Portfolio card grid">
           {portfolioCards.map((card) => {
             const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
+            const isNonClickable = card.nonClickable === true;
+
+            if (isNonClickable) {
+              return (
+                <div
+                  className={`portfolio-card card-${card.type} ${card.placementClass} card-non-clickable${isHidden ? ' card-hidden' : ''}`}
+                  key={card.id}
+                  aria-label={card.title}
+                >
+                  <CardInner card={card} />
+                </div>
+              );
+            }
+
             return (
               <button
                 className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
@@ -340,16 +427,7 @@ function App() {
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}
                 type="button"
               >
-                <p className="card-label">{card.label}</p>
-                <h2 className="card-title">{card.title}</h2>
-                <p className="card-summary">{card.summary}</p>
-                {card.type === 'status' && (
-                  <div className="status-line">
-                    <span className="status-dot" aria-hidden="true" />
-                    <span>{card.statusText}</span>
-                  </div>
-                )}
-                {card.type === 'project' && <span className="project-accent" aria-hidden="true" />}
+                <CardInner card={card} />
               </button>
             );
           })}

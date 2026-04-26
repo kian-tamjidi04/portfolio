@@ -1,6 +1,6 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  /* Light mode */
+  /* Dark mode (default) */
   --bg: #1c1917;
   --surface: #28211e;
   --surface-subtle: #322b27;
@@ -9,6 +9,8 @@
   --accent-dim: rgba(249, 115, 22, 0.14);
   --accent-sky: #38bdf8;
   --accent-sky-dim: rgba(56, 189, 248, 0.12);
+  --accent-emerald: #34d399;
+  --accent-emerald-dim: rgba(52, 211, 153, 0.12);
   --text-primary: #f5f0ec;
   --text-secondary: #a89b92;
   --text-muted: #6b5e57;
@@ -30,6 +32,8 @@
   --accent-dim: rgba(234, 101, 8, 0.1);
   --accent-sky: #0ea5e9;
   --accent-sky-dim: rgba(14, 165, 233, 0.10);
+  --accent-emerald: #059669;
+  --accent-emerald-dim: rgba(5, 150, 105, 0.10);
   --text-primary: #1a1210;
   --text-secondary: #6b5346;
   --text-muted: #a89080;
@@ -103,7 +107,7 @@ a {
 .portfolio-grid-surface {
   margin: 0 auto;
   max-width: 1320px;
-  /* Un-dim is slower than dim so the landing card is the visual focus */
+  width: 100%;
   transition: opacity 0.45s ease, filter 0.45s ease, transform 0.35s ease;
 }
 
@@ -119,15 +123,23 @@ a {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 10px;
   align-items: stretch;
+  transition: grid-template-columns 0.4s ease, gap 0.4s ease;
 }
 
 /* ─── Grid Placement ─────────────────────────────────────────────── */
+/*
+  Row 1–2: hero (col 1–8, rows 1–2) │ certs (col 9–12) │ social (col 9–12)
+  Row 3:   about (col 1–5) │ vision (col 6–8) │ education (col 9–12)
+  Row 4:   experience (col 1–7) │ skills (col 8–12)
+  Row 5:   project-01 (col 1–5) │ project-02 (col 6–9) │ project-03 (col 10–12)
+*/
+
 .place-hero {
   grid-column: span 8;
   grid-row: span 2;
 }
 
-.place-status {
+.place-certifications {
   grid-column: span 4;
 }
 
@@ -139,8 +151,20 @@ a {
   grid-column: span 5;
 }
 
+.place-vision {
+  grid-column: span 3;
+}
+
+.place-education {
+  grid-column: span 4;
+}
+
 .place-experience {
   grid-column: span 7;
+}
+
+.place-skills {
+  grid-column: span 5;
 }
 
 .place-project-01 {
@@ -171,7 +195,14 @@ a {
   padding: 22px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  /* hover interactions + smooth grid resize */
+  transition:
+    border-color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    grid-column 0.4s ease,
+    width 0.4s ease,
+    min-height 0.4s ease;
   box-shadow: var(--shadow-card);
 }
 
@@ -181,14 +212,23 @@ a {
   box-shadow: 0 8px 28px rgba(249, 115, 22, 0.18);
 }
 
+/* Non-clickable card variant (e.g. hero) */
+.card-non-clickable {
+  cursor: default;
+}
+
+.card-non-clickable:hover {
+  border-color: var(--border);
+  transform: none;
+  box-shadow: var(--shadow-card);
+}
+
 /* ─── Card invisible while flying card is live ──────────────────── */
 .portfolio-card.card-hidden {
   opacity: 0;
   pointer-events: none;
   transition: none;
 }
-
-
 
 /* ─── Card Typography ────────────────────────────────────────────── */
 .card-label {
@@ -226,35 +266,6 @@ a {
   font-size: clamp(3.1rem, 4.1vw, 4.8rem);
 }
 
-/* ─── Status ─────────────────────────────────────────────────────── */
-.status-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: #22c55e;
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.42);
-  animation: pulse-status 1.7s ease-out infinite;
-}
-
-/* ─── Project Accent ─────────────────────────────────────────────── */
-.project-accent {
-  margin-top: auto;
-  width: min(180px, 74%);
-  height: 5px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-sky));
-}
-
-/* ─── Modal ──────────────────────────────────────────────────────── */
 /* ─── Flip card scrim ─────────────────────────────────────────────── */
 .flip-scrim {
   position: fixed;
@@ -270,19 +281,17 @@ a {
 .flip-wrapper {
   position: fixed;
   z-index: 50;
-  /* W3Schools: perspective on the parent container */
   perspective: 1600px;
 }
 
-/* ─── Inner rotating element (W3Schools: transform-style: preserve-3d) */
+/* ─── Inner rotating element ──────────────────────────────────────── */
 .flip-inner {
   width: 100%;
   height: 100%;
   position: relative;
-  /* transform-style set via inline style for framer-motion compat */
 }
 
-/* ─── Shared face rules (W3Schools: backface-visibility: hidden) ─── */
+/* ─── Shared face rules ───────────────────────────────────────────── */
 .flip-face {
   position: absolute;
   inset: 0;
@@ -293,7 +302,7 @@ a {
   overflow: hidden;
 }
 
-/* Front face — mirrors the bento card layout */
+/* Front face */
 .flip-front {
   border-radius: var(--card-radius);
   display: flex;
@@ -301,11 +310,9 @@ a {
   align-items: flex-start;
   gap: 14px;
   padding: 22px;
-  /* starts fully visible (rotateY = 0) */
 }
 
-/* Back face — rotated 180deg base, shown when inner reaches 180deg */
-/* W3Schools: back face starts at rotateY(180deg) */
+/* Back face */
 .flip-back {
   border-radius: var(--modal-radius);
   transform: rotateY(180deg);
@@ -314,10 +321,8 @@ a {
   box-shadow: var(--shadow-modal);
 }
 
-/* portfolio-modal class kept for modal-header/body child selectors */
 .portfolio-modal {
   display: contents;
-  /* layout handled by .flip-back */
 }
 
 .portfolio-modal-header {
@@ -451,6 +456,65 @@ a {
   font-size: 0.85rem;
   color: var(--accent-sky);
   font-weight: 600;
+}
+
+/* ─── Certifications Modal ───────────────────────────────────────── */
+.cert-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-subtle);
+  padding: 16px;
+  align-items: flex-start;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.cert-row:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.cert-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert-date {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ─── Skills Modal ───────────────────────────────────────────────── */
+.skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skill-category {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-subtle);
+  padding: 16px;
+}
+
+.skill-category-label {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
 }
 
 /* ─── Beliefs ────────────────────────────────────────────────────── */
@@ -618,5 +682,161 @@ a {
 
   100% {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
+@media (max-width: 900px) {
+  .portfolio-page {
+    padding: 14px;
+    align-items: flex-start;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  /*
+    Row 1: hero(6)                             = 6
+    Row 2: certs(3) + social(3)                = 6
+    Row 3: about(4) + vision(2)                = 6
+    Row 4: education(2) + experience(4)        = 6
+    Row 5: skills(2) + project-01(4)           = 6
+    Row 6: project-02(3) + project-03(3)       = 6
+  */
+
+  .place-hero {
+    grid-column: span 6;
+    grid-row: span 1;
+  }
+
+  .card-hero {
+    min-height: 220px;
+  }
+
+  .card-hero .card-title {
+    font-size: clamp(2.4rem, 6vw, 3.5rem);
+  }
+
+  .place-certifications {
+    grid-column: span 3;
+  }
+
+  .place-social {
+    grid-column: span 3;
+  }
+
+  .place-about {
+    grid-column: span 4;
+  }
+
+  .place-vision {
+    grid-column: span 2;
+  }
+
+  .place-education {
+    grid-column: span 2;
+  }
+
+  .place-experience {
+    grid-column: span 4;
+  }
+
+  .place-skills {
+    grid-column: span 2;
+  }
+
+  .place-project-01 {
+    grid-column: span 4;
+  }
+
+  .place-project-02 {
+    grid-column: span 3;
+  }
+
+  .place-project-03 {
+    grid-column: span 3;
+  }
+}
+
+/* ─── Responsive: mobile (≤ 560px) ───────────────────────────────── */
+@media (max-width: 560px) {
+  .portfolio-page {
+    padding: 10px;
+    align-items: flex-start;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /*
+    Row 1:  hero(2)                              = 2
+    Row 2:  certs(1)     + social(1)             = 2
+    Row 3:  about(1)     + vision(1)             = 2
+    Row 4:  education(1) + experience(1)         = 2
+    Row 5:  skills(1)    + project-01(1)         = 2
+    Row 6:  project-02(1)+ project-03(1)         = 2
+  */
+
+  .place-hero {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .place-certifications,
+  .place-social,
+  .place-about,
+  .place-vision,
+  .place-education,
+  .place-experience,
+  .place-skills,
+  .place-project-01,
+  .place-project-02,
+  .place-project-03 {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+
+  .card-hero {
+    min-height: 180px;
+  }
+
+  .card-hero .card-title {
+    font-size: clamp(2.4rem, 7vw, 3rem);
+  }
+
+  .card-title {
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+  }
+
+  .theme-toggle {
+    top: 12px;
+    left: 12px;
+  }
+}
+
+/* ─── Responsive: small mobile (≤ 380px) ────────────────────────── */
+@media (max-width: 380px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Every card full-width — single column is trivially gap-free */
+  .place-hero,
+  .place-certifications,
+  .place-social,
+  .place-about,
+  .place-vision,
+  .place-education,
+  .place-experience,
+  .place-skills,
+  .place-project-01,
+  .place-project-02,
+  .place-project-03 {
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 }
