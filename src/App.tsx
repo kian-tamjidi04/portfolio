@@ -6,6 +6,7 @@ import {
   faBriefcase,
   faBullhorn,
   faCircleUser,
+  faCircleXmark,
   faHammer,
   faRocket,
   faScrewdriverWrench,
@@ -271,19 +272,22 @@ function ModalBody({
   if (card.type === 'projects') {
     return (
       <section className="projects-preview-grid" aria-label="Projects overview cards">
-        {card.items.map((item) => (
-          <motion.button
-            className={`project-preview-card${focusedProjectId === item.id ? ' project-preview-card-hidden' : ''}`}
-            key={item.id}
-            variants={modalItemVariants}
-            onClick={(event) => onProjectPreviewClick(item, event.currentTarget)}
-            type="button"
-          >
-            <p className="project-preview-label">{item.id.replace('-', ' ')}</p>
-            <h3 className="project-preview-title">{item.title}</h3>
-            <p className="project-preview-summary">{item.summary}</p>
-          </motion.button>
-        ))}
+        {card.items.map((item) => {
+          const isHidden = focusedProjectId === item.id;
+          return (
+            <motion.button
+              className={`project-preview-card${isHidden ? ' project-preview-card-hidden' : ''}`}
+              key={item.id}
+              variants={modalItemVariants}
+              onClick={isHidden ? undefined : (event) => onProjectPreviewClick(item, event.currentTarget)}
+              type="button"
+              aria-hidden={isHidden || undefined}
+            >
+              <h3 className="project-preview-title">{item.title}</h3>
+              <p className="project-preview-summary">{item.summary}</p>
+            </motion.button>
+          );
+        })}
       </section>
     );
   }
@@ -309,6 +313,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   const [modalHeight, setModalHeight] = useState(modalRect.height);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
   const [projectFocus, setProjectFocus] = useState<ProjectFocusState | null>(null);
+  const [projectFocusClosedId, setProjectFocusClosedId] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -351,6 +356,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   useEffect(() => {
     setIsContentRevealed(false);
     setProjectFocus(null);
+    setProjectFocusClosedId(null);
     const revealTimer = window.setTimeout(() => {
       setIsContentRevealed(true);
     }, CONTENT_REVEAL_DELAY * 1000);
@@ -359,18 +365,23 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
   const projectFocusRect = useMemo(() => {
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
-    const topOffset = headerHeight + 20;
-    const availableHeight = Math.max(220, modalHeight - topOffset);
+    const topOffset = headerHeight + 14;
+    const viewportPadding = 24;
+    const maxWidth = Math.max(320, window.innerWidth - viewportPadding * 2);
+    const focusWidth = Math.min(maxWidth, modalRect.width + 84);
+    const availableHeight = Math.max(250, modalHeight - topOffset + 28);
+    const left = modalRect.left + ((modalRect.width - focusWidth) / 2);
     return {
-      left: modalRect.left,
+      left,
       top: modalRect.top + topOffset,
-      width: modalRect.width,
+      width: focusWidth,
       height: availableHeight,
     };
   }, [modalHeight, modalRect]);
 
   const handleProjectPreviewClick = useCallback((item: ProjectPreviewItem, el: HTMLButtonElement) => {
     const rect = el.getBoundingClientRect();
+    setProjectFocusClosedId(null);
     setProjectFocus({
       item,
       fromRect: {
@@ -383,8 +394,9 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   }, []);
 
   const closeProjectFocus = useCallback(() => {
+    setProjectFocusClosedId(projectFocus?.item.id ?? null);
     setProjectFocus(null);
-  }, []);
+  }, [projectFocus]);
 
   useEffect(() => {
     if (!projectFocus) return undefined;
@@ -412,7 +424,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
       {/* The flying card — framer-motion owns position + size */}
       <motion.div
-        className="flip-wrapper"
+        className={`flip-wrapper${projectFocus ? ' flip-wrapper-nested-focus' : ''}`}
         initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
         animate={{ left: modalRect.left, top: modalRect.top, width: modalRect.width, height: modalHeight }}
         exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
@@ -433,7 +445,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           </div>
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
-          <div className="flip-face flip-back">
+          <div className={`flip-face flip-back${projectFocus ? ' flip-back-nested-focus' : ''}`}>
             <header className="portfolio-modal-header" ref={headerRef}>
               <div>
                 <p className="modal-label">{card.label}</p>
@@ -445,7 +457,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                 onClick={onClose}
                 type="button"
               >
-                ✕
+                <FontAwesomeIcon icon={faCircleXmark} />
               </button>
             </header>
             <motion.div
@@ -458,7 +470,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
             >
               <ModalBody
                 card={card}
-                focusedProjectId={projectFocus?.item.id ?? null}
+                focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
                 onProjectPreviewClick={handleProjectPreviewClick}
               />
             </motion.div>
@@ -466,7 +478,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
         </motion.div>
       </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => setProjectFocusClosedId(null)}>
         {projectFocus && (
           <>
             <motion.button
@@ -511,7 +523,6 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                 <div className="project-focus-face project-focus-back">
                   <header className="project-focus-header">
                     <div>
-                      <p className="modal-label">Project details</p>
                       <h3 className="project-focus-title">{projectFocus.item.title}</h3>
                     </div>
                     <button
@@ -520,7 +531,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                       onClick={closeProjectFocus}
                       type="button"
                     >
-                      ✕
+                      <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                   </header>
                   <div className="project-focus-body">

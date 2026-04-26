@@ -300,6 +300,13 @@ a {
   position: fixed;
   z-index: 50;
   perspective: 1600px;
+  transition: transform 0.42s ease, filter 0.42s ease, opacity 0.42s ease;
+}
+
+.flip-wrapper.flip-wrapper-nested-focus {
+  transform: scale(0.94) translateY(6px);
+  filter: saturate(0.82) blur(0.8px);
+  opacity: 0.86;
 }
 
 /* ─── Inner rotating element ──────────────────────────────────────── */
@@ -340,6 +347,13 @@ a {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-modal);
+  transition: background-color 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease;
+}
+
+.flip-back.flip-back-nested-focus {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--border) 78%, transparent),
+    0 14px 28px rgba(0, 0, 0, 0.24);
 }
 
 .portfolio-modal {
@@ -378,22 +392,23 @@ a {
 }
 
 .modal-close {
-  border: 1px solid var(--border);
+  border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 1.2rem;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  font-size: 1.6rem;
+  padding: 4px;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
   flex-shrink: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-close:hover {
   color: var(--accent);
-  background: var(--accent-dim);
-  border-color: var(--accent);
+  transform: scale(1.15);
 }
 
 .portfolio-modal-body {
@@ -727,7 +742,7 @@ a {
   min-height: 150px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.24s ease, transform 0.24s ease, box-shadow 0.24s ease, background-color 0.3s ease;
 }
 
 .project-preview-card:hover {
@@ -773,7 +788,7 @@ a {
 }
 
 .project-preview-card.project-preview-card-hidden {
-  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transition: none;
 }
@@ -789,9 +804,10 @@ a {
   inset: 0;
   border: 1px solid var(--border);
   border-radius: 14px;
-  background: var(--surface);
+  background: var(--surface-subtle);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  transition: background-color 0.38s ease, border-color 0.38s ease, box-shadow 0.38s ease;
 }
 
 .project-focus-front {
@@ -807,6 +823,7 @@ a {
   flex-direction: column;
   overflow: hidden;
   box-shadow: var(--shadow-modal);
+  background: var(--surface);
 }
 
 .project-focus-header {
@@ -817,6 +834,7 @@ a {
   padding: 18px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+  transition: background-color 0.34s ease, border-color 0.34s ease;
 }
 
 .project-focus-title {
@@ -832,6 +850,7 @@ a {
   flex-direction: column;
   gap: 12px;
   overflow: auto;
+  transition: background-color 0.34s ease;
 }
 
 /* ─── Keyframes ──────────────────────────────────────────────────── */
