@@ -592,6 +592,33 @@ function CardInner({ card }: { card: PortfolioCard }) {
 
 /* ─── App ────────────────────────────────────────────────────────── */
 
+/* ─── Health bar (liquid wobble) ────────────────────────────────── */
+
+const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
+const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
+
+function HealthBar({ viewedCount }: { viewedCount: number }) {
+  const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
+  const isEmpty = pct === 0;
+
+  return (
+    <div className="health-bar-container" aria-label={`Portfolio progress: ${viewedCount} of ${TOTAL_SECTIONS} sections viewed`}>
+      <div className="health-bar-track">
+        <div
+          className={`health-bar-fill${isEmpty ? ' health-bar-empty' : ''}`}
+          style={{ height: `${pct}%` }}
+        >
+          {!isEmpty && <div className="health-bar-wave" />}
+        </div>
+      </div>
+      <div className="health-bar-label">
+        <span className="health-bar-pct">{Math.round(pct)}%</span>
+        <span className="health-bar-sub">explored</span>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   /* Dark mode */
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -605,6 +632,11 @@ function App() {
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
   }, [isDark]);
 
+  /* Viewed cards (session only — resets on refresh) */
+  const [viewedCards, setViewedCards] = useState<Set<string>>(() => new Set());
+
+  const viewedCount = viewedCards.size;
+
   /* Flip state */
   interface FlipState { cardId: string; fromRect: FromRect; }
   const [flipState, setFlipState] = useState<FlipState | null>(null);
@@ -617,6 +649,7 @@ function App() {
 
   const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
     const r = el.getBoundingClientRect();
+    setViewedCards((prev) => new Set([...prev, cardId]));
     setFlipState({ cardId, fromRect: { left: r.left, top: r.top, width: r.width, height: r.height } });
   }, []);
 
@@ -639,6 +672,9 @@ function App() {
 
   return (
     <div className="portfolio-page">
+      {/* Health bar — left side */}
+      <HealthBar viewedCount={viewedCount} />
+
       {/* Dark-mode toggle */}
       <button
         id="theme-toggle"
@@ -656,6 +692,7 @@ function App() {
           {portfolioCards.map((card) => {
             const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
             const isNonClickable = card.nonClickable === true;
+            const isViewed = viewedCards.has(card.id);
 
             if (isNonClickable) {
               return (
@@ -672,7 +709,7 @@ function App() {
             return (
               <button
                 aria-label={card.title}
-                className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
+                className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}${isViewed ? ' card-viewed' : ''}`}
                 key={card.id}
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}
                 type="button"
