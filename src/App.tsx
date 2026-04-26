@@ -10,6 +10,8 @@ import {
   faHammer,
   faRocket,
   faScrewdriverWrench,
+  faMoon,
+  faSun,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
@@ -583,7 +585,7 @@ function CardInner({ card }: { card: PortfolioCard }) {
           <FontAwesomeIcon icon={previewIcon} />
         </span>
       )}
-      <p className="card-label">{card.label}</p>
+      {/* <p className="card-label">{card.label}</p> */}
       <h2 className="card-title">{card.title}</h2>
       <p className="card-summary">{card.summary}</p>
     </>
@@ -683,7 +685,7 @@ function App() {
         onClick={() => setIsDark((p) => !p)}
         type="button"
       >
-        {isDark ? '☀️' : '🌙'}
+        {isDark ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
       </button>
 
       {/* Bento grid */}

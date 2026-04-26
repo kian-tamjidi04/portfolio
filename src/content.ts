@@ -322,7 +322,7 @@ export const portfolioCards: PortfolioCard[] = [
     id: 'projects',
     type: 'projects',
     label: 'projects',
-    title: 'what I build',
+    title: 'What I build',
     summary: 'Selected experiments, products, and systems in progress.',
     placementClass: 'place-projects',
     items: [
