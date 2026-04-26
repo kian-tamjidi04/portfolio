@@ -97,11 +97,12 @@ a {
 
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
-  min-height: 100vh;
+  height: 100vh;
   padding: 22px;
   background: var(--bg);
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .portfolio-grid-surface {
@@ -128,10 +129,11 @@ a {
 
 /* ─── Grid Placement ─────────────────────────────────────────────── */
 /*
-  Row 1–2: hero (col 1–8, rows 1–2) │ certs (col 9–12) │ social (col 9–12)
-  Row 3:   about (col 1–5) │ vision (col 6–8) │ education (col 9–12)
-  Row 4:   experience (col 1–7) │ skills (col 8–12)
+  Row 1–2: hero (col 1–8, rows 1–2) │ about (col 9–12) │ social (col 9–12)
+  Row 3:   experience (col 1–7) │ education (col 8–12)
+  Row 4:   certifications (col 1–5) │ skills (col 6–12)
   Row 5:   project-01 (col 1–5) │ project-02 (col 6–9) │ project-03 (col 10–12)
+  Row 6:   vision (col 1–12)
 */
 
 .place-hero {
@@ -140,7 +142,7 @@ a {
 }
 
 .place-certifications {
-  grid-column: span 4;
+  grid-column: span 5;
 }
 
 .place-social {
@@ -148,15 +150,15 @@ a {
 }
 
 .place-about {
-  grid-column: span 5;
+  grid-column: span 4;
 }
 
 .place-vision {
-  grid-column: span 3;
+  grid-column: 1 / -1;
 }
 
 .place-education {
-  grid-column: span 4;
+  grid-column: span 5;
 }
 
 .place-experience {
@@ -164,7 +166,7 @@ a {
 }
 
 .place-skills {
-  grid-column: span 5;
+  grid-column: span 7;
 }
 
 .place-project-01 {
@@ -198,18 +200,23 @@ a {
   /* hover interactions + smooth grid resize */
   transition:
     border-color 0.22s ease,
-    transform 0.22s ease,
+    background 0.22s ease,
     box-shadow 0.22s ease,
     grid-column 0.4s ease,
     width 0.4s ease,
     min-height 0.4s ease;
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
 }
 
 .portfolio-card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(249, 115, 22, 0.18);
+  background: linear-gradient(160deg, var(--surface), color-mix(in srgb, var(--accent) 8%, var(--surface)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -24px 34px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent);
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -219,8 +226,10 @@ a {
 
 .card-non-clickable:hover {
   border-color: var(--border);
-  transform: none;
-  box-shadow: var(--shadow-card);
+  background: var(--surface);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
 }
 
 /* ─── Card invisible while flying card is live ──────────────────── */
@@ -255,6 +264,16 @@ a {
   margin: 0;
   font-size: 0.95rem;
   color: var(--text-secondary);
+}
+
+.card-preview-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--accent);
+  font-size: 1.38rem;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .card-hero {
@@ -295,8 +314,8 @@ a {
 .flip-face {
   position: absolute;
   inset: 0;
-  backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -310,6 +329,9 @@ a {
   align-items: flex-start;
   gap: 14px;
   padding: 22px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
 }
 
 /* Back face */
@@ -381,6 +403,8 @@ a {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .modal-section {
@@ -388,6 +412,13 @@ a {
   border-radius: 12px;
   padding: 16px;
   background: var(--surface-subtle);
+}
+
+.modal-section.modal-section-plain {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .modal-text {
@@ -597,6 +628,18 @@ a {
   font-size: 0.82rem;
 }
 
+.education-details {
+  margin-top: 8px;
+}
+
+.education-modules-section {
+  margin-top: 12px;
+}
+
+.education-modules-tags {
+  margin-top: 10px;
+}
+
 /* ─── Tags ───────────────────────────────────────────────────────── */
 .tag-row {
   display: flex;
@@ -690,6 +733,8 @@ a {
   .portfolio-page {
     padding: 14px;
     align-items: flex-start;
+    height: auto;
+    overflow: auto;
   }
 
   .portfolio-grid {
@@ -699,11 +744,12 @@ a {
 
   /*
     Row 1: hero(6)                             = 6
-    Row 2: certs(3) + social(3)                = 6
-    Row 3: about(4) + vision(2)                = 6
-    Row 4: education(2) + experience(4)        = 6
-    Row 5: skills(2) + project-01(4)           = 6
-    Row 6: project-02(3) + project-03(3)       = 6
+    Row 2: about(3) + social(3)                = 6
+    Row 3: experience(4) + education(2)        = 6
+    Row 4: certifications(3) + skills(3)       = 6
+    Row 5: project-01(3) + project-02(3)       = 6
+    Row 6: project-03(6)                       = 6
+    Row 7: vision(6)                           = 6
   */
 
   .place-hero {
@@ -728,11 +774,11 @@ a {
   }
 
   .place-about {
-    grid-column: span 4;
+    grid-column: span 3;
   }
 
   .place-vision {
-    grid-column: span 2;
+    grid-column: span 6;
   }
 
   .place-education {
@@ -744,11 +790,11 @@ a {
   }
 
   .place-skills {
-    grid-column: span 2;
+    grid-column: span 3;
   }
 
   .place-project-01 {
-    grid-column: span 4;
+    grid-column: span 3;
   }
 
   .place-project-02 {
@@ -756,7 +802,7 @@ a {
   }
 
   .place-project-03 {
-    grid-column: span 3;
+    grid-column: span 6;
   }
 }
 
@@ -765,6 +811,8 @@ a {
   .portfolio-page {
     padding: 10px;
     align-items: flex-start;
+    height: auto;
+    overflow: auto;
   }
 
   .portfolio-grid {
@@ -810,6 +858,12 @@ a {
 
   .card-title {
     font-size: clamp(1.5rem, 5vw, 2.2rem);
+  }
+
+  .card-preview-icon {
+    top: 14px;
+    right: 14px;
+    font-size: 1.2rem;
   }
 
   .theme-toggle {

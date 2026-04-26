@@ -1,5 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  faAward,
+  faBook,
+  faBriefcase,
+  faBullhorn,
+  faCircleUser,
+  faRocket,
+  faScrewdriverWrench,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { portfolioCards, type PortfolioCard } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
@@ -19,6 +29,8 @@ function getModalRect() {
 /* ─── Shared transition ──────────────────────────────────────────── */
 const FLIP_DURATION = 0.58; // seconds
 const FLIP_EASE = [0.4, 0, 0.2, 1] as const;
+const CONTENT_REVEAL_DELAY = 0.24; // seconds, starts during card expansion
+const CONTENT_STAGGER = 0.08; // seconds
 
 /* ─── Modal body content ─────────────────────────────────────────── */
 
@@ -33,52 +45,64 @@ const modalItemVariants = {
 
 const modalBodyVariants = {
   hidden: {},
-  visible: { transition: { delayChildren: FLIP_DURATION + 0.05, staggerChildren: 0.08 } },
+  visible: { transition: { staggerChildren: CONTENT_STAGGER } },
 };
+
+const cardPreviewIcons = {
+  certifications: faAward,
+  about: faCircleUser,
+  social: faBullhorn,
+  experience: faBriefcase,
+  education: faBook,
+  skills: faScrewdriverWrench,
+  vision: faRocket,
+} as const;
 
 function ModalBody({ card }: { card: PortfolioCard }) {
   if (card.type === 'certifications') {
     return (
-      <div className="modal-list">
+      <>
         {card.certs.map((cert) => (
-          <motion.div className="cert-row" key={cert.name} variants={modalItemVariants}>
-            <div className="cert-badge" aria-hidden="true">✦</div>
-            <div>
-              <h3 className="modal-row-title">{cert.name}</h3>
-              <p className="modal-row-subtitle">{cert.issuer}</p>
-              <p className="cert-date">{cert.date}</p>
+          <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
+            <div className="cert-row">
+              <div className="cert-badge" aria-hidden="true">✦</div>
+              <div>
+                <h3 className="modal-row-title">{cert.name}</h3>
+                <p className="modal-row-subtitle">{cert.issuer}</p>
+                <p className="cert-date">{cert.date}</p>
+              </div>
             </div>
-          </motion.div>
+          </motion.section>
         ))}
-      </div>
+      </>
     );
   }
 
   if (card.type === 'social') {
     return (
-      <div className="modal-list">
+      <>
         {card.links.map((link) => (
-          <motion.a
-            className="social-row"
-            href={link.href}
-            key={link.platform}
-            target="_blank"
-            rel="noreferrer"
-            variants={modalItemVariants}
-          >
-            <div className="social-icon" aria-hidden="true">
-              {link.icon
-                ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
-                : <span>{link.platform}</span>}
-            </div>
-            <div>
-              <h3 className="modal-row-title">{link.platform}</h3>
-              <p className="modal-row-subtitle">{link.handle}</p>
-              <p className="modal-text">{link.description}</p>
-            </div>
-          </motion.a>
+          <motion.section className="modal-section modal-section-plain" key={link.platform} variants={modalItemVariants}>
+            <a
+              className="social-row"
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div className="social-icon" aria-hidden="true">
+                {link.icon
+                  ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
+                  : <span>{link.platform}</span>}
+              </div>
+              <div>
+                <h3 className="modal-row-title">{link.platform}</h3>
+                <p className="modal-row-subtitle">{link.handle}</p>
+                <p className="modal-text">{link.description}</p>
+              </div>
+            </a>
+          </motion.section>
         ))}
-      </div>
+      </>
     );
   }
 
@@ -107,18 +131,20 @@ function ModalBody({ card }: { card: PortfolioCard }) {
 
   if (card.type === 'skills') {
     return (
-      <div className="skills-grid">
+      <>
         {card.categories.map((cat) => (
-          <motion.div className="skill-category" key={cat.label} variants={modalItemVariants}>
-            <p className="skill-category-label">{cat.label}</p>
-            <div className="tag-row">
-              {cat.items.map((item) => (
-                <span className="tag" key={item}>{item}</span>
-              ))}
+          <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
+            <div className="skill-category">
+              <p className="skill-category-label">{cat.label}</p>
+              <div className="tag-row">
+                {cat.items.map((item) => (
+                  <span className="tag" key={item}>{item}</span>
+                ))}
+              </div>
             </div>
-          </motion.div>
+          </motion.section>
         ))}
-      </div>
+      </>
     );
   }
 
@@ -126,22 +152,22 @@ function ModalBody({ card }: { card: PortfolioCard }) {
     return (
       <>
         {card.entries.map((entry) => (
-          <motion.div key={entry.degree} variants={modalItemVariants}>
-            <motion.section className="modal-section" variants={modalItemVariants}>
-              <p className="timeline-role">{entry.degree}</p>
-              <p className="timeline-company">{entry.institution}</p>
-              <p className="timeline-dates">{entry.dates}</p>
-              <p className="modal-text" style={{ marginTop: '8px' }}>{entry.details}</p>
-            </motion.section>
-            <motion.section className="modal-section" style={{ marginTop: '12px' }} variants={modalItemVariants}>
-              <h3 className="modal-row-title">Key Modules</h3>
-              <div className="tag-row" style={{ marginTop: '10px' }}>
-                {entry.modules.map((m) => (
-                  <span className="tag" key={m}>{m}</span>
-                ))}
-              </div>
-            </motion.section>
-          </motion.div>
+          <motion.section className="modal-section" key={`${entry.degree}-details`} variants={modalItemVariants}>
+            <p className="timeline-role">{entry.degree}</p>
+            <p className="timeline-company">{entry.institution}</p>
+            <p className="timeline-dates">{entry.dates}</p>
+            <p className="modal-text education-details">{entry.details}</p>
+          </motion.section>
+        ))}
+        {card.entries.map((entry) => (
+          <motion.section className="modal-section education-modules-section" key={`${entry.degree}-modules`} variants={modalItemVariants}>
+            <h3 className="modal-row-title">Key Modules</h3>
+            <div className="tag-row education-modules-tags">
+              {entry.modules.map((m) => (
+                <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
+              ))}
+            </div>
+          </motion.section>
         ))}
       </>
     );
@@ -172,7 +198,7 @@ function ModalBody({ card }: { card: PortfolioCard }) {
 
   if (card.type === 'experience') {
     return (
-      <section className="timeline" aria-label="Experience timeline">
+      <div className="timeline" aria-label="Experience timeline">
         {card.roles.map((role) => (
           <motion.article
             className="timeline-item"
@@ -191,45 +217,46 @@ function ModalBody({ card }: { card: PortfolioCard }) {
             </div>
           </motion.article>
         ))}
-      </section>
+      </div>
     );
   }
 
-  // project
-  return (
-    <>
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <div className="project-image-placeholder" role="img" aria-label={card.imageTitle}>
-          {card.imageTitle}
-        </div>
-      </motion.section>
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <p className="modal-text">{card.description}</p>
-      </motion.section>
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <h3 className="modal-row-title">Impact</h3>
-        <div className="pill-grid">
-          {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
-        </div>
-      </motion.section>
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <h3 className="modal-row-title">Stack</h3>
-        <div className="tag-row">
-          {card.stack.map((i) => (
-            <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
-          ))}
-        </div>
-      </motion.section>
-      <motion.section className="modal-section" variants={modalItemVariants}>
-        <h3 className="modal-row-title">Links</h3>
-        <div className="link-row">
-          {card.links.map((l) => (
-            <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
-          ))}
-        </div>
-      </motion.section>
-    </>
-  );
+  if (card.type === 'project') {
+    return (
+      <>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <div className="project-image-placeholder" role="img" aria-label={card.imageTitle}>
+            {card.imageTitle}
+          </div>
+        </motion.section>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <p className="modal-text">{card.description}</p>
+        </motion.section>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <h3 className="modal-row-title">Impact</h3>
+          <div className="pill-grid">
+            {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
+          </div>
+        </motion.section>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <h3 className="modal-row-title">Stack</h3>
+          <div className="tag-row">
+            {card.stack.map((i) => (
+              <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
+            ))}
+          </div>
+        </motion.section>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <h3 className="modal-row-title">Links</h3>
+          <div className="link-row">
+            {card.links.map((l) => (
+              <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
+            ))}
+          </div>
+        </motion.section>
+      </>
+    );
+  }
 }
 
 /* ─── Flying flip card ───────────────────────────────────────────── */
@@ -243,7 +270,55 @@ interface FlipCardProps {
 }
 
 function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
-  const toRect = useMemo(() => getModalRect(), []);
+  const [modalRect, setModalRect] = useState(() => getModalRect());
+  const [modalHeight, setModalHeight] = useState(modalRect.height);
+  const [isContentRevealed, setIsContentRevealed] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+
+  const computeHeight = useCallback((rect: ReturnType<typeof getModalRect>) => {
+    const headerHeight = headerRef.current?.offsetHeight ?? 0;
+    const bodyHeight = bodyRef.current?.scrollHeight ?? 0;
+    const contentHeight = headerHeight + bodyHeight;
+    const targetHeight = Math.min(rect.height, contentHeight || rect.height);
+    setModalHeight(targetHeight);
+  }, []);
+
+  const measureModal = useCallback(() => {
+    const nextRect = getModalRect();
+    setModalRect(nextRect);
+    computeHeight(nextRect);
+  }, [computeHeight]);
+
+  useLayoutEffect(() => {
+    measureModal();
+    const rafId = requestAnimationFrame(() => {
+      measureModal();
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [card, measureModal]);
+
+  useEffect(() => {
+    const handleResize = () => measureModal();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [measureModal]);
+
+  useEffect(() => {
+    if (!bodyRef.current && !headerRef.current) return undefined;
+    const observer = new ResizeObserver(() => measureModal());
+    if (bodyRef.current) observer.observe(bodyRef.current);
+    if (headerRef.current) observer.observe(headerRef.current);
+    return () => observer.disconnect();
+  }, [measureModal]);
+
+  useEffect(() => {
+    setIsContentRevealed(false);
+    const revealTimer = window.setTimeout(() => {
+      setIsContentRevealed(true);
+    }, CONTENT_REVEAL_DELAY * 1000);
+    return () => window.clearTimeout(revealTimer);
+  }, [card.id]);
 
   return (
     <>
@@ -261,7 +336,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       <motion.div
         className="flip-wrapper"
         initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
-        animate={{ left: toRect.left, top: toRect.top, width: toRect.width, height: toRect.height }}
+        animate={{ left: modalRect.left, top: modalRect.top, width: modalRect.width, height: modalHeight }}
         exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
         transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
       >
@@ -276,14 +351,12 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
         >
           {/* Front face — exact copy of the card */}
           <div className="flip-face flip-front">
-            <p className="card-label">{card.label}</p>
-            <h2 className="card-title">{card.title}</h2>
-            <p className="card-summary">{card.summary}</p>
+            <CardInner card={card} />
           </div>
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
           <div className="flip-face flip-back">
-            <header className="portfolio-modal-header">
+            <header className="portfolio-modal-header" ref={headerRef}>
               <div>
                 <p className="modal-label">{card.label}</p>
                 <h2 className="modal-title">{card.title}</h2>
@@ -300,9 +373,10 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
             <motion.div
               className="portfolio-modal-body"
               initial="hidden"
-              animate="visible"
+              animate={isContentRevealed ? 'visible' : 'hidden'}
               exit="hidden"
               variants={modalBodyVariants}
+              ref={bodyRef}
             >
               <ModalBody card={card} />
             </motion.div>
@@ -316,8 +390,15 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 /* ─── Card inner content (shared between grid & flip front) ──────── */
 
 function CardInner({ card }: { card: PortfolioCard }) {
+  const previewIcon = cardPreviewIcons[card.id as keyof typeof cardPreviewIcons];
+
   return (
     <>
+      {previewIcon && (
+        <span className="card-preview-icon" aria-hidden="true">
+          <FontAwesomeIcon icon={previewIcon} />
+        </span>
+      )}
       <p className="card-label">{card.label}</p>
       <h2 className="card-title">{card.title}</h2>
       <p className="card-summary">{card.summary}</p>
@@ -406,6 +487,7 @@ function App() {
 
             return (
               <button
+                aria-label={card.title}
                 className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
                 key={card.id}
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}

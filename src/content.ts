@@ -72,6 +72,12 @@ export interface SkillCategory {
   items: string[];
 }
 
+export interface HeroCard extends CardBase {
+  type: 'hero';
+  name: string;
+  subtitle: string;
+}
+
 export interface CertificationsCard extends CardBase {
   type: 'certifications';
   certs: CertItem[];
@@ -119,6 +125,7 @@ export interface SkillsCard extends CardBase {
 }
 
 export type PortfolioCard =
+  | HeroCard
   | CertificationsCard
   | SocialCard
   | AboutCard
@@ -145,33 +152,20 @@ export const portfolioCards: PortfolioCard[] = [
     },
   },
   {
-    id: 'certifications',
-    type: 'certifications',
-    label: 'Certifications',
-    title: 'Credentials',
-    summary: 'Verified skills across cloud, AI, and engineering.',
-    placementClass: 'place-certifications',
-    certs: [
-      {
-        name: 'AWS Certified Cloud Practitioner',
-        issuer: 'Amazon Web Services',
-        date: '2024',
-      },
-      {
-        name: 'Google AI Essentials',
-        issuer: 'Google',
-        date: '2024',
-      },
-      {
-        name: 'Meta Front-End Developer Certificate',
-        issuer: 'Meta',
-        date: '2023',
-      },
-      {
-        name: 'CS50x: Introduction to Computer Science',
-        issuer: 'Harvard / edX',
-        date: '2022',
-      },
+    id: 'about',
+    type: 'about',
+    label: 'About',
+    title: 'Who I am',
+    summary: 'Product-minded engineer focused on useful, durable interfaces.',
+    placementClass: 'place-about',
+    bio: [
+      'I move between design and development so product decisions can stay grounded in real constraints and real users. I care about momentum, clear priorities, and thoughtful defaults that make teams faster.',
+      'Most of my work sits at the intersection of front-end engineering, interaction design, and experimentation. I enjoy turning rough ideas into shipped systems that feel both calm and precise.',
+    ],
+    beliefs: [
+      'A clear product story reduces technical complexity.',
+      'Interfaces should reward attention without demanding it.',
+      'Small, frequent releases beat large speculative rewrites.',
     ],
     layout: {
       column: 'span 4',
@@ -204,66 +198,6 @@ export const portfolioCards: PortfolioCard[] = [
         handle: 'Download PDF',
         description: 'A concise one-page resume with impact-focused metrics.',
         href: '#',
-      },
-    ],
-    layout: {
-      column: 'span 4',
-    },
-  },
-  {
-    id: 'about',
-    type: 'about',
-    label: 'About',
-    title: 'Who I am',
-    summary: 'Product-minded engineer focused on useful, durable interfaces.',
-    placementClass: 'place-about',
-    bio: [
-      'I move between design and development so product decisions can stay grounded in real constraints and real users. I care about momentum, clear priorities, and thoughtful defaults that make teams faster.',
-      'Most of my work sits at the intersection of front-end engineering, interaction design, and experimentation. I enjoy turning rough ideas into shipped systems that feel both calm and precise.',
-    ],
-    beliefs: [
-      'A clear product story reduces technical complexity.',
-      'Interfaces should reward attention without demanding it.',
-      'Small, frequent releases beat large speculative rewrites.',
-    ],
-    layout: {
-      column: 'span 5',
-    },
-  },
-  {
-    id: 'vision',
-    type: 'vision',
-    label: "Where I'm going",
-    title: 'The next chapter',
-    summary: 'What I want to build, and the kind of work that drives me forward.',
-    placementClass: 'place-vision',
-    body: [
-      "I want to work at the intersection of ambitious product ideas and the engineering discipline to ship them reliably. I'm drawn to teams that treat craft and speed as compatible — not opposing — forces.",
-    ],
-    goals: [
-      'Join a product team building something genuinely novel',
-      'Deepen expertise in AI-native interfaces and tooling',
-      'Ship products that measurably improve how people work',
-      'Eventually lead product strategy on a focused team',
-    ],
-    layout: {
-      column: 'span 3',
-    },
-  },
-  {
-    id: 'education',
-    type: 'education',
-    label: 'Education',
-    title: 'Where I studied',
-    summary: 'Formal foundations in computing, design, and systems thinking.',
-    placementClass: 'place-education',
-    entries: [
-      {
-        degree: 'BSc Computer Science',
-        institution: 'University of Exeter',
-        dates: '2022 - 2025',
-        details: 'First Class Honours (predicted). Dissertation on adaptive UI personalisation using reinforcement learning.',
-        modules: ['Algorithms & Data Structures', 'Human-Computer Interaction', 'Machine Learning', 'Software Engineering', 'Databases'],
       },
     ],
     layout: {
@@ -311,6 +245,59 @@ export const portfolioCards: PortfolioCard[] = [
     },
   },
   {
+    id: 'education',
+    type: 'education',
+    label: 'Education',
+    title: 'Where I studied',
+    summary: 'Formal foundations in computing, design, and systems thinking.',
+    placementClass: 'place-education',
+    entries: [
+      {
+        degree: 'BSc Computer Science',
+        institution: 'University of Exeter',
+        dates: '2022 - 2025',
+        details: 'First Class Honours (predicted). Dissertation on adaptive UI personalisation using reinforcement learning.',
+        modules: ['Algorithms & Data Structures', 'Human-Computer Interaction', 'Machine Learning', 'Software Engineering', 'Databases'],
+      },
+    ],
+    layout: {
+      column: 'span 5',
+    },
+  },
+  {
+    id: 'certifications',
+    type: 'certifications',
+    label: 'Certifications',
+    title: 'Credentials',
+    summary: 'Verified skills across cloud, AI, and engineering.',
+    placementClass: 'place-certifications',
+    certs: [
+      {
+        name: 'AWS Certified Cloud Practitioner',
+        issuer: 'Amazon Web Services',
+        date: '2024',
+      },
+      {
+        name: 'Google AI Essentials',
+        issuer: 'Google',
+        date: '2024',
+      },
+      {
+        name: 'Meta Front-End Developer Certificate',
+        issuer: 'Meta',
+        date: '2023',
+      },
+      {
+        name: 'CS50x: Introduction to Computer Science',
+        issuer: 'Harvard / edX',
+        date: '2022',
+      },
+    ],
+    layout: {
+      column: 'span 5',
+    },
+  },
+  {
     id: 'skills',
     type: 'skills',
     label: 'Skills',
@@ -340,7 +327,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
     ],
     layout: {
-      column: 'span 5',
+      column: 'span 7',
     },
   },
   {
@@ -416,6 +403,26 @@ export const portfolioCards: PortfolioCard[] = [
     ],
     layout: {
       column: 'span 3',
+    },
+  },
+  {
+    id: 'vision',
+    type: 'vision',
+    label: "Where I'm going",
+    title: 'The next chapter',
+    summary: 'What I want to build, and the kind of work that drives me forward.',
+    placementClass: 'place-vision',
+    body: [
+      "I want to work at the intersection of ambitious product ideas and the engineering discipline to ship them reliably. I'm drawn to teams that treat craft and speed as compatible — not opposing — forces.",
+    ],
+    goals: [
+      'Join a product team building something genuinely novel',
+      'Deepen expertise in AI-native interfaces and tooling',
+      'Ship products that measurably improve how people work',
+      'Eventually lead product strategy on a focused team',
+    ],
+    layout: {
+      column: 'span 12',
     },
   },
 ];
