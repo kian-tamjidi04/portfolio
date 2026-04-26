@@ -1,17 +1,44 @@
+/* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  --bg: #fafaf8;
-  --surface: #ffffff;
-  --border: #e8e6e0;
-  --accent: #e8621a;
-  --text-primary: #1a1a1a;
-  --text-secondary: #6b6b6b;
-  --text-muted: #aaaaaa;
-  --orb: #fff0e8;
+  /* Light mode */
+  --bg: #1c1917;
+  --surface: #28211e;
+  --surface-subtle: #322b27;
+  --border: #3d3330;
+  --accent: #f97316;
+  --accent-dim: rgba(249, 115, 22, 0.14);
+  --accent-sky: #38bdf8;
+  --accent-sky-dim: rgba(56, 189, 248, 0.12);
+  --text-primary: #f5f0ec;
+  --text-secondary: #a89b92;
+  --text-muted: #6b5e57;
+  --orb: rgba(249, 115, 22, 0.18);
   --label-size: 10px;
-  --card-radius: 14px;
-  --modal-radius: 18px;
+  --card-radius: 16px;
+  --modal-radius: 20px;
+  --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
 }
 
+/* Light mode override */
+.light {
+  --bg: #f5ede6;
+  --surface: #ffffff;
+  --surface-subtle: #fdf6f1;
+  --border: #e5d8d0;
+  --accent: #ea6508;
+  --accent-dim: rgba(234, 101, 8, 0.1);
+  --accent-sky: #0ea5e9;
+  --accent-sky-dim: rgba(14, 165, 233, 0.10);
+  --text-primary: #1a1210;
+  --text-secondary: #6b5346;
+  --text-muted: #a89080;
+  --orb: rgba(234, 101, 8, 0.13);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -29,6 +56,7 @@ body {
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   line-height: 1.45;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 button,
@@ -36,11 +64,38 @@ a {
   font-family: inherit;
 }
 
+/* ─── Dark-mode Toggle ───────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+/* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   min-height: 100vh;
   padding: 22px;
-  background: radial-gradient(circle at 100% 100%, #f4f0e8 0%, transparent 36%),
-    var(--bg);
+  background: var(--bg);
   display: flex;
   align-items: center;
 }
@@ -48,13 +103,14 @@ a {
 .portfolio-grid-surface {
   margin: 0 auto;
   max-width: 1320px;
-  transition: opacity 0.24s ease, filter 0.24s ease, transform 0.24s ease;
+  /* Un-dim is slower than dim so the landing card is the visual focus */
+  transition: opacity 0.45s ease, filter 0.45s ease, transform 0.35s ease;
 }
 
 .portfolio-grid-surface.is-dimmed {
-  opacity: 0.3;
-  filter: blur(3px);
-  transform: scale(0.995);
+  opacity: 0.25;
+  filter: blur(4px);
+  transform: scale(0.994);
   pointer-events: none;
 }
 
@@ -65,6 +121,7 @@ a {
   align-items: stretch;
 }
 
+/* ─── Grid Placement ─────────────────────────────────────────────── */
 .place-hero {
   grid-column: span 8;
   grid-row: span 2;
@@ -98,6 +155,7 @@ a {
   grid-column: span 3;
 }
 
+/* ─── Cards ──────────────────────────────────────────────────────── */
 .portfolio-card {
   position: relative;
   overflow: hidden;
@@ -107,20 +165,32 @@ a {
   gap: 14px;
   width: 100%;
   min-height: 170px;
-  border: 0.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--card-radius);
   background: var(--surface);
   padding: 22px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.24s ease, transform 0.24s ease;
+  transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: var(--shadow-card);
 }
 
 .portfolio-card:hover {
   border-color: var(--accent);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(249, 115, 22, 0.18);
 }
 
+/* ─── Card invisible while flying card is live ──────────────────── */
+.portfolio-card.card-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+
+
+
+/* ─── Card Typography ────────────────────────────────────────────── */
 .card-label {
   margin: 0;
   font-size: var(--label-size);
@@ -156,16 +226,7 @@ a {
   font-size: clamp(3.1rem, 4.1vw, 4.8rem);
 }
 
-.hero-orb {
-  position: absolute;
-  right: 22px;
-  bottom: 22px;
-  width: 80px;
-  height: 80px;
-  border-radius: 999px;
-  background: var(--orb);
-}
-
+/* ─── Status ─────────────────────────────────────────────────────── */
 .status-line {
   display: inline-flex;
   align-items: center;
@@ -179,54 +240,84 @@ a {
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: #33b864;
-  box-shadow: 0 0 0 0 rgba(51, 184, 100, 0.42);
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.42);
   animation: pulse-status 1.7s ease-out infinite;
 }
 
-.card-social .card-title {
-  font-size: clamp(2.2rem, 3vw, 3.4rem);
-}
-
+/* ─── Project Accent ─────────────────────────────────────────────── */
 .project-accent {
   margin-top: auto;
   width: min(180px, 74%);
   height: 5px;
   border-radius: 999px;
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--accent), var(--accent-sky));
 }
 
-.modal-overlay {
+/* ─── Modal ──────────────────────────────────────────────────────── */
+/* ─── Flip card scrim ─────────────────────────────────────────────── */
+.flip-scrim {
   position: fixed;
   inset: 0;
-  z-index: 20;
-  border: 0;
-  background: rgba(26, 26, 26, 0.45);
+  z-index: 40;
+  background: rgba(10, 7, 6, 0.55);
+  backdrop-filter: blur(1px);
   cursor: pointer;
+  border: 0;
 }
 
-.modal-viewport {
+/* ─── Flying flip card wrapper (position + size driven by framer-motion) */
+.flip-wrapper {
   position: fixed;
-  inset: 0;
-  z-index: 21;
-  display: grid;
-  place-items: center;
-  padding: 42px;
-  perspective: 1800px;
-  pointer-events: none;
+  z-index: 50;
+  /* W3Schools: perspective on the parent container */
+  perspective: 1600px;
 }
 
-.portfolio-modal {
-  width: min(900px, calc(100vw - 120px));
-  max-height: min(760px, calc(100vh - 84px));
-  border: 1.5px solid var(--accent);
-  border-radius: var(--modal-radius);
+/* ─── Inner rotating element (W3Schools: transform-style: preserve-3d) */
+.flip-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* transform-style set via inline style for framer-motion compat */
+}
+
+/* ─── Shared face rules (W3Schools: backface-visibility: hidden) ─── */
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   background: var(--surface);
+  border: 1px solid var(--border);
   overflow: hidden;
+}
+
+/* Front face — mirrors the bento card layout */
+.flip-front {
+  border-radius: var(--card-radius);
   display: flex;
   flex-direction: column;
-  transform-origin: center;
-  pointer-events: auto;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px;
+  /* starts fully visible (rotateY = 0) */
+}
+
+/* Back face — rotated 180deg base, shown when inner reaches 180deg */
+/* W3Schools: back face starts at rotateY(180deg) */
+.flip-back {
+  border-radius: var(--modal-radius);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-modal);
+}
+
+/* portfolio-modal class kept for modal-header/body child selectors */
+.portfolio-modal {
+  display: contents;
+  /* layout handled by .flip-back */
 }
 
 .portfolio-modal-header {
@@ -238,7 +329,7 @@ a {
   justify-content: space-between;
   gap: 18px;
   padding: 22px;
-  border-bottom: 1px solid #f4eee4;
+  border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
 
@@ -257,23 +348,26 @@ a {
   font-size: clamp(2.2rem, 4.1vw, 3.5rem);
   line-height: 0.98;
   font-weight: 400;
+  color: var(--text-primary);
 }
 
 .modal-close {
-  border: 0;
+  border: 1px solid var(--border);
   background: transparent;
-  color: var(--text-primary);
-  font-size: 1.35rem;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .modal-close:hover {
   color: var(--accent);
-  background: #fef1e9;
+  background: var(--accent-dim);
+  border-color: var(--accent);
 }
 
 .portfolio-modal-body {
@@ -285,10 +379,10 @@ a {
 }
 
 .modal-section {
-  border: 0.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
-  background: #fffdf9;
+  background: var(--surface-subtle);
 }
 
 .modal-text {
@@ -307,28 +401,30 @@ a {
   gap: 12px;
 }
 
+/* ─── Social Rows ────────────────────────────────────────────────── */
 .social-row {
   text-decoration: none;
   color: inherit;
-  border: 0.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #fffdf9;
+  background: var(--surface-subtle);
   padding: 16px;
   display: grid;
   grid-template-columns: 48px 1fr;
   gap: 14px;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .social-row:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-sky);
+  background: var(--accent-sky-dim);
 }
 
 .social-icon {
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background: #fff2ea;
+  background: var(--accent-dim);
   color: var(--accent);
   font-weight: 700;
   font-size: 0.76rem;
@@ -336,6 +432,10 @@ a {
   align-items: center;
   justify-content: center;
   letter-spacing: 0.06em;
+}
+
+.social-icon-image {
+  border-radius: 6px;
 }
 
 .modal-row-title {
@@ -349,10 +449,11 @@ a {
 .modal-row-subtitle {
   margin: 4px 0 10px;
   font-size: 0.85rem;
-  color: var(--accent);
+  color: var(--accent-sky);
   font-weight: 600;
 }
 
+/* ─── Beliefs ────────────────────────────────────────────────────── */
 .belief-list {
   list-style: none;
   margin: 12px 0 0;
@@ -375,8 +476,10 @@ a {
   border-radius: 999px;
   margin-top: 0.5em;
   background: var(--accent);
+  flex-shrink: 0;
 }
 
+/* ─── Timeline ───────────────────────────────────────────────────── */
 .timeline {
   margin: 0;
   padding-left: 14px;
@@ -398,11 +501,12 @@ a {
   width: 9px;
   height: 9px;
   border-radius: 999px;
-  background: #bababa;
+  background: var(--border);
 }
 
 .timeline-dot.is-recent {
   background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
 .timeline-content {
@@ -429,6 +533,7 @@ a {
   font-size: 0.82rem;
 }
 
+/* ─── Tags ───────────────────────────────────────────────────────── */
 .tag-row {
   display: flex;
   flex-wrap: wrap;
@@ -436,28 +541,29 @@ a {
 }
 
 .tag {
-  border: 0.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 5px 10px;
   font-size: 0.76rem;
   color: var(--text-secondary);
-  background: #ffffff;
+  background: transparent;
 }
 
 .tag.is-primary {
-  border-color: #f4c6ac;
+  border-color: rgba(249, 115, 22, 0.4);
   color: var(--accent);
-  background: #fff3ec;
+  background: var(--accent-dim);
 }
 
+/* ─── Project Modal ──────────────────────────────────────────────── */
 .project-image-placeholder {
-  border: 0.5px solid #f0cdb8;
-  background: #fff4ec;
+  border: 1px solid var(--border);
+  background: var(--surface-subtle);
   border-radius: 12px;
   min-height: 180px;
   display: grid;
   place-items: center;
-  color: #bc6d42;
+  color: var(--text-muted);
   font-size: 0.84rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -470,14 +576,15 @@ a {
 }
 
 .pill {
-  border: 0.5px solid #f0dacd;
+  border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 10px;
   padding: 8px 10px;
   font-size: 0.8rem;
-  color: #8b5839;
-  background: #fff7f2;
+  color: var(--accent-sky);
+  background: var(--accent-sky-dim);
 }
 
+/* ─── Links ──────────────────────────────────────────────────────── */
 .link-row {
   display: flex;
   gap: 8px;
@@ -485,27 +592,31 @@ a {
 
 .link-row a {
   text-decoration: none;
-  border: 0.5px solid #f1cab2;
+  border: 1px solid rgba(249, 115, 22, 0.35);
   border-radius: 999px;
-  padding: 7px 12px;
+  padding: 7px 14px;
   font-size: 0.8rem;
   color: var(--accent);
   font-weight: 600;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .link-row a:hover {
-  background: #fff2e9;
+  background: var(--accent-dim);
+  border-color: var(--accent);
 }
 
+/* ─── Keyframes ──────────────────────────────────────────────────── */
 @keyframes pulse-status {
   0% {
-    box-shadow: 0 0 0 0 rgba(51, 184, 100, 0.42);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45);
   }
+
   70% {
-    box-shadow: 0 0 0 8px rgba(51, 184, 100, 0);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
   }
+
   100% {
-    box-shadow: 0 0 0 0 rgba(51, 184, 100, 0);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 }

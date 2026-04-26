@@ -1,35 +1,39 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { portfolioCards, type PortfolioCard } from './content';
 
-const flipTransition = {
-  duration: 0.55,
-  ease: [0.4, 0, 0.2, 1] as const,
+/* ─── Helpers ────────────────────────────────────────────────────── */
+
+function getModalRect() {
+  const pad = 42;
+  const w = Math.min(900, window.innerWidth - pad * 2);
+  const h = Math.min(760, window.innerHeight - pad * 2);
+  return {
+    left: (window.innerWidth - w) / 2,
+    top: (window.innerHeight - h) / 2,
+    width: w,
+    height: h,
+  };
+}
+
+/* ─── Shared transition ──────────────────────────────────────────── */
+const FLIP_DURATION = 0.58; // seconds
+const FLIP_EASE = [0.4, 0, 0.2, 1] as const;
+
+/* ─── Modal body content ─────────────────────────────────────────── */
+
+const modalItemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.22, ease: [0.2, 0, 0, 1] as const },
+  },
 };
 
 const modalBodyVariants = {
   hidden: {},
-  visible: {
-    transition: {
-      delayChildren: 0.56,
-      staggerChildren: 0.09,
-    },
-  },
-};
-
-const modalItemVariants = {
-  hidden: {
-    opacity: 0,
-    y: 8,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.26,
-      ease: [0.2, 0, 0, 1] as const,
-    },
-  },
+  visible: { transition: { delayChildren: FLIP_DURATION + 0.05, staggerChildren: 0.08 } },
 };
 
 function ModalBody({ card }: { card: PortfolioCard }) {
@@ -51,15 +55,13 @@ function ModalBody({ card }: { card: PortfolioCard }) {
 
   if (card.type === 'status') {
     return (
-      <>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="status-line modal-status-line">
-            <span className="status-dot" aria-hidden="true" />
-            <span>{card.statusText}</span>
-          </div>
-          <p className="modal-text">{card.statusSubtitle}</p>
-        </motion.section>
-      </>
+      <motion.section className="modal-section" variants={modalItemVariants}>
+        <div className="status-line modal-status-line">
+          <span className="status-dot" aria-hidden="true" />
+          <span>{card.statusText}</span>
+        </div>
+        <p className="modal-text">{card.statusSubtitle}</p>
+      </motion.section>
     );
   }
 
@@ -76,11 +78,9 @@ function ModalBody({ card }: { card: PortfolioCard }) {
             variants={modalItemVariants}
           >
             <div className="social-icon" aria-hidden="true">
-              {link.icon ? (
-                <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
-              ) : (
-                <span>{link.platform}</span>
-              )}
+              {link.icon
+                ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
+                : <span>{link.platform}</span>}
             </div>
             <div>
               <h3 className="modal-row-title">{link.platform}</h3>
@@ -96,22 +96,18 @@ function ModalBody({ card }: { card: PortfolioCard }) {
   if (card.type === 'about') {
     return (
       <>
-        {card.bio.map((paragraph) => (
-          <motion.section
-            className="modal-section"
-            key={paragraph}
-            variants={modalItemVariants}
-          >
-            <p className="modal-text">{paragraph}</p>
+        {card.bio.map((p) => (
+          <motion.section className="modal-section" key={p} variants={modalItemVariants}>
+            <p className="modal-text">{p}</p>
           </motion.section>
         ))}
         <motion.section className="modal-section" variants={modalItemVariants}>
           <h3 className="modal-row-title">Things I believe</h3>
           <ul className="belief-list">
-            {card.beliefs.map((belief) => (
-              <li key={belief}>
+            {card.beliefs.map((b) => (
+              <li key={b}>
                 <span className="belief-dot" aria-hidden="true" />
-                <span>{belief}</span>
+                <span>{b}</span>
               </li>
             ))}
           </ul>
@@ -129,21 +125,14 @@ function ModalBody({ card }: { card: PortfolioCard }) {
             key={`${role.company}-${role.role}`}
             variants={modalItemVariants}
           >
-            <span
-              className={`timeline-dot ${role.isRecent ? 'is-recent' : ''}`}
-              aria-hidden="true"
-            />
+            <span className={`timeline-dot ${role.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
             <div className="timeline-content">
               <p className="timeline-role">{role.role}</p>
               <p className="timeline-company">{role.company}</p>
               <p className="timeline-dates">{role.dates}</p>
               <p className="modal-text">{role.impact}</p>
               <div className="tag-row">
-                {role.skills.map((skill) => (
-                  <span className="tag" key={skill}>
-                    {skill}
-                  </span>
-                ))}
+                {role.skills.map((s) => <span className="tag" key={s}>{s}</span>)}
               </div>
             </div>
           </motion.article>
@@ -152,6 +141,7 @@ function ModalBody({ card }: { card: PortfolioCard }) {
     );
   }
 
+  // project
   return (
     <>
       <motion.section className="modal-section" variants={modalItemVariants}>
@@ -165,30 +155,22 @@ function ModalBody({ card }: { card: PortfolioCard }) {
       <motion.section className="modal-section" variants={modalItemVariants}>
         <h3 className="modal-row-title">Impact</h3>
         <div className="pill-grid">
-          {card.impact.map((item) => (
-            <span className="pill" key={item}>
-              {item}
-            </span>
-          ))}
+          {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
         </div>
       </motion.section>
       <motion.section className="modal-section" variants={modalItemVariants}>
         <h3 className="modal-row-title">Stack</h3>
         <div className="tag-row">
-          {card.stack.map((item) => (
-            <span className={`tag ${item.primary ? 'is-primary' : ''}`} key={item.name}>
-              {item.name}
-            </span>
+          {card.stack.map((i) => (
+            <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
           ))}
         </div>
       </motion.section>
       <motion.section className="modal-section" variants={modalItemVariants}>
         <h3 className="modal-row-title">Links</h3>
         <div className="link-row">
-          {card.links.map((link) => (
-            <a href={link.href} key={link.label} target="_blank" rel="noreferrer">
-              {link.label}
-            </a>
+          {card.links.map((l) => (
+            <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
           ))}
         </div>
       </motion.section>
@@ -196,118 +178,193 @@ function ModalBody({ card }: { card: PortfolioCard }) {
   );
 }
 
-function App() {
-  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+/* ─── Flying flip card ───────────────────────────────────────────── */
 
-  const activeCard = useMemo(
-    () => portfolioCards.find((card) => card.id === activeCardId) ?? null,
-    [activeCardId],
+interface FromRect { left: number; top: number; width: number; height: number; }
+
+interface FlipCardProps {
+  card: PortfolioCard;
+  fromRect: FromRect;
+  onClose: () => void;
+}
+
+function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
+  const toRect = useMemo(() => getModalRect(), []);
+
+  return (
+    <>
+      {/* Scrim behind the card */}
+      <motion.div
+        className="flip-scrim"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.22 }}
+        onClick={onClose}
+      />
+
+      {/* The flying card — framer-motion owns position + size */}
+      <motion.div
+        className="flip-wrapper"
+        initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
+        animate={{ left: toRect.left, top: toRect.top, width: toRect.width, height: toRect.height }}
+        exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
+        transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
+      >
+        {/* Inner rotating element — W3Schools preserve-3d pattern */}
+        <motion.div
+          className="flip-inner"
+          initial={{ rotateY: 0 }}
+          animate={{ rotateY: 180 }}
+          exit={{ rotateY: 0 }}
+          transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {/* Front face — exact copy of the card */}
+          <div className="flip-face flip-front">
+            <p className="card-label">{card.label}</p>
+            <h2 className="card-title">{card.title}</h2>
+            <p className="card-summary">{card.summary}</p>
+            {card.type === 'status' && (
+              <div className="status-line">
+                <span className="status-dot" aria-hidden="true" />
+                <span>{card.statusText}</span>
+              </div>
+            )}
+            {card.type === 'project' && <span className="project-accent" aria-hidden="true" />}
+          </div>
+
+          {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
+          <div className="flip-face flip-back">
+            <header className="portfolio-modal-header">
+              <div>
+                <p className="modal-label">{card.label}</p>
+                <h2 className="modal-title">{card.title}</h2>
+              </div>
+              <button
+                aria-label="Close modal"
+                className="modal-close"
+                onClick={onClose}
+                type="button"
+              >
+                ✕
+              </button>
+            </header>
+            <motion.div
+              className="portfolio-modal-body"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={modalBodyVariants}
+            >
+              <ModalBody card={card} />
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </>
   );
+}
+
+/* ─── App ────────────────────────────────────────────────────────── */
+
+function App() {
+  /* Dark mode */
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    const stored = localStorage.getItem('portfolio-theme');
+    if (stored) return stored === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
-    if (!activeCardId) {
-      return undefined;
-    }
+    document.documentElement.classList.toggle('light', !isDark);
+    localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setActiveCardId(null);
-      }
-    };
+  /* Flip state */
+  interface FlipState { cardId: string; fromRect: FromRect; }
+  const [flipState, setFlipState] = useState<FlipState | null>(null);
+  // Keeps the grid card invisible through the flip-back exit animation.
+  // Cleared only when AnimatePresence signals the exit is complete.
+  const [closedCardId, setClosedCardId] = useState<string | null>(null);
 
-    window.addEventListener('keydown', handleEscape);
+  const activeCard = useMemo(
+    () => flipState ? portfolioCards.find((c) => c.id === flipState.cardId) ?? null : null,
+    [flipState],
+  );
 
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [activeCardId]);
+  const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
+    const r = el.getBoundingClientRect();
+    setFlipState({ cardId, fromRect: { left: r.left, top: r.top, width: r.width, height: r.height } });
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setClosedCardId(flipState?.cardId ?? null);
+    setFlipState(null);
+  }, [flipState]);
+
+  const handleExitComplete = useCallback(() => {
+    setClosedCardId(null);
+  }, []);
+
+  /* Escape key */
+  useEffect(() => {
+    if (!flipState) return undefined;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [flipState, handleClose]);
 
   return (
     <div className="portfolio-page">
-      <main className={`portfolio-grid-surface ${activeCard ? 'is-dimmed' : ''}`}>
+      {/* Dark-mode toggle */}
+      <button
+        id="theme-toggle"
+        className="theme-toggle"
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        onClick={() => setIsDark((p) => !p)}
+        type="button"
+      >
+        {isDark ? '☀️' : '🌙'}
+      </button>
+
+      {/* Bento grid */}
+      <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>
         <section className="portfolio-grid" aria-label="Portfolio card grid">
-          {portfolioCards.map((card) => (
-            <button
-              className={`portfolio-card card-${card.type} ${card.placementClass}`}
-              key={card.id}
-              onClick={() => setActiveCardId(card.id)}
-              type="button"
-            >
-              <p className="card-label">{card.label}</p>
-              <h2 className="card-title">{card.title}</h2>
-              <p className="card-summary">{card.summary}</p>
-
-              {card.type === 'hero' && <span className="hero-orb" aria-hidden="true" />}
-
-              {card.type === 'status' && (
-                <div className="status-line">
-                  <span className="status-dot" aria-hidden="true" />
-                  <span>{card.statusText}</span>
-                </div>
-              )}
-
-              {card.type === 'project' && <span className="project-accent" aria-hidden="true" />}
-            </button>
-          ))}
+          {portfolioCards.map((card) => {
+            const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
+            return (
+              <button
+                className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
+                key={card.id}
+                onClick={(e) => handleCardClick(card.id, e.currentTarget)}
+                type="button"
+              >
+                <p className="card-label">{card.label}</p>
+                <h2 className="card-title">{card.title}</h2>
+                <p className="card-summary">{card.summary}</p>
+                {card.type === 'status' && (
+                  <div className="status-line">
+                    <span className="status-dot" aria-hidden="true" />
+                    <span>{card.statusText}</span>
+                  </div>
+                )}
+                {card.type === 'project' && <span className="project-accent" aria-hidden="true" />}
+              </button>
+            );
+          })}
         </section>
       </main>
 
-      <AnimatePresence>
+      {/* Flying flip card */}
+      <AnimatePresence onExitComplete={handleExitComplete}>
         {activeCard && (
-          <>
-            <motion.button
-              aria-label="Close active card"
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setActiveCardId(null)}
-              transition={{ duration: 0.2 }}
-              type="button"
-            />
-
-            <motion.div
-              className="modal-viewport"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <motion.article
-                className="portfolio-modal"
-                initial={{ rotateY: 90, scale: 0.6, opacity: 0 }}
-                animate={{ rotateY: 0, scale: 1, opacity: 1 }}
-                exit={{ rotateY: 90, scale: 0.6, opacity: 0 }}
-                onClick={(event) => event.stopPropagation()}
-                transition={flipTransition}
-              >
-                <header className="portfolio-modal-header">
-                  <div>
-                    <p className="modal-label">{activeCard.label}</p>
-                    <h2 className="modal-title">{activeCard.title}</h2>
-                  </div>
-                  <button
-                    aria-label="Close modal"
-                    className="modal-close"
-                    onClick={() => setActiveCardId(null)}
-                    type="button"
-                  >
-                    ✕
-                  </button>
-                </header>
-
-                <motion.div
-                  className="portfolio-modal-body"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={modalBodyVariants}
-                >
-                  <ModalBody card={activeCard} />
-                </motion.div>
-              </motion.article>
-            </motion.div>
-          </>
+          <FlipCard
+            key={activeCard.id}
+            card={activeCard}
+            fromRect={flipState!.fromRect}
+            onClose={handleClose}
+          />
         )}
       </AnimatePresence>
     </div>
