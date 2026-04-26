@@ -10,11 +10,6 @@ export type CardType =
   | 'vision'
   | 'skills';
 
-export interface CardLayout {
-  column: string;
-  row?: string;
-}
-
 export interface CardBase {
   id: string;
   type: CardType;
@@ -22,7 +17,6 @@ export interface CardBase {
   title: string;
   summary: string;
   placementClass: string;
-  layout: CardLayout;
   nonClickable?: boolean;
 }
 
@@ -162,10 +156,6 @@ export const portfolioCards: PortfolioCard[] = [
     nonClickable: true,
     name: 'Kian Tamjidi',
     subtitle: 'Developer & Product Designer',
-    layout: {
-      column: 'span 8',
-      row: 'span 2',
-    },
   },
   {
     id: 'about',
@@ -183,9 +173,6 @@ export const portfolioCards: PortfolioCard[] = [
       'Interfaces should reward attention without demanding it.',
       'Small, frequent releases beat large speculative rewrites.',
     ],
-    layout: {
-      column: 'span 4',
-    },
   },
   {
     id: 'social',
@@ -216,9 +203,6 @@ export const portfolioCards: PortfolioCard[] = [
         href: '#',
       },
     ],
-    layout: {
-      column: 'span 4',
-    },
   },
   {
     id: 'experience',
@@ -256,9 +240,6 @@ export const portfolioCards: PortfolioCard[] = [
         isRecent: false,
       },
     ],
-    layout: {
-      column: 'span 7',
-    },
   },
   {
     id: 'education',
@@ -276,9 +257,6 @@ export const portfolioCards: PortfolioCard[] = [
         modules: ['Algorithms & Data Structures', 'Human-Computer Interaction', 'Machine Learning', 'Software Engineering', 'Databases'],
       },
     ],
-    layout: {
-      column: 'span 5',
-    },
   },
   {
     id: 'certifications',
@@ -309,9 +287,6 @@ export const portfolioCards: PortfolioCard[] = [
         date: '2022',
       },
     ],
-    layout: {
-      column: 'span 5',
-    },
   },
   {
     id: 'skills',
@@ -342,9 +317,6 @@ export const portfolioCards: PortfolioCard[] = [
         items: ['Product Thinking', 'Stakeholder Comms', 'Estimation', 'Cross-functional Collab'],
       },
     ],
-    layout: {
-      column: 'span 5',
-    },
   },
   {
     id: 'projects',
@@ -419,10 +391,6 @@ export const portfolioCards: PortfolioCard[] = [
         links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
       },
     ],
-    layout: {
-      column: 'span 7',
-      row: 'span 2',
-    },
   },
   {
     id: 'vision',
@@ -440,8 +408,5 @@ export const portfolioCards: PortfolioCard[] = [
       'Ship products that measurably improve how people work',
       'Eventually lead product strategy on a focused team',
     ],
-    layout: {
-      column: 'span 12',
-    },
   },
 ];
