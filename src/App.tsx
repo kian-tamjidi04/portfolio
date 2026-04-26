@@ -37,22 +37,6 @@ const modalBodyVariants = {
 };
 
 function ModalBody({ card }: { card: PortfolioCard }) {
-  if (card.type === 'hero') {
-    return (
-      <>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">
-            {card.name} builds thoughtful digital products where interaction quality
-            and engineering reliability move together.
-          </p>
-        </motion.section>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">{card.subtitle}</p>
-        </motion.section>
-      </>
-    );
-  }
-
   if (card.type === 'certifications') {
     return (
       <div className="modal-list">

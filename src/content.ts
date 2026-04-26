@@ -72,12 +72,6 @@ export interface SkillCategory {
   items: string[];
 }
 
-export interface HeroCard extends CardBase {
-  type: 'hero';
-  name: string;
-  subtitle: string;
-}
-
 export interface CertificationsCard extends CardBase {
   type: 'certifications';
   certs: CertItem[];
@@ -125,7 +119,6 @@ export interface SkillsCard extends CardBase {
 }
 
 export type PortfolioCard =
-  | HeroCard
   | CertificationsCard
   | SocialCard
   | AboutCard
