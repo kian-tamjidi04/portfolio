@@ -131,8 +131,8 @@ a {
 /*
   Row 1–2: hero (col 1–8, rows 1–2) │ about (col 9–12) │ social (col 9–12)
   Row 3:   experience (col 1–7) │ education (col 8–12)
-  Row 4:   certifications (col 1–5) │ skills (col 6–12)
-  Row 5:   project-01 (col 1–5) │ project-02 (col 6–9) │ project-03 (col 10–12)
+  Row 4:   certifications (col 1–5) │ projects (col 6–12, spans 2 rows)
+  Row 5:   what-i-use (col 1–5)
   Row 6:   vision (col 1–12)
 */
 
@@ -142,7 +142,8 @@ a {
 }
 
 .place-certifications {
-  grid-column: span 5;
+  grid-column: 1 / span 5;
+  grid-row: 4;
 }
 
 .place-social {
@@ -166,19 +167,17 @@ a {
 }
 
 .place-skills {
-  grid-column: span 7;
+  grid-column: 1 / span 5;
+  grid-row: 5;
 }
 
 .place-project-01 {
   grid-column: span 5;
 }
 
-.place-project-02 {
-  grid-column: span 4;
-}
-
-.place-project-03 {
-  grid-column: span 3;
+.place-projects {
+  grid-column: 6 / -1;
+  grid-row: 4 / span 2;
 }
 
 /* ─── Cards ──────────────────────────────────────────────────────── */
@@ -713,6 +712,128 @@ a {
   border-color: var(--accent);
 }
 
+/* ─── Projects Parent Card ───────────────────────────────────────── */
+.projects-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.project-preview-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-subtle);
+  padding: 18px;
+  min-height: 150px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-preview-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.14);
+}
+
+.project-preview-label {
+  margin: 0 0 8px;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.project-preview-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.project-preview-summary {
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.project-focus-scrim {
+  position: fixed;
+  inset: 0;
+  border: 0;
+  z-index: 55;
+  background: rgba(10, 7, 6, 0.48);
+}
+
+.project-focus-wrapper {
+  position: fixed;
+  z-index: 60;
+  perspective: 1400px;
+}
+
+.project-preview-card.project-preview-card-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+
+.project-focus-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.project-focus-face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.project-focus-front {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-focus-back {
+  transform: rotateX(180deg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-modal);
+}
+
+.project-focus-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.project-focus-title {
+  margin: 8px 0 0;
+  font-size: 1.45rem;
+  color: var(--text-primary);
+  font-family: 'DM Serif Display', serif;
+}
+
+.project-focus-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: auto;
+}
+
 /* ─── Keyframes ──────────────────────────────────────────────────── */
 @keyframes pulse-status {
   0% {
@@ -746,9 +867,8 @@ a {
     Row 1: hero(6)                             = 6
     Row 2: about(3) + social(3)                = 6
     Row 3: experience(4) + education(2)        = 6
-    Row 4: certifications(3) + skills(3)       = 6
-    Row 5: project-01(3) + project-02(3)       = 6
-    Row 6: project-03(6)                       = 6
+    Row 4: certifications(3) + projects(3)
+    Row 5: project-01(3) + projects(3)
     Row 7: vision(6)                           = 6
   */
 
@@ -766,7 +886,13 @@ a {
   }
 
   .place-certifications {
-    grid-column: span 3;
+    grid-column: 1 / span 3;
+    grid-row: 4;
+  }
+
+  .place-skills {
+    grid-column: 1 / span 3;
+    grid-row: 5;
   }
 
   .place-social {
@@ -789,20 +915,18 @@ a {
     grid-column: span 4;
   }
 
-  .place-skills {
-    grid-column: span 3;
-  }
-
   .place-project-01 {
     grid-column: span 3;
   }
 
-  .place-project-02 {
-    grid-column: span 3;
+  .place-projects {
+    grid-column: 4 / -1;
+    grid-row: 4 / span 2;
   }
 
-  .place-project-03 {
-    grid-column: span 6;
+  .projects-preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 }
 
@@ -826,7 +950,7 @@ a {
     Row 3:  about(1)     + vision(1)             = 2
     Row 4:  education(1) + experience(1)         = 2
     Row 5:  skills(1)    + project-01(1)         = 2
-    Row 6:  project-02(1)+ project-03(1)         = 2
+    Row 6:  projects(2)                           = 2
   */
 
   .place-hero {
@@ -842,10 +966,17 @@ a {
   .place-experience,
   .place-skills,
   .place-project-01,
-  .place-project-02,
-  .place-project-03 {
+  .place-projects {
     grid-column: span 1;
     grid-row: auto;
+  }
+
+  .place-projects {
+    grid-column: 1 / -1;
+  }
+
+  .projects-preview-grid {
+    grid-template-columns: 1fr;
   }
 
   .card-hero {
@@ -888,8 +1019,7 @@ a {
   .place-experience,
   .place-skills,
   .place-project-01,
-  .place-project-02,
-  .place-project-03 {
+  .place-projects {
     grid-column: 1 / -1;
     grid-row: auto;
   }

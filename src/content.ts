@@ -5,6 +5,7 @@ export type CardType =
   | 'about'
   | 'experience'
   | 'project'
+  | 'projects'
   | 'education'
   | 'vision'
   | 'skills';
@@ -50,6 +51,15 @@ export interface TagItem {
 export interface ExternalLink {
   label: string;
   href: string;
+}
+
+export interface ProjectPreviewItem {
+  id: string;
+  title: string;
+  summary: string;
+  stack: TagItem[];
+  impact: string[];
+  links: ExternalLink[];
 }
 
 export interface CertItem {
@@ -108,6 +118,11 @@ export interface ProjectCard extends CardBase {
   links: ExternalLink[];
 }
 
+export interface ProjectsCard extends CardBase {
+  type: 'projects';
+  items: ProjectPreviewItem[];
+}
+
 export interface EducationCard extends CardBase {
   type: 'education';
   entries: EducationEntry[];
@@ -131,6 +146,7 @@ export type PortfolioCard =
   | AboutCard
   | ExperienceCard
   | ProjectCard
+  | ProjectsCard
   | EducationCard
   | VisionCard
   | SkillsCard;
@@ -327,89 +343,92 @@ export const portfolioCards: PortfolioCard[] = [
       },
     ],
     layout: {
-      column: 'span 7',
-    },
-  },
-  {
-    id: 'project-01',
-    type: 'project',
-    label: 'Project 01',
-    title: 'Signal Board',
-    summary: 'A focused product analytics workspace for feature teams.',
-    placementClass: 'place-project-01',
-    imageTitle: 'Signal Board Preview',
-    description:
-      'Signal Board helps teams track behavioral patterns without drowning in dashboards. It blends event summaries, release context, and lightweight annotation in one place.',
-    impact: ['Reduced reporting setup time by 42%', 'Raised team insight-sharing cadence'],
-    stack: [
-      { name: 'React', primary: true },
-      { name: 'TypeScript', primary: true },
-      { name: 'PostgreSQL' },
-      { name: 'Framer Motion' },
-    ],
-    links: [
-      { label: 'Live Site', href: '#' },
-      { label: 'GitHub', href: '#' },
-    ],
-    layout: {
       column: 'span 5',
     },
   },
   {
-    id: 'project-02',
-    type: 'project',
-    label: 'Project 02',
-    title: 'Sprint Atlas',
-    summary: 'A planning layer that maps priorities to weekly delivery.',
-    placementClass: 'place-project-02',
-    imageTitle: 'Sprint Atlas Preview',
-    description:
-      'Sprint Atlas is a project orchestration tool that turns strategy notes into clear sprint outputs. The interface emphasizes progress confidence and communication clarity.',
-    impact: ['Improved planning confidence scores', 'Cut rollover tasks across two squads'],
-    stack: [
-      { name: 'Next.js', primary: true },
-      { name: 'Node', primary: true },
-      { name: 'Prisma' },
-      { name: 'Railway' },
-    ],
-    links: [
-      { label: 'Live Site', href: '#' },
-      { label: 'GitHub', href: '#' },
+    id: 'projects',
+    type: 'projects',
+    label: 'projects',
+    title: 'what I build',
+    summary: 'Selected experiments, products, and systems in progress.',
+    placementClass: 'place-projects',
+    items: [
+      {
+        id: 'project-01',
+        title: 'Project One',
+        summary: 'A placeholder concept focused on practical workflow improvements.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'React', primary: true }, { name: 'TypeScript', primary: true }, { name: 'API' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-02',
+        title: 'Project Two',
+        summary: 'A placeholder concept for a data-rich product experience.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'Next.js', primary: true }, { name: 'Node.js' }, { name: 'PostgreSQL' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-03',
+        title: 'Project Three',
+        summary: 'A placeholder concept designed around team collaboration.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'Figma', primary: true }, { name: 'Framer Motion' }, { name: 'Design System' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-04',
+        title: 'Project Four',
+        summary: 'A placeholder concept with an emphasis on onboarding clarity.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'Vite', primary: true }, { name: 'React Query' }, { name: 'Tailwind CSS' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-05',
+        title: 'Project Five',
+        summary: 'A placeholder concept for decision-support tooling.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'Python', primary: true }, { name: 'FastAPI' }, { name: 'OpenAI API' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-06',
+        title: 'Project Six',
+        summary: 'A placeholder concept for simplifying recurring operations.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'Docker', primary: true }, { name: 'Redis' }, { name: 'Celery' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-07',
+        title: 'Project Seven',
+        summary: 'A placeholder concept for mobile-first product delivery.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'React Native', primary: true }, { name: 'Expo' }, { name: 'Supabase' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
+      {
+        id: 'project-08',
+        title: 'Project Eight',
+        summary: 'A placeholder concept centered on analytics and reporting.',
+        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
+        stack: [{ name: 'D3', primary: true }, { name: 'TypeScript' }, { name: 'PostgreSQL' }],
+        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+      },
     ],
     layout: {
-      column: 'span 4',
-    },
-  },
-  {
-    id: 'project-03',
-    type: 'project',
-    label: 'Project 03',
-    title: 'Briefcase AI',
-    summary: 'An assistant for summarising project context before meetings.',
-    placementClass: 'place-project-03',
-    imageTitle: 'Briefcase AI Preview',
-    description:
-      'Briefcase AI pulls from notes and tickets to generate concise pre-read briefs. It helps teams enter meetings with aligned context and fewer repeated explanations.',
-    impact: ['Saved prep time before stakeholder syncs', 'Improved handoff quality across teams'],
-    stack: [
-      { name: 'Python', primary: true },
-      { name: 'FastAPI', primary: true },
-      { name: 'OpenAI API' },
-      { name: 'Docker' },
-    ],
-    links: [
-      { label: 'Live Site', href: '#' },
-      { label: 'GitHub', href: '#' },
-    ],
-    layout: {
-      column: 'span 3',
+      column: 'span 7',
+      row: 'span 2',
     },
   },
   {
     id: 'vision',
     type: 'vision',
-    label: "Where I'm going",
-    title: 'The next chapter',
+    label: 'The next chapter',
+    title: "Where I'm going",
     summary: 'What I want to build, and the kind of work that drives me forward.',
     placementClass: 'place-vision',
     body: [

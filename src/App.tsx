@@ -6,11 +6,12 @@ import {
   faBriefcase,
   faBullhorn,
   faCircleUser,
+  faHammer,
   faRocket,
   faScrewdriverWrench,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { portfolioCards, type PortfolioCard } from './content';
+import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
@@ -55,10 +56,19 @@ const cardPreviewIcons = {
   experience: faBriefcase,
   education: faBook,
   skills: faScrewdriverWrench,
+  projects: faHammer,
   vision: faRocket,
 } as const;
 
-function ModalBody({ card }: { card: PortfolioCard }) {
+function ModalBody({
+  card,
+  onProjectPreviewClick,
+  focusedProjectId,
+}: {
+  card: PortfolioCard;
+  onProjectPreviewClick: (item: ProjectPreviewItem, el: HTMLButtonElement) => void;
+  focusedProjectId: string | null;
+}) {
   if (card.type === 'certifications') {
     return (
       <>
@@ -257,6 +267,26 @@ function ModalBody({ card }: { card: PortfolioCard }) {
       </>
     );
   }
+
+  if (card.type === 'projects') {
+    return (
+      <section className="projects-preview-grid" aria-label="Projects overview cards">
+        {card.items.map((item) => (
+          <motion.button
+            className={`project-preview-card${focusedProjectId === item.id ? ' project-preview-card-hidden' : ''}`}
+            key={item.id}
+            variants={modalItemVariants}
+            onClick={(event) => onProjectPreviewClick(item, event.currentTarget)}
+            type="button"
+          >
+            <p className="project-preview-label">{item.id.replace('-', ' ')}</p>
+            <h3 className="project-preview-title">{item.title}</h3>
+            <p className="project-preview-summary">{item.summary}</p>
+          </motion.button>
+        ))}
+      </section>
+    );
+  }
 }
 
 /* ─── Flying flip card ───────────────────────────────────────────── */
@@ -269,10 +299,16 @@ interface FlipCardProps {
   onClose: () => void;
 }
 
+interface ProjectFocusState {
+  item: ProjectPreviewItem;
+  fromRect: FromRect;
+}
+
 function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   const [modalRect, setModalRect] = useState(() => getModalRect());
   const [modalHeight, setModalHeight] = useState(modalRect.height);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
+  const [projectFocus, setProjectFocus] = useState<ProjectFocusState | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -314,11 +350,53 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
   useEffect(() => {
     setIsContentRevealed(false);
+    setProjectFocus(null);
     const revealTimer = window.setTimeout(() => {
       setIsContentRevealed(true);
     }, CONTENT_REVEAL_DELAY * 1000);
     return () => window.clearTimeout(revealTimer);
   }, [card.id]);
+
+  const projectFocusRect = useMemo(() => {
+    const headerHeight = headerRef.current?.offsetHeight ?? 0;
+    const topOffset = headerHeight + 20;
+    const availableHeight = Math.max(220, modalHeight - topOffset);
+    return {
+      left: modalRect.left,
+      top: modalRect.top + topOffset,
+      width: modalRect.width,
+      height: availableHeight,
+    };
+  }, [modalHeight, modalRect]);
+
+  const handleProjectPreviewClick = useCallback((item: ProjectPreviewItem, el: HTMLButtonElement) => {
+    const rect = el.getBoundingClientRect();
+    setProjectFocus({
+      item,
+      fromRect: {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      },
+    });
+  }, []);
+
+  const closeProjectFocus = useCallback(() => {
+    setProjectFocus(null);
+  }, []);
+
+  useEffect(() => {
+    if (!projectFocus) return undefined;
+    const onProjectEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.stopPropagation();
+      event.preventDefault();
+      setProjectFocus(null);
+    };
+    window.addEventListener('keydown', onProjectEscape, true);
+    return () => window.removeEventListener('keydown', onProjectEscape, true);
+  }, [projectFocus]);
 
   return (
     <>
@@ -378,11 +456,106 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
               variants={modalBodyVariants}
               ref={bodyRef}
             >
-              <ModalBody card={card} />
+              <ModalBody
+                card={card}
+                focusedProjectId={projectFocus?.item.id ?? null}
+                onProjectPreviewClick={handleProjectPreviewClick}
+              />
             </motion.div>
           </div>
         </motion.div>
       </motion.div>
+
+      <AnimatePresence>
+        {projectFocus && (
+          <>
+            <motion.button
+              className="project-focus-scrim"
+              aria-label="Close project details"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeProjectFocus}
+              type="button"
+            />
+            <motion.div
+              className="project-focus-wrapper"
+              initial={{
+                left: projectFocus.fromRect.left,
+                top: projectFocus.fromRect.top,
+                width: projectFocus.fromRect.width,
+                height: projectFocus.fromRect.height,
+              }}
+              animate={projectFocusRect}
+              exit={{
+                left: projectFocus.fromRect.left,
+                top: projectFocus.fromRect.top,
+                width: projectFocus.fromRect.width,
+                height: projectFocus.fromRect.height,
+              }}
+              transition={{ duration: 0.48, ease: FLIP_EASE }}
+            >
+              <motion.div
+                className="project-focus-inner"
+                initial={{ rotateX: 0 }}
+                animate={{ rotateX: 180 }}
+                exit={{ rotateX: 0 }}
+                transition={{ duration: 0.48, ease: FLIP_EASE }}
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div className="project-focus-face project-focus-front">
+                  <h3 className="project-preview-title">{projectFocus.item.title}</h3>
+                  <p className="project-preview-summary">{projectFocus.item.summary}</p>
+                </div>
+                <div className="project-focus-face project-focus-back">
+                  <header className="project-focus-header">
+                    <div>
+                      <p className="modal-label">Project details</p>
+                      <h3 className="project-focus-title">{projectFocus.item.title}</h3>
+                    </div>
+                    <button
+                      aria-label="Close focused project"
+                      className="modal-close"
+                      onClick={closeProjectFocus}
+                      type="button"
+                    >
+                      ✕
+                    </button>
+                  </header>
+                  <div className="project-focus-body">
+                    <section className="modal-section">
+                      <p className="modal-text">{projectFocus.item.summary}</p>
+                    </section>
+                    <section className="modal-section">
+                      <h3 className="modal-row-title">Impact</h3>
+                      <div className="pill-grid">
+                        {projectFocus.item.impact.map((impactPoint) => <span className="pill" key={impactPoint}>{impactPoint}</span>)}
+                      </div>
+                    </section>
+                    <section className="modal-section">
+                      <h3 className="modal-row-title">Stack</h3>
+                      <div className="tag-row">
+                        {projectFocus.item.stack.map((tag) => (
+                          <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>{tag.name}</span>
+                        ))}
+                      </div>
+                    </section>
+                    <section className="modal-section">
+                      <h3 className="modal-row-title">Links</h3>
+                      <div className="link-row">
+                        {projectFocus.item.links.map((link) => (
+                          <a href={link.href} key={link.label} target="_blank" rel="noreferrer">{link.label}</a>
+                        ))}
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }
