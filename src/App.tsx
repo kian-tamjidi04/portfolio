@@ -149,7 +149,7 @@ function ModalBody({
           <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
             <div className="skill-category">
               <p className="skill-category-label">{cat.label}</p>
-              <div className="tag-row">
+              <div className="d-flex flex-wrap gap-2">
                 {cat.items.map((item) => (
                   <span className="tag" key={item}>{item}</span>
                 ))}
@@ -175,7 +175,7 @@ function ModalBody({
         {card.entries.map((entry) => (
           <motion.section className="modal-section education-modules-section" key={`${entry.degree}-modules`} variants={modalItemVariants}>
             <h3 className="modal-row-title">Key Modules</h3>
-            <div className="tag-row education-modules-tags">
+            <div className="d-flex flex-wrap gap-2 education-modules-tags">
               {entry.modules.map((m) => (
                 <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
               ))}
@@ -224,7 +224,7 @@ function ModalBody({
               <p className="timeline-company">{role.company}</p>
               <p className="timeline-dates">{role.dates}</p>
               <p className="modal-text">{role.impact}</p>
-              <div className="tag-row">
+              <div className="d-flex flex-wrap gap-2">
                 {role.skills.map((s) => <span className="tag" key={s}>{s}</span>)}
               </div>
             </div>
@@ -247,13 +247,13 @@ function ModalBody({
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
           <h3 className="modal-row-title">Impact</h3>
-          <div className="pill-grid">
+          <div className="d-flex flex-wrap gap-2">
             {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
           </div>
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
           <h3 className="modal-row-title">Stack</h3>
-          <div className="tag-row">
+          <div className="d-flex flex-wrap gap-2">
             {card.stack.map((i) => (
               <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
             ))}
@@ -261,7 +261,7 @@ function ModalBody({
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
           <h3 className="modal-row-title">Links</h3>
-          <div className="link-row">
+          <div className="link-row d-flex gap-2">
             {card.links.map((l) => (
               <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
             ))}
@@ -542,13 +542,13 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                     </section>
                     <section className="modal-section">
                       <h3 className="modal-row-title">Impact</h3>
-                      <div className="pill-grid">
+                      <div className="d-flex flex-wrap gap-2">
                         {projectFocus.item.impact.map((impactPoint) => <span className="pill" key={impactPoint}>{impactPoint}</span>)}
                       </div>
                     </section>
                     <section className="modal-section">
                       <h3 className="modal-row-title">Stack</h3>
-                      <div className="tag-row">
+                      <div className="d-flex flex-wrap gap-2">
                         {projectFocus.item.stack.map((tag) => (
                           <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>{tag.name}</span>
                         ))}
@@ -556,7 +556,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                     </section>
                     <section className="modal-section">
                       <h3 className="modal-row-title">Links</h3>
-                      <div className="link-row">
+                      <div className="link-row d-flex gap-2">
                         {projectFocus.item.links.map((link) => (
                           <a href={link.href} key={link.label} target="_blank" rel="noreferrer">{link.label}</a>
                         ))}
@@ -608,7 +608,7 @@ function HealthBar({ viewedCount }: { viewedCount: number }) {
       <div className="health-bar-track">
         <div
           className={`health-bar-fill${isEmpty ? ' health-bar-empty' : ''}`}
-          style={{ height: `${pct}%` }}
+          style={{ '--health-fill-pct': `${pct}%` } as React.CSSProperties}
         >
           {!isEmpty && <div className="health-bar-wave" />}
         </div>

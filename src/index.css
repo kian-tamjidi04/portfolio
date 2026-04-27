@@ -32,7 +32,7 @@
 }
 
 /* Light mode override */
-.light {
+html.light {
   --bg: #f5ede6;
   --surface: #ffffff;
   --surface-subtle: #fdf6f1;
@@ -77,6 +77,7 @@ body,
 #root {
   margin: 0;
   min-height: 100%;
+  font-family: 'AppleFont', serif;
 }
 
 body {
@@ -89,7 +90,11 @@ body {
 }
 
 button,
-a {
+a,
+input,
+textarea,
+select,
+option {
   font-family: inherit;
 }
 
@@ -123,7 +128,7 @@ a {
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   height: 100vh;
-  padding: 22px 22px 22px 86px;
+  padding: 22px 22px 22px 132px;
   background: var(--bg);
   display: flex;
   align-items: center;
@@ -253,31 +258,6 @@ a {
     inset 0 -20px 30px rgba(0, 0, 0, 0.16);
 }
 
-/* ─── Viewed card (green hue) ────────────────────────────────────── */
-.portfolio-card.card-viewed {
-  border-color: var(--viewed-border);
-  background: linear-gradient(160deg,
-      var(--surface),
-      color-mix(in srgb, var(--accent-emerald) 9%, var(--surface)));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.14),
-    0 0 0 1px var(--viewed-border),
-    0 4px 18px var(--viewed-shadow);
-}
-
-.portfolio-card.card-viewed:hover {
-  border-color: var(--accent-emerald);
-  background: linear-gradient(160deg,
-      var(--surface),
-      color-mix(in srgb, var(--accent-emerald) 14%, var(--surface)));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    inset 0 -24px 34px rgba(0, 0, 0, 0.18),
-    0 0 0 1px var(--accent-emerald),
-    0 6px 24px var(--viewed-shadow);
-}
-
 /* ─── Card invisible while flying card is live ──────────────────── */
 .portfolio-card.card-hidden {
   opacity: 0;
@@ -305,6 +285,11 @@ a {
   color: var(--text-primary);
 }
 
+/* Guardrail: keep card titles token-driven in default dark mode. */
+html:not(.light) .card-title {
+  color: var(--text-primary);
+}
+
 .card-summary {
   max-width: 52ch;
   margin: 0;
@@ -322,6 +307,10 @@ a {
   pointer-events: none;
 }
 
+.card-viewed .card-preview-icon {
+  color: var(--accent-emerald);
+}
+
 .card-hero {
   justify-content: flex-end;
   min-height: 365px;
@@ -335,7 +324,7 @@ a {
 .flip-scrim {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 900;
   background: rgba(10, 7, 6, 0.55);
   backdrop-filter: blur(1px);
   cursor: pointer;
@@ -345,13 +334,13 @@ a {
 /* ─── Flying flip card wrapper (position + size driven by framer-motion) */
 .flip-wrapper {
   position: fixed;
-  z-index: 50;
+  z-index: 910;
   perspective: 1600px;
   transition: transform 0.42s ease, filter 0.42s ease, opacity 0.42s ease;
 }
 
 .flip-wrapper.flip-wrapper-nested-focus {
-  transform: scale(0.94) translateY(6px);
+  transform: scale(0.94);
   filter: saturate(0.82) blur(0.8px);
   opacity: 0.86;
 }
@@ -380,6 +369,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-end;
   gap: 14px;
   padding: 22px;
   box-shadow:
@@ -688,13 +678,6 @@ a {
   margin-top: 10px;
 }
 
-/* ─── Tags ───────────────────────────────────────────────────────── */
-.tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .tag {
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -724,12 +707,6 @@ a {
   text-transform: uppercase;
 }
 
-.pill-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 .pill {
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 10px;
@@ -737,12 +714,6 @@ a {
   font-size: 0.8rem;
   color: var(--accent-sky);
   background: var(--accent-sky-dim);
-}
-
-/* ─── Links ──────────────────────────────────────────────────────── */
-.link-row {
-  display: flex;
-  gap: 8px;
 }
 
 .link-row a {
@@ -811,13 +782,13 @@ a {
   position: fixed;
   inset: 0;
   border: 0;
-  z-index: 55;
+  z-index: 920;
   background: rgba(10, 7, 6, 0.48);
 }
 
 .project-focus-wrapper {
   position: fixed;
-  z-index: 60;
+  z-index: 930;
   perspective: 1400px;
 }
 
@@ -924,21 +895,21 @@ a {
 
 .health-bar-container {
   position: fixed;
-  left: 20px;
+  left: 26px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 90;
+  z-index: 80;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   pointer-events: none;
   user-select: none;
 }
 
 .health-bar-track {
-  width: 10px;
-  height: 180px;
+  width: 26px;
+  height: clamp(320px, 72vh, 680px);
   border-radius: 999px;
   border: 1px solid var(--health-track-border);
   background: var(--health-track);
@@ -951,6 +922,7 @@ a {
 
 .health-bar-fill {
   width: 100%;
+  height: var(--health-fill-pct, 0%);
   border-radius: 999px;
   background: var(--health-liquid);
   position: relative;
@@ -985,21 +957,21 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: 4px;
 }
 
 .health-bar-pct {
-  font-size: 0.6rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--health-liquid);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   line-height: 1;
 }
 
 .health-bar-sub {
-  font-size: 0.5rem;
+  font-size: 0.74rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   color: var(--text-muted);
   line-height: 1;
 }
@@ -1007,14 +979,47 @@ a {
 /* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
 @media (max-width: 900px) {
   .portfolio-page {
-    padding: 14px;
+    padding: 86px 14px 14px;
     align-items: flex-start;
     height: auto;
     overflow: auto;
   }
 
   .health-bar-container {
-    display: none;
+    left: 50%;
+    top: 16px;
+    transform: translateX(-50%);
+    width: min(920px, calc(100vw - 28px));
+    flex-direction: row;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .health-bar-track {
+    width: 100%;
+    height: 22px;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .health-bar-fill {
+    height: 100%;
+    width: var(--health-fill-pct, 0%);
+    transition: width 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: none;
+  }
+
+  .health-bar-label {
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .health-bar-pct {
+    font-size: 0.95rem;
+  }
+
+  .health-bar-sub {
+    font-size: 0.68rem;
   }
 
   .portfolio-grid {
@@ -1083,10 +1088,28 @@ a {
 /* ─── Responsive: mobile (≤ 560px) ───────────────────────────────── */
 @media (max-width: 560px) {
   .portfolio-page {
-    padding: 10px;
+    padding: 82px 10px 10px;
     align-items: flex-start;
     height: auto;
     overflow: auto;
+  }
+
+  .health-bar-container {
+    top: 12px;
+    width: calc(100vw - 20px);
+    gap: 10px;
+  }
+
+  .health-bar-track {
+    height: 18px;
+  }
+
+  .health-bar-pct {
+    font-size: 0.85rem;
+  }
+
+  .health-bar-sub {
+    font-size: 0.62rem;
   }
 
   .portfolio-grid {
