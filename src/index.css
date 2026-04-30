@@ -273,17 +273,6 @@ option {
     inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
-/* ─── Custom Cursors ─────────────────────────────────────────────── */
-.card-hero:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E👋%3C/text%3E%3C/svg%3E") 16 16, default; }
-.card-about:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E👤%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-social:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E📣%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-experience:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E💼%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-education:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E📚%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-certifications:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E🏆%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-skills:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E🛠️%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-projects:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E🔨%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-.card-vision:hover { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' style='font-size:24px'%3E%3Ctext y='24'%3E🚀%3C/text%3E%3C/svg%3E") 16 16, pointer; }
-
 /* ─── Card invisible while flying card is live ──────────────────── */
 .portfolio-card.card-hidden {
   opacity: 0;
@@ -538,6 +527,7 @@ html:not(.light) .card-title {
 .modal-row-title {
   margin: 0;
   color: var(--text-primary);
+  font-size: var(--font-lg);
   /* letter-spacing: 0.1em; */
 }
 
