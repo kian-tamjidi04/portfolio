@@ -30,7 +30,7 @@
 
 /* Light mode override */
 html.light {
-  --bg: #f8f9fc;
+  --bg: #eeeeee;
   --surface: #ffffff;
   --surface-subtle: #eef0f5;
   --border: #d8dce8;
@@ -301,8 +301,8 @@ html:not(.light) .card-title {
   pointer-events: none;
 }
 
-.card-viewed .card-preview-icon {
-  color: var(--accent-emerald);
+.card-viewed {
+  background-color: color-mix(in srgb, var(--accent-emerald), transparent 50%);
 }
 
 .card-hero {

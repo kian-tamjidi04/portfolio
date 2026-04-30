@@ -691,7 +691,7 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      <ViewportProgress viewedCount={viewedCount} />
+      {/* <ViewportProgress viewedCount={viewedCount} /> */}
 
       {/* Dark-mode toggle */}
       <button
