@@ -79,9 +79,12 @@ function ModalBody({
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
             <div className="cert-row">
               <div className="cert-badge" aria-hidden="true">✦</div>
-              <div>
-                <div className="modal-row-title">{cert.name}</div>
-                <div className="modal-row-subtitle">{cert.issuer}</div>
+              <div className="d-flex flex-column">
+                <div className="timeline-title-row">
+                  <span className="timeline-role">{cert.name}</span>
+                  <span className="timeline-separator"> • </span>
+                  <span className="timeline-company">{cert.issuer}</span>
+                </div>
                 <div className="cert-date">{cert.date}</div>
               </div>
             </div>
@@ -590,7 +593,7 @@ function CardInner({ card }: { card: PortfolioCard }) {
           <FontAwesomeIcon icon={previewIcon} />
         </span>
       )}
-      <p className="card-label">{card.label}</p>
+      {card.type !== 'hero' && <p className="card-label">{card.label}</p>}
       <h2 className="card-title">{card.title}</h2>
       {/* <p className="card-summary">{card.summary}</p> */}
     </>

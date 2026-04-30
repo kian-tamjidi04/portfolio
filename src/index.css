@@ -533,7 +533,7 @@ html:not(.light) .card-title {
 
 .modal-row-subtitle {
   margin: 4px 0px;
-  font-size: var(--font-base);
+  font-size: var(--font-md);
   color: var(--accent-sky);
   /* font-weight: 600; */
   font-family: 'Bold';
@@ -553,8 +553,8 @@ html:not(.light) .card-title {
 }
 
 .cert-row:hover {
-  border-color: var(--accent);
-  background: var(--accent-dim);
+  border-color: var(--accent-sky);
+  background: var(--accent-sky-dim);
 }
 
 .cert-badge {
@@ -571,7 +571,7 @@ html:not(.light) .card-title {
 
 .cert-date {
   margin: 4px 0 0;
-  font-size: var(--font-base);
+  font-size: var(--font-md);
   color: var(--text-muted);
 }
 
@@ -667,17 +667,31 @@ html:not(.light) .card-title {
 
 .timeline-dot {
   position: absolute;
-  left: -19px;
-  top: 6px;
-  width: 9px;
-  height: 9px;
+  left: -22px;
+  top: 16px;
+  width: 15px;
+  height: 15px;
   border-radius: 999px;
   background: var(--border);
 }
 
 .timeline-dot.is-recent {
   background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-dim);
+  animation: pulse-recent 2s infinite;
+}
+
+@keyframes pulse-recent {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+  }
 }
 
 .timeline-content {
