@@ -1,7 +1,7 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  --bg: #0e0e11;
-  --surface: #16161c;
+  --bg: #16161c;
+  --surface: #23232b;
   --surface-subtle: #1f1f28;
   --border: #2a2a36;
   --accent: #f97316;
@@ -21,7 +21,7 @@
   --health-liquid-dim: rgba(45, 212, 191, 0.18);
   --health-track: rgba(45, 212, 191, 0.08);
   --health-track-border: rgba(45, 212, 191, 0.18);
-  --label-size: 14px;
+  --label-size: 16px;
   --card-radius: 16px;
   --modal-radius: 20px;
   --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
@@ -123,7 +123,7 @@ option {
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   height: 100vh;
-  padding: 22px 22px 22px 132px;
+  padding: 22px;
   background: var(--bg);
   display: flex;
   align-items: center;
@@ -226,18 +226,18 @@ option {
     grid-column 0.4s ease,
     width 0.4s ease,
     min-height 0.4s ease;
-  box-shadow:
+  /* box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
 .portfolio-card:hover {
   border-color: var(--accent);
   background: linear-gradient(160deg, var(--surface), color-mix(in srgb, var(--accent) 8%, var(--surface)));
-  box-shadow:
+  /* box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     inset 0 -24px 34px rgba(0, 0, 0, 0.24),
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent);
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent); */
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -248,9 +248,9 @@ option {
 .card-non-clickable:hover {
   border-color: var(--border);
   background: var(--surface);
-  box-shadow:
+  /* box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
 /* ─── Card invisible while flying card is live ──────────────────── */
@@ -264,7 +264,7 @@ option {
 .card-label {
   margin: 0;
   font-size: var(--label-size);
-  letter-spacing: 0.16em;
+  /* letter-spacing: 0.16em; */
   color: var(--text-muted);
   font-weight: 600;
 }
@@ -275,7 +275,7 @@ option {
   font-size: clamp(2rem, 3.2vw, 3.3rem);
   font-weight: 400;
   line-height: 0.97;
-  letter-spacing: -0.02em;
+  /* letter-spacing: -0.02em; */
   color: var(--text-primary);
 }
 
@@ -366,9 +366,9 @@ html:not(.light) .card-title {
   justify-content: flex-end;
   gap: 14px;
   padding: 22px;
-  box-shadow:
+  /* box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.16);
+    inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
 /* Back face */
@@ -381,11 +381,11 @@ html:not(.light) .card-title {
   transition: background-color 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease;
 }
 
-.flip-back.flip-back-nested-focus {
+/* .flip-back.flip-back-nested-focus {
   box-shadow:
     inset 0 0 0 1px color-mix(in oklab, var(--border) 78%, transparent),
     0 14px 28px rgba(0, 0, 0, 0.24);
-}
+} */
 
 .portfolio-modal {
   display: contents;
@@ -407,7 +407,7 @@ html:not(.light) .card-title {
 .modal-label {
   margin: 0;
   color: var(--accent);
-  letter-spacing: 0.14em;
+  /* letter-spacing: 0.14em; */
   font-size: var(--label-size);
   font-weight: 700;
 }
@@ -442,18 +442,14 @@ html:not(.light) .card-title {
 }
 
 .portfolio-modal-body {
-  overflow: auto;
   padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  flex: 1 1 auto;
-  min-height: 0;
 }
 
 .modal-section {
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border-left: 4px solid var(--border);
   padding: 16px;
   background: var(--surface-subtle);
 }
@@ -503,7 +499,7 @@ html:not(.light) .card-title {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 0.06em;
+  /* letter-spacing: 0.06em; */
 }
 
 .social-icon-image {
@@ -512,13 +508,12 @@ html:not(.light) .card-title {
 
 .modal-row-title {
   margin: 0;
-  font-size: 0.9rem;
   color: var(--text-primary);
-  letter-spacing: 0.1em;
+  /* letter-spacing: 0.1em; */
 }
 
 .modal-row-subtitle {
-  margin: 4px 0 10px;
+  margin: 4px 0px;
   font-size: 0.85rem;
   color: var(--accent-sky);
   font-weight: 600;
@@ -566,13 +561,10 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-subtle);
-  padding: 16px;
 }
 
 .skill-category-label {
-  margin: 0 0 10px;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  /* letter-spacing: 0.14em; */
   color: var(--accent);
   font-weight: 700;
 }
@@ -671,11 +663,10 @@ html:not(.light) .card-title {
 
 .tag {
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 15px;
   padding: 5px 10px;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  background: transparent;
 }
 
 .tag.is-primary {
@@ -694,7 +685,7 @@ html:not(.light) .card-title {
   place-items: center;
   color: var(--text-muted);
   font-size: 0.84rem;
-  letter-spacing: 0.06em;
+  /* letter-spacing: 0.06em; */
 }
 
 .pill {
@@ -749,7 +740,7 @@ html:not(.light) .card-title {
 .project-preview-label {
   margin: 0 0 8px;
   font-size: 0.66rem;
-  letter-spacing: 0.12em;
+  /* letter-spacing: 0.12em; */
   color: var(--text-muted);
 }
 
@@ -847,121 +838,35 @@ html:not(.light) .card-title {
   transition: background-color 0.34s ease;
 }
 
-
-
-/* ─── Health Bar ─────────────────────────────────────────────────── */
-@keyframes wave-shift {
-  0% {
-    transform: translateX(0) scaleY(1);
-  }
-
-  20% {
-    transform: translateX(-6%) scaleY(1.04);
-  }
-
-  40% {
-    transform: translateX(-12%) scaleY(0.97);
-  }
-
-  60% {
-    transform: translateX(-8%) scaleY(1.03);
-  }
-
-  80% {
-    transform: translateX(-4%) scaleY(0.98);
-  }
-
-  100% {
-    transform: translateX(0) scaleY(1);
-  }
-}
-
-@keyframes fill-rise {
-  from {
-    height: 0;
-  }
-}
-
-.health-bar-container {
+/* ─── Viewport progress border ─────────────────────────────────── */
+.viewport-progress {
   position: fixed;
-  left: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 80;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  inset: 0;
+  z-index: 90;
   pointer-events: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.health-bar-track {
-  width: 26px;
-  height: clamp(320px, 72vh, 680px);
-  border-radius: 999px;
-  border: 1px solid var(--health-track-border);
-  background: var(--health-track);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
-}
-
-.health-bar-fill {
+.viewport-progress-svg {
   width: 100%;
-  height: var(--health-fill-pct, 0%);
-  border-radius: 999px;
-  background: var(--health-liquid);
-  position: relative;
-  overflow: hidden;
-  transition: height 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
-  animation: fill-rise 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  box-shadow:
-    0 0 8px color-mix(in srgb, var(--health-liquid) 60%, transparent),
-    0 0 20px color-mix(in srgb, var(--health-liquid) 28%, transparent);
+  height: 100%;
+  display: block;
 }
 
-.health-bar-fill.health-bar-empty {
-  background: transparent;
-  box-shadow: none;
+.viewport-progress-path {
+  stroke: var(--health-liquid);
+  stroke-width: 2px;
+  stroke-linecap: butt;
+  filter:
+    drop-shadow(0 0 6px color-mix(in srgb, var(--health-liquid) 60%, transparent)) drop-shadow(0 0 16px color-mix(in srgb, var(--health-liquid) 28%, transparent));
+  transition: none;
+  /* Disable transition by default */
 }
 
-/* The wobbly liquid wave overlay */
-.health-bar-wave {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(255, 255, 255, 0.06) 40%,
-      rgba(255, 255, 255, 0.14) 70%,
-      rgba(255, 255, 255, 0.04) 100%);
-  border-radius: inherit;
-  animation: wave-shift 3.2s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.health-bar-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.health-bar-pct {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--health-liquid);
-  letter-spacing: 0.06em;
-  line-height: 1;
-}
-
-.health-bar-sub {
-  font-size: 0.74rem;
-  letter-spacing: 0.14em;
-  color: var(--text-muted);
-  line-height: 1;
+.viewport-progress-path.viewport-progress-ready {
+  transition: stroke-dashoffset 0.65s ease-out;
+  /* Enable transition only when ready */
 }
 
 /* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
@@ -971,43 +876,6 @@ html:not(.light) .card-title {
     align-items: flex-start;
     height: auto;
     overflow: auto;
-  }
-
-  .health-bar-container {
-    left: 50%;
-    top: 16px;
-    transform: translateX(-50%);
-    width: min(920px, calc(100vw - 28px));
-    flex-direction: row;
-    justify-content: center;
-    gap: 14px;
-  }
-
-  .health-bar-track {
-    width: 100%;
-    height: 22px;
-    flex-direction: row;
-    align-items: stretch;
-  }
-
-  .health-bar-fill {
-    height: 100%;
-    width: var(--health-fill-pct, 0%);
-    transition: width 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
-    animation: none;
-  }
-
-  .health-bar-label {
-    align-items: flex-start;
-    gap: 2px;
-  }
-
-  .health-bar-pct {
-    font-size: 0.95rem;
-  }
-
-  .health-bar-sub {
-    font-size: 0.68rem;
   }
 
   .portfolio-grid {
@@ -1080,24 +948,6 @@ html:not(.light) .card-title {
     align-items: flex-start;
     height: auto;
     overflow: auto;
-  }
-
-  .health-bar-container {
-    top: 12px;
-    width: calc(100vw - 20px);
-    gap: 10px;
-  }
-
-  .health-bar-track {
-    height: 18px;
-  }
-
-  .health-bar-pct {
-    font-size: 0.85rem;
-  }
-
-  .health-bar-sub {
-    font-size: 0.62rem;
   }
 
   .portfolio-grid {

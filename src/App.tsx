@@ -80,9 +80,9 @@ function ModalBody({
             <div className="cert-row">
               <div className="cert-badge" aria-hidden="true">✦</div>
               <div>
-                <h3 className="modal-row-title">{cert.name}</h3>
-                <p className="modal-row-subtitle">{cert.issuer}</p>
-                <p className="cert-date">{cert.date}</p>
+                <div className="modal-row-title">{cert.name}</div>
+                <div className="modal-row-subtitle">{cert.issuer}</div>
+                <div className="cert-date">{cert.date}</div>
               </div>
             </div>
           </motion.section>
@@ -95,7 +95,7 @@ function ModalBody({
     return (
       <>
         {card.links.map((link) => (
-          <motion.section className="modal-section modal-section-plain" key={link.platform} variants={modalItemVariants}>
+          <motion.section key={link.platform} variants={modalItemVariants}>
             <a
               className="social-row"
               href={link.href}
@@ -108,9 +108,9 @@ function ModalBody({
                   : <span>{link.platform}</span>}
               </div>
               <div>
-                <h3 className="modal-row-title">{link.platform}</h3>
-                <p className="modal-row-subtitle">{link.handle}</p>
-                {/* <p className="modal-text">{link.description}</p> */}
+                <div className="modal-row-title">{link.platform}</div>
+                <div className="modal-row-subtitle">{link.handle}</div>
+                {/* <div className="modal-text">{link.description}</div> */}
               </div>
             </a>
           </motion.section>
@@ -128,7 +128,7 @@ function ModalBody({
           </motion.section>
         ))}
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <h3 className="modal-row-title">Things I believe</h3>
+          <div className="modal-row-title">Things I believe</div>
           <ul className="belief-list">
             {card.beliefs.map((b) => (
               <li key={b}>
@@ -147,7 +147,7 @@ function ModalBody({
       <>
         {card.categories.map((cat) => (
           <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
-            <div className="skill-category">
+            <div className="skill-category p-3">
               <p className="skill-category-label">{cat.label}</p>
               <div className="d-flex flex-wrap gap-2">
                 {cat.items.map((item) => (
@@ -174,7 +174,7 @@ function ModalBody({
         ))}
         {card.entries.map((entry) => (
           <motion.section className="modal-section education-modules-section" key={`${entry.degree}-modules`} variants={modalItemVariants}>
-            <h3 className="modal-row-title">Key Modules</h3>
+            <div className="modal-row-title">Key Modules</div>
             <div className="d-flex flex-wrap gap-2 education-modules-tags">
               {entry.modules.map((m) => (
                 <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
@@ -195,7 +195,7 @@ function ModalBody({
           </motion.section>
         ))}
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <h3 className="modal-row-title">Goals</h3>
+          <div className="modal-row-title">Goals</div>
           <ul className="belief-list">
             {card.goals.map((g) => (
               <li key={g}>
@@ -246,13 +246,13 @@ function ModalBody({
           <p className="modal-text">{card.description}</p>
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <h3 className="modal-row-title">Impact</h3>
+          <div className="modal-row-title">Impact</div>
           <div className="d-flex flex-wrap gap-2">
             {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
           </div>
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <h3 className="modal-row-title">Stack</h3>
+          <div className="modal-row-title">Stack</div>
           <div className="d-flex flex-wrap gap-2">
             {card.stack.map((i) => (
               <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
@@ -260,7 +260,7 @@ function ModalBody({
           </div>
         </motion.section>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <h3 className="modal-row-title">Links</h3>
+          <div className="modal-row-title">Links</div>
           <div className="link-row d-flex gap-2">
             {card.links.map((l) => (
               <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
@@ -448,34 +448,28 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
           <div className={`flip-face flip-back${projectFocus ? ' flip-back-nested-focus' : ''}`}>
-            <header className="portfolio-modal-header" ref={headerRef}>
-              <div>
-                <p className="modal-label">{card.label}</p>
-                <h2 className="modal-title">{card.title}</h2>
-              </div>
-              <button
-                aria-label="Close modal"
-                className="modal-close"
-                onClick={onClose}
-                type="button"
+            <div style={{ width: modalRect.width, display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <header className="portfolio-modal-header" ref={headerRef}>
+                <div>
+                  <p className="modal-label">{card.label}</p>
+                  <h2 className="modal-title">{card.title}</h2>
+                </div>
+              </header>
+              <motion.div
+                className="portfolio-modal-body"
+                initial="hidden"
+                animate={isContentRevealed ? 'visible' : 'hidden'}
+                exit="hidden"
+                variants={modalBodyVariants}
+                ref={bodyRef}
               >
-                <FontAwesomeIcon icon={faCircleXmark} />
-              </button>
-            </header>
-            <motion.div
-              className="portfolio-modal-body"
-              initial="hidden"
-              animate={isContentRevealed ? 'visible' : 'hidden'}
-              exit="hidden"
-              variants={modalBodyVariants}
-              ref={bodyRef}
-            >
-              <ModalBody
-                card={card}
-                focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
-                onProjectPreviewClick={handleProjectPreviewClick}
-              />
-            </motion.div>
+                <ModalBody
+                  card={card}
+                  focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
+                  onProjectPreviewClick={handleProjectPreviewClick}
+                />
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -541,13 +535,13 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                       <p className="modal-text">{projectFocus.item.summary}</p>
                     </section>
                     <section className="modal-section">
-                      <h3 className="modal-row-title">Impact</h3>
+                      <div className="modal-row-title">Impact</div>
                       <div className="d-flex flex-wrap gap-2">
                         {projectFocus.item.impact.map((impactPoint) => <span className="pill" key={impactPoint}>{impactPoint}</span>)}
                       </div>
                     </section>
                     <section className="modal-section">
-                      <h3 className="modal-row-title">Stack</h3>
+                      <div className="modal-row-title">Stack</div>
                       <div className="d-flex flex-wrap gap-2">
                         {projectFocus.item.stack.map((tag) => (
                           <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>{tag.name}</span>
@@ -555,7 +549,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                       </div>
                     </section>
                     <section className="modal-section">
-                      <h3 className="modal-row-title">Links</h3>
+                      <div className="modal-row-title">Links</div>
                       <div className="link-row d-flex gap-2">
                         {projectFocus.item.links.map((link) => (
                           <a href={link.href} key={link.label} target="_blank" rel="noreferrer">{link.label}</a>
@@ -594,29 +588,52 @@ function CardInner({ card }: { card: PortfolioCard }) {
 
 /* ─── App ────────────────────────────────────────────────────────── */
 
-/* ─── Health bar (liquid wobble) ────────────────────────────────── */
+/* ─── Viewport progress border ────────────────────────────────── */
 
 const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
 const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
 
-function HealthBar({ viewedCount }: { viewedCount: number }) {
+function ViewportProgress({ viewedCount }: { viewedCount: number }) {
   const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
-  const isEmpty = pct === 0;
+  const clamped = Math.min(100, Math.max(0, pct));
+  const pathRef = useRef<SVGPathElement | null>(null);
+  const [pathLength, setPathLength] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+
+  useLayoutEffect(() => {
+    const node = pathRef.current;
+    if (!node) return undefined;
+
+    const updateLength = () => {
+      setPathLength(node.getTotalLength());
+    };
+
+    updateLength();
+    window.addEventListener('resize', updateLength);
+    return () => window.removeEventListener('resize', updateLength);
+  }, []);
+
+  useEffect(() => {
+    if (pathLength > 0) {
+      setIsReady(true);
+    }
+  }, [pathLength]);
+
+  const dasharray = pathLength || 0;
+  const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
 
   return (
-    <div className="health-bar-container" aria-label={`Portfolio progress: ${viewedCount} of ${TOTAL_SECTIONS} sections viewed`}>
-      <div className="health-bar-track">
-        <div
-          className={`health-bar-fill${isEmpty ? ' health-bar-empty' : ''}`}
-          style={{ '--health-fill-pct': `${pct}%` } as React.CSSProperties}
-        >
-          {!isEmpty && <div className="health-bar-wave" />}
-        </div>
-      </div>
-      <div className="health-bar-label">
-        <span className="health-bar-pct">{Math.round(pct)}%</span>
-        <span className="health-bar-sub">explored</span>
-      </div>
+    <div className="viewport-progress" aria-hidden="true">
+      <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path
+          ref={pathRef}
+          className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
+          d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
+          fill="none"
+          strokeDasharray={dasharray}
+          strokeDashoffset={dashoffset}
+        />
+      </svg>
     </div>
   );
 }
@@ -674,8 +691,7 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      {/* Health bar — left side */}
-      <HealthBar viewedCount={viewedCount} />
+      <ViewportProgress viewedCount={viewedCount} />
 
       {/* Dark-mode toggle */}
       <button

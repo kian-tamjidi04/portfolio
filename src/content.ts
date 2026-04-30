@@ -179,7 +179,7 @@ export const portfolioCards: PortfolioCard[] = [
     id: 'social',
     type: 'social',
     label: 'Social',
-    title: 'GitHub / LinkedIn',
+    title: 'Where to contact me',
     summary: 'Find me across the platforms where I build and share.',
     placementClass: 'place-social',
     links: [
@@ -197,11 +197,12 @@ export const portfolioCards: PortfolioCard[] = [
         href: 'https://www.linkedin.com/in/kian-tamjidi',
         icon: '../public/custom_linkedin.svg',
       },
+      // TODO: Add an email icon to the below section
       {
-        platform: 'CV',
-        handle: 'Download PDF',
+        platform: 'Email',
+        handle: 'kian.tamjidi2004@gmail.com',
         description: 'A concise one-page resume with impact-focused metrics.',
-        href: '#',
+        href: 'mailto:kian.tamjidi2004@gmail.com',
       },
     ],
   },
