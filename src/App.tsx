@@ -110,7 +110,7 @@ function ModalBody({
               <div>
                 <h3 className="modal-row-title">{link.platform}</h3>
                 <p className="modal-row-subtitle">{link.handle}</p>
-                <p className="modal-text">{link.description}</p>
+                {/* <p className="modal-text">{link.description}</p> */}
               </div>
             </a>
           </motion.section>
@@ -585,9 +585,9 @@ function CardInner({ card }: { card: PortfolioCard }) {
           <FontAwesomeIcon icon={previewIcon} />
         </span>
       )}
-      {/* <p className="card-label">{card.label}</p> */}
+      <p className="card-label">{card.label}</p>
       <h2 className="card-title">{card.title}</h2>
-      <p className="card-summary">{card.summary}</p>
+      {/* <p className="card-summary">{card.summary}</p> */}
     </>
   );
 }
