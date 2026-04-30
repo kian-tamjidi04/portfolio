@@ -594,29 +594,52 @@ function CardInner({ card }: { card: PortfolioCard }) {
 
 /* ─── App ────────────────────────────────────────────────────────── */
 
-/* ─── Health bar (liquid wobble) ────────────────────────────────── */
+/* ─── Viewport progress border ────────────────────────────────── */
 
 const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
 const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
 
-function HealthBar({ viewedCount }: { viewedCount: number }) {
+function ViewportProgress({ viewedCount }: { viewedCount: number }) {
   const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
-  const isEmpty = pct === 0;
+  const clamped = Math.min(100, Math.max(0, pct));
+  const pathRef = useRef<SVGPathElement | null>(null);
+  const [pathLength, setPathLength] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+
+  useLayoutEffect(() => {
+    const node = pathRef.current;
+    if (!node) return undefined;
+
+    const updateLength = () => {
+      setPathLength(node.getTotalLength());
+    };
+
+    updateLength();
+    window.addEventListener('resize', updateLength);
+    return () => window.removeEventListener('resize', updateLength);
+  }, []);
+
+  useEffect(() => {
+    if (pathLength > 0) {
+      setIsReady(true);
+    }
+  }, [pathLength]);
+
+  const dasharray = pathLength || 0;
+  const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
 
   return (
-    <div className="health-bar-container" aria-label={`Portfolio progress: ${viewedCount} of ${TOTAL_SECTIONS} sections viewed`}>
-      <div className="health-bar-track">
-        <div
-          className={`health-bar-fill${isEmpty ? ' health-bar-empty' : ''}`}
-          style={{ '--health-fill-pct': `${pct}%` } as React.CSSProperties}
-        >
-          {!isEmpty && <div className="health-bar-wave" />}
-        </div>
-      </div>
-      <div className="health-bar-label">
-        <span className="health-bar-pct">{Math.round(pct)}%</span>
-        <span className="health-bar-sub">explored</span>
-      </div>
+    <div className="viewport-progress" aria-hidden="true">
+      <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path
+          ref={pathRef}
+          className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
+          d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
+          fill="none"
+          strokeDasharray={dasharray}
+          strokeDashoffset={dashoffset}
+        />
+      </svg>
     </div>
   );
 }
@@ -674,8 +697,7 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      {/* Health bar — left side */}
-      <HealthBar viewedCount={viewedCount} />
+      <ViewportProgress viewedCount={viewedCount} />
 
       {/* Dark-mode toggle */}
       <button
