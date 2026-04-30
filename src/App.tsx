@@ -145,18 +145,23 @@ function ModalBody({
   if (card.type === 'skills') {
     return (
       <>
-        {card.categories.map((cat) => (
-          <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
-            <div className="skill-category p-3">
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <p className="modal-text">I believe in product creation and not being limited by any single set of tools</p>
+        </motion.section>
+        <div className="skills-grid">
+          {card.categories.map((cat) => (
+            <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
               <p className="skill-category-label">{cat.label}</p>
-              <div className="d-flex flex-wrap gap-2">
-                {cat.items.map((item) => (
-                  <span className="tag" key={item}>{item}</span>
-                ))}
+              <div className="skill-category p-3 ps-2">
+                <div className="d-flex flex-wrap gap-2">
+                  {cat.items.map((item) => (
+                    <span className="tag" key={item}>{item}</span>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.section>
-        ))}
+            </motion.section>
+          ))}
+        </div>
       </>
     );
   }
