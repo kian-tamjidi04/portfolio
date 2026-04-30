@@ -1,63 +1,58 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  /* Dark mode (default) */
-  --bg: #1c1917;
-  --surface: #28211e;
-  --surface-subtle: #322b27;
-  --border: #3d3330;
+  --bg: #0e0e11;
+  --surface: #16161c;
+  --surface-subtle: #1f1f28;
+  --border: #2a2a36;
   --accent: #f97316;
   --accent-dim: rgba(249, 115, 22, 0.14);
-  --accent-sky: #38bdf8;
-  --accent-sky-dim: rgba(56, 189, 248, 0.12);
-  --accent-emerald: #34d399;
-  --accent-emerald-dim: rgba(52, 211, 153, 0.12);
-  --text-primary: #f5f0ec;
-  --text-secondary: #a89b92;
-  --text-muted: #6b5e57;
+  --accent-sky: #22d3ee;
+  --accent-sky-dim: rgba(34, 211, 238, 0.12);
+  --accent-emerald: #2dd4bf;
+  --accent-emerald-dim: rgba(45, 212, 191, 0.12);
+  --text-primary: #f0f1f5;
+  --text-secondary: #9094a8;
+  --text-muted: #52566b;
   --orb: rgba(249, 115, 22, 0.18);
+  --viewed-border: rgba(45, 212, 191, 0.45);
+  --viewed-bg-mix: rgba(45, 212, 191, 0.07);
+  --viewed-shadow: rgba(45, 212, 191, 0.18);
+  --health-liquid: #2dd4bf;
+  --health-liquid-dim: rgba(45, 212, 191, 0.18);
+  --health-track: rgba(45, 212, 191, 0.08);
+  --health-track-border: rgba(45, 212, 191, 0.18);
   --label-size: 14px;
   --card-radius: 16px;
   --modal-radius: 20px;
   --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
-  /* Viewed card */
-  --viewed-border: rgba(52, 211, 153, 0.45);
-  --viewed-bg-mix: rgba(52, 211, 153, 0.07);
-  --viewed-shadow: rgba(52, 211, 153, 0.18);
-  /* Health bar */
-  --health-liquid: #34d399;
-  --health-liquid-dim: rgba(52, 211, 153, 0.18);
-  --health-track: rgba(52, 211, 153, 0.08);
-  --health-track-border: rgba(52, 211, 153, 0.18);
 }
 
 /* Light mode override */
 html.light {
-  --bg: #f5ede6;
+  --bg: #f8f9fc;
   --surface: #ffffff;
-  --surface-subtle: #fdf6f1;
-  --border: #e5d8d0;
+  --surface-subtle: #eef0f5;
+  --border: #d8dce8;
   --accent: #ea6508;
-  --accent-dim: rgba(234, 101, 8, 0.1);
-  --accent-sky: #0ea5e9;
-  --accent-sky-dim: rgba(14, 165, 233, 0.10);
-  --accent-emerald: #059669;
-  --accent-emerald-dim: rgba(5, 150, 105, 0.10);
-  --text-primary: #1a1210;
-  --text-secondary: #6b5346;
-  --text-muted: #a89080;
+  --accent-dim: rgba(234, 101, 8, 0.10);
+  --accent-sky: #0891b2;
+  --accent-sky-dim: rgba(8, 145, 178, 0.10);
+  --accent-emerald: #0d9488;
+  --accent-emerald-dim: rgba(13, 148, 136, 0.10);
+  --text-primary: #0d0e12;
+  --text-secondary: #4a4f63;
+  --text-muted: #8a8fa8;
   --orb: rgba(234, 101, 8, 0.13);
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
-  /* Viewed card (light) */
-  --viewed-border: rgba(5, 150, 105, 0.40);
-  --viewed-bg-mix: rgba(5, 150, 105, 0.06);
-  --viewed-shadow: rgba(5, 150, 105, 0.14);
-  /* Health bar (light) */
-  --health-liquid: #059669;
-  --health-liquid-dim: rgba(5, 150, 105, 0.18);
-  --health-track: rgba(5, 150, 105, 0.07);
-  --health-track-border: rgba(5, 150, 105, 0.20);
+  --viewed-border: rgba(13, 148, 136, 0.40);
+  --viewed-bg-mix: rgba(13, 148, 136, 0.06);
+  --viewed-shadow: rgba(13, 148, 136, 0.14);
+  --health-liquid: #0d9488;
+  --health-liquid-dim: rgba(13, 148, 136, 0.18);
+  --health-track: rgba(13, 148, 136, 0.07);
+  --health-track-border: rgba(13, 148, 136, 0.20);
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────── */
@@ -324,7 +319,7 @@ html:not(.light) .card-title {
   position: fixed;
   inset: 0;
   z-index: 900;
-  background: rgba(10, 7, 6, 0.55);
+  background: rgba(8, 8, 12, 0.55);
   backdrop-filter: blur(1px);
   cursor: pointer;
   border: 0;
@@ -703,7 +698,7 @@ html:not(.light) .card-title {
 }
 
 .pill {
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(34, 211, 238, 0.3);
   border-radius: 10px;
   padding: 8px 10px;
   font-size: 0.8rem;
@@ -777,7 +772,7 @@ html:not(.light) .card-title {
   inset: 0;
   border: 0;
   z-index: 920;
-  background: rgba(10, 7, 6, 0.48);
+  background: rgba(8, 8, 12, 0.55);
 }
 
 .project-focus-wrapper {
