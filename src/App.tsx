@@ -378,7 +378,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
   const projectFocusRect = useMemo(() => {
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
-    const topOffset = headerHeight + 14;
+    const topOffset = headerHeight + 10;
     const viewportPadding = 24;
     const maxWidth = Math.max(320, window.innerWidth - viewportPadding * 2);
     const focusWidth = Math.min(maxWidth, modalRect.width + 84);
