@@ -145,18 +145,23 @@ function ModalBody({
   if (card.type === 'skills') {
     return (
       <>
-        {card.categories.map((cat) => (
-          <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
-            <div className="skill-category p-3">
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <p className="modal-text">I believe in product creation and not being limited by any single set of tools</p>
+        </motion.section>
+        <div className="skills-grid">
+          {card.categories.map((cat) => (
+            <motion.section className="modal-section modal-section-plain" key={cat.label} variants={modalItemVariants}>
               <p className="skill-category-label">{cat.label}</p>
-              <div className="d-flex flex-wrap gap-2">
-                {cat.items.map((item) => (
-                  <span className="tag" key={item}>{item}</span>
-                ))}
+              <div className="skill-category p-3 ps-2">
+                <div className="d-flex flex-wrap gap-2">
+                  {cat.items.map((item) => (
+                    <span className="tag" key={item}>{item}</span>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.section>
-        ))}
+            </motion.section>
+          ))}
+        </div>
       </>
     );
   }
@@ -166,8 +171,11 @@ function ModalBody({
       <>
         {card.entries.map((entry) => (
           <motion.section className="modal-section" key={`${entry.degree}-details`} variants={modalItemVariants}>
-            <p className="timeline-role">{entry.degree}</p>
-            <p className="timeline-company">{entry.institution}</p>
+            <div className="timeline-title-row">
+              <span className="timeline-role">{entry.degree}</span>
+              <span className="timeline-separator"> • </span>
+              <span className="timeline-company">{entry.institution}</span>
+            </div>
             <p className="timeline-dates">{entry.dates}</p>
             <p className="modal-text education-details">{entry.details}</p>
           </motion.section>
@@ -220,8 +228,11 @@ function ModalBody({
           >
             <span className={`timeline-dot ${role.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
             <div className="timeline-content">
-              <p className="timeline-role">{role.role}</p>
-              <p className="timeline-company">{role.company}</p>
+              <div className="timeline-title-row">
+                <span className="timeline-role">{role.role}</span>
+                <span className="timeline-separator"> • </span>
+                <span className="timeline-company">{role.company}</span>
+              </div>
               <p className="timeline-dates">{role.dates}</p>
               <p className="modal-text">{role.impact}</p>
               <div className="d-flex flex-wrap gap-2">
@@ -442,7 +453,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Front face — exact copy of the card */}
-          <div className="flip-face flip-front">
+          <div className={`flip-face flip-front`} style={{ transition: 'background-color 0.6s ease' }}>
             <CardInner card={card} />
           </div>
 
@@ -691,7 +702,7 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      <ViewportProgress viewedCount={viewedCount} />
+      {/* <ViewportProgress viewedCount={viewedCount} /> */}
 
       {/* Dark-mode toggle */}
       <button
