@@ -448,34 +448,28 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
           <div className={`flip-face flip-back${projectFocus ? ' flip-back-nested-focus' : ''}`}>
-            <header className="portfolio-modal-header" ref={headerRef}>
-              <div>
-                <p className="modal-label">{card.label}</p>
-                <h2 className="modal-title">{card.title}</h2>
-              </div>
-              <button
-                aria-label="Close modal"
-                className="modal-close"
-                onClick={onClose}
-                type="button"
+            <div style={{ width: modalRect.width, display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <header className="portfolio-modal-header" ref={headerRef}>
+                <div>
+                  <p className="modal-label">{card.label}</p>
+                  <h2 className="modal-title">{card.title}</h2>
+                </div>
+              </header>
+              <motion.div
+                className="portfolio-modal-body"
+                initial="hidden"
+                animate={isContentRevealed ? 'visible' : 'hidden'}
+                exit="hidden"
+                variants={modalBodyVariants}
+                ref={bodyRef}
               >
-                <FontAwesomeIcon icon={faCircleXmark} />
-              </button>
-            </header>
-            <motion.div
-              className="portfolio-modal-body"
-              initial="hidden"
-              animate={isContentRevealed ? 'visible' : 'hidden'}
-              exit="hidden"
-              variants={modalBodyVariants}
-              ref={bodyRef}
-            >
-              <ModalBody
-                card={card}
-                focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
-                onProjectPreviewClick={handleProjectPreviewClick}
-              />
-            </motion.div>
+                <ModalBody
+                  card={card}
+                  focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
+                  onProjectPreviewClick={handleProjectPreviewClick}
+                />
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
