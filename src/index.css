@@ -442,13 +442,10 @@ html:not(.light) .card-title {
 }
 
 .portfolio-modal-body {
-  overflow: auto;
   padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  flex: 1 1 auto;
-  min-height: 0;
 }
 
 .modal-section {
@@ -512,13 +509,12 @@ html:not(.light) .card-title {
 
 .modal-row-title {
   margin: 0;
-  font-size: 0.9rem;
   color: var(--text-primary);
   letter-spacing: 0.1em;
 }
 
 .modal-row-subtitle {
-  margin: 4px 0 10px;
+  margin: 4px 0px;
   font-size: 0.85rem;
   color: var(--accent-sky);
   font-weight: 600;
@@ -566,12 +562,9 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-subtle);
-  padding: 16px;
 }
 
 .skill-category-label {
-  margin: 0 0 10px;
-  font-size: 0.72rem;
   letter-spacing: 0.14em;
   color: var(--accent);
   font-weight: 700;
@@ -673,9 +666,8 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 5px 10px;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  background: transparent;
 }
 
 .tag.is-primary {
@@ -868,13 +860,14 @@ html:not(.light) .card-title {
   stroke-width: 2px;
   stroke-linecap: butt;
   filter:
-    drop-shadow(0 0 6px color-mix(in srgb, var(--health-liquid) 60%, transparent))
-    drop-shadow(0 0 16px color-mix(in srgb, var(--health-liquid) 28%, transparent));
-  transition: none; /* Disable transition by default */
+    drop-shadow(0 0 6px color-mix(in srgb, var(--health-liquid) 60%, transparent)) drop-shadow(0 0 16px color-mix(in srgb, var(--health-liquid) 28%, transparent));
+  transition: none;
+  /* Disable transition by default */
 }
 
 .viewport-progress-path.viewport-progress-ready {
-  transition: stroke-dashoffset 0.65s ease-out; /* Enable transition only when ready */
+  transition: stroke-dashoffset 0.65s ease-out;
+  /* Enable transition only when ready */
 }
 
 /* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
