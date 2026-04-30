@@ -1,7 +1,7 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  --bg: #0e0e11;
-  --surface: #16161c;
+  --bg: #16161c;
+  --surface: #23232b;
   --surface-subtle: #1f1f28;
   --border: #2a2a36;
   --accent: #f97316;
