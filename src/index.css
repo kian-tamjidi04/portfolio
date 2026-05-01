@@ -21,13 +21,13 @@
   --health-liquid-dim: rgba(45, 212, 191, 0.18);
   --health-track: rgba(45, 212, 191, 0.08);
   --health-track-border: rgba(45, 212, 191, 0.18);
-  --font-base: 1rem;
-  --font-md: 1.25rem;
-  --font-lg: 1.5rem;
-  --font-xl: 1.75rem;
-  --font-card-title: 2.5rem;
-  --font-modal-title: 3rem;
-  --font-hero-title: 5rem;
+  --font-base: 1.25rem;
+  --font-md: 1.5rem;
+  --font-lg: 1.75rem;
+  --font-xl: 2rem;
+  --font-card-title: 2.75rem;
+  --font-modal-title: 3.25rem;
+  --font-hero-title: 5.25rem;
   --card-radius: 16px;
   --modal-radius: 20px;
   --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
@@ -373,7 +373,7 @@ html:not(.light) .card-title {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: none;
   overflow: hidden;
 }
 
@@ -428,7 +428,7 @@ html:not(.light) .card-title {
   margin: 0;
   color: var(--accent);
   /* letter-spacing: 0.14em; */
-  font-size: var(--font-base);
+  font-size: var(--font-md);
   /* font-weight: 700; */
   font-family: 'Bold';
 }
@@ -494,8 +494,7 @@ html:not(.light) .card-title {
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 16px;
-  display: grid;
-  grid-template-columns: 48px 1fr;
+  display: flex;
   gap: 14px;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
@@ -506,8 +505,8 @@ html:not(.light) .card-title {
 }
 
 .social-icon {
-  width: 48px;
-  height: 48px;
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
   background: var(--accent-dim);
   color: var(--accent);
@@ -636,7 +635,7 @@ html:not(.light) .card-title {
 
 .belief-list li {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   color: var(--text-secondary);
 }
@@ -645,9 +644,12 @@ html:not(.light) .card-title {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  margin-top: 0.5em;
   background: var(--accent);
   flex-shrink: 0;
+}
+
+.belief-text {
+  font-size: var(--font-base);
 }
 
 /* ─── Timeline ───────────────────────────────────────────────────── */
@@ -807,7 +809,7 @@ html:not(.light) .card-title {
 }
 
 .project-preview-card {
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 18px;
@@ -818,9 +820,7 @@ html:not(.light) .card-title {
 }
 
 .project-preview-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.14);
+  background-color: color-mix(in srgb, var(--accent), transparent 85%);
 }
 
 .project-preview-label {
@@ -911,7 +911,7 @@ html:not(.light) .card-title {
 
 .project-focus-title {
   margin: 8px 0 0;
-  font-size: var(--font-lg);
+  font-size: var(--font-modal-title);
   color: var(--text-primary);
   font-family: 'Regular', serif;
 }

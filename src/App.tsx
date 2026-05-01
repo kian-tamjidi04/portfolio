@@ -110,9 +110,9 @@ function ModalBody({
             >
               <div className="social-icon" aria-hidden="true">
                 {link.icon
-                  ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
+                  ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={64} width={64} />
                   : link.platform === 'Email'
-                    ? <FontAwesomeIcon icon={faEnvelope} size="lg" />
+                    ? <FontAwesomeIcon icon={faEnvelope} size="2xl" />
                     : <span>{link.platform}</span>}
               </div>
               <div>
@@ -141,7 +141,7 @@ function ModalBody({
             {card.beliefs.map((b) => (
               <li key={b}>
                 <span className="belief-dot" aria-hidden="true" />
-                <span>{b}</span>
+                <span className="belief-text">{b}</span>
               </li>
             ))}
           </ul>
@@ -216,7 +216,7 @@ function ModalBody({
             {card.goals.map((g) => (
               <li key={g}>
                 <span className="belief-dot" aria-hidden="true" />
-                <span>{g}</span>
+                <span className="belief-text">{g}</span>
               </li>
             ))}
           </ul>
@@ -746,7 +746,7 @@ function App() {
             return (
               <button
                 aria-label={card.title}
-                className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}${isViewed ? ' card-viewed' : ''}`}
+                className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
                 key={card.id}
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}
                 type="button"
