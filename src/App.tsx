@@ -12,6 +12,7 @@ import {
   faScrewdriverWrench,
   faMoon,
   faSun,
+  faEnvelope
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
@@ -78,7 +79,9 @@ function ModalBody({
         {card.certs.map((cert) => (
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
             <div className="cert-row">
-              <div className="cert-badge" aria-hidden="true">✦</div>
+              <div className="cert-icon" aria-hidden="true">
+                <img src={cert.icon} className="cert-icon-image" height={32} width={32} />
+              </div>
               <div className="d-flex flex-column">
                 <div className="timeline-title-row">
                   <span className="timeline-role">{cert.name}</span>
@@ -108,7 +111,9 @@ function ModalBody({
               <div className="social-icon" aria-hidden="true">
                 {link.icon
                   ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={32} width={32} />
-                  : <span>{link.platform}</span>}
+                  : link.platform === 'Email'
+                    ? <FontAwesomeIcon icon={faEnvelope} size="lg" />
+                    : <span>{link.platform}</span>}
               </div>
               <div>
                 <div className="modal-row-title">{link.platform}</div>

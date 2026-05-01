@@ -60,7 +60,7 @@ export interface CertItem {
   name: string;
   issuer: string;
   date: string;
-  badge?: string;
+  icon: string;
 }
 
 export interface EducationEntry {
@@ -263,21 +263,25 @@ export const portfolioCards: PortfolioCard[] = [
         name: 'Introduction to Agent Skills',
         issuer: 'Anthropic',
         date: '2026',
+        icon: '../public/anthopic.svg',
       },
       {
         name: 'Advanced React',
         issuer: 'Meta',
         date: '2026',
+        icon: '../public/meta.svg',
       },
       {
         name: 'AI-900 Azure AI Fundamentals',
         issuer: 'Microsoft',
         date: '2024',
+        icon: '../public/microsoft.svg',
       },
       {
         name: 'UX Design Professional Certificate',
         issuer: 'Google',
         date: 'NEED TO COMPLETE',
+        icon: '../public/google.svg',
       },
     ],
   },
