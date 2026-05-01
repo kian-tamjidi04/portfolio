@@ -83,10 +83,10 @@ function ModalBody({
                 <img src={cert.icon} className="cert-icon-image" height={32} width={32} />
               </div>
               <div className="d-flex flex-column">
-                <div className="timeline-title-row">
-                  <span className="timeline-role">{cert.name}</span>
-                  <span className="timeline-separator"> • </span>
-                  <span className="timeline-company">{cert.issuer}</span>
+                <div className="cert-title-row">
+                  <span className="cert-name">{cert.name}</span>
+                  <span className="cert-separator"> • </span>
+                  <span className="cert-company">{cert.issuer}</span>
                 </div>
                 <div className="cert-date">{cert.date}</div>
               </div>
@@ -388,15 +388,27 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
     const topOffset = headerHeight + 10;
     const viewportPadding = 24;
+
+    const baseWidth = modalRect.width + 84;
+    const baseHeight = Math.max(250, modalHeight - topOffset + 28);
+
+    const targetWidth = baseWidth * 1.5;
+    const targetHeight = baseHeight * 1.5;
+
     const maxWidth = Math.max(320, window.innerWidth - viewportPadding * 2);
-    const focusWidth = Math.min(maxWidth, modalRect.width + 84);
-    const availableHeight = Math.max(250, modalHeight - topOffset + 28);
-    const left = modalRect.left + ((modalRect.width - focusWidth) / 2);
+    const maxHeight = Math.max(250, window.innerHeight - viewportPadding * 2);
+
+    const focusWidth = Math.min(maxWidth, targetWidth);
+    const focusHeight = Math.min(maxHeight, targetHeight);
+
+    const left = (window.innerWidth - focusWidth) / 2;
+    const top = (window.innerHeight - focusHeight) / 2;
+
     return {
       left,
-      top: modalRect.top + topOffset,
+      top,
       width: focusWidth,
-      height: availableHeight,
+      height: focusHeight,
     };
   }, [modalHeight, modalRect]);
 

@@ -705,12 +705,14 @@ html:not(.light) .card-title {
   border-radius: 8px;
 }
 
-.timeline-title-row {
+.timeline-title-row,
+.cert-title-row {
   margin: 0;
   line-height: 1.3;
 }
 
-.timeline-role {
+.timeline-role,
+.cert-name {
   margin: 0;
   /* font-weight: 600; */
   font-family: 'Bold';
@@ -718,12 +720,14 @@ html:not(.light) .card-title {
   font-size: var(--font-lg);
 }
 
-.timeline-separator {
+.timeline-separator,
+.cert-separator {
   color: var(--text-muted);
   font-size: var(--font-lg);
 }
 
-.timeline-company {
+.timeline-company,
+.cert-company {
   margin: 0;
   color: var(--accent);
   /* font-weight: 700; */

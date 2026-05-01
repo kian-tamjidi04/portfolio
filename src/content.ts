@@ -197,7 +197,6 @@ export const portfolioCards: PortfolioCard[] = [
         href: 'https://www.linkedin.com/in/kian-tamjidi',
         icon: '../public/custom_linkedin.svg',
       },
-      // TODO: Add an email icon to the below section
       {
         platform: 'Email',
         handle: 'kian.tamjidi2004@gmail.com',
