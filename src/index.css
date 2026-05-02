@@ -322,7 +322,7 @@ html:not(.light) .card-title {
 }
 
 .card-viewed {
-  background-color: color-mix(in srgb, var(--accent-emerald), transparent 50%);
+  background-color: rgba(16, 185, 129, 0.5);
 }
 
 .card-hero {
@@ -468,7 +468,9 @@ html:not(.light) .card-title {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
+  -webkit-scrollbar-color: var(--border) transparent;
   scrollbar-color: var(--border) transparent;
 }
 
@@ -701,7 +703,7 @@ html:not(.light) .card-title {
 }
 
 .skill-category:hover {
-  background-color: color-mix(in srgb, var(--accent-sky), transparent 85%);
+  background-color: rgba(6, 182, 212, 0.15);
 }
 
 .skill-category-label {
@@ -1100,7 +1102,9 @@ html:not(.light) .card-title {
   flex-direction: column;
   overflow-y: auto;
   min-height: 0;
+  -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
+  -webkit-scrollbar-color: var(--border) transparent;
   scrollbar-color: var(--border) transparent;
 }
 
@@ -1288,8 +1292,8 @@ html:not(.light) .card-title {
   inset: 0;
   z-index: 90;
   pointer-events: none;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
 }
 
 .viewport-progress-svg {

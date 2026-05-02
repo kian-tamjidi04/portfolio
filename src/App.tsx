@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, cubicBezier } from 'framer-motion';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   faAward,
@@ -18,11 +18,10 @@ import {
   faChevronDown,
   faCode,
   faArrowUpRightFromSquare,
-  faBars,
   faListUl
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
+import { portfolioCards, type PortfolioCard } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
@@ -44,7 +43,7 @@ function getModalRect(type?: string) {
 
 /* ─── Shared transition ──────────────────────────────────────────── */
 const FLIP_DURATION = 0.58; // seconds
-const FLIP_EASE = [0.4, 0, 0.2, 1] as const;
+const FLIP_EASE = cubicBezier(0.4, 0, 0.2, 1);
 const CONTENT_REVEAL_DELAY = 0.24; // seconds, starts during card expansion
 const CONTENT_STAGGER = 0.08; // seconds
 
@@ -55,7 +54,7 @@ const modalItemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.22, ease: [0.2, 0, 0, 1] as const },
+    transition: { duration: 0.22, ease: cubicBezier(0.2, 0, 0, 1) },
   },
 };
 
@@ -75,7 +74,7 @@ const gridContainerVariants = {
 
 const gridItemVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: cubicBezier(0.4, 0, 0.2, 1) } },
 };
 
 const projectContainerVariants = {
@@ -85,7 +84,7 @@ const projectContainerVariants = {
 
 const projectItemVariants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: cubicBezier(0.4, 0, 0.2, 1) } },
 };
 
 const cardPreviewIcons = {
@@ -153,7 +152,7 @@ function ModalBody({
                     initial: { height: 0, opacity: 0, marginTop: 0 },
                     hovered: { height: 'auto', opacity: 1, marginTop: 8 }
                   }}
-                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: 0.3, ease: cubicBezier(0.4, 0, 0.2, 1) }}
                   style={{ overflow: 'hidden' }}
                 >
                   <p className="cert-takeaway">{cert.takeaway}</p>
@@ -370,11 +369,11 @@ function ModalBody({
       }),
       center: {
         y: 0,
-        transition: { duration: 0.6, ease: [0.65, 0, 0.35, 1] },
+        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
       },
       exit: (dir: number) => ({
         y: dir > 0 ? 'calc(-100% - 8px)' : 'calc(100% + 8px)',
-        transition: { duration: 0.6, ease: [0.65, 0, 0.35, 1] },
+        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
       }),
     };
 
@@ -561,11 +560,6 @@ interface FlipCardProps {
   card: PortfolioCard;
   fromRect: FromRect;
   onClose: () => void;
-}
-
-interface ProjectFocusState {
-  item: ProjectPreviewItem;
-  fromRect: FromRect;
 }
 
 function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
@@ -774,11 +768,6 @@ function App() {
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
   }, [isDark]);
 
-  /* Viewed cards (session only — resets on refresh) */
-  const [viewedCards, setViewedCards] = useState<Set<string>>(() => new Set());
-
-  // const viewedCount = viewedCards.size;
-
   /* Flip state */
   interface FlipState { cardId: string; fromRect: FromRect; }
   const [flipState, setFlipState] = useState<FlipState | null>(null);
@@ -791,7 +780,6 @@ function App() {
 
   const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
     const r = el.getBoundingClientRect();
-    setViewedCards((prev) => new Set([...prev, cardId]));
     setFlipState({ cardId, fromRect: { left: r.left, top: r.top, width: r.width, height: r.height } });
   }, []);
 
@@ -839,7 +827,6 @@ function App() {
           {portfolioCards.map((card) => {
             const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
             const isNonClickable = card.nonClickable === true;
-            const isViewed = viewedCards.has(card.id);
 
             if (isNonClickable) {
               return (
