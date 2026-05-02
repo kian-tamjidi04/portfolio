@@ -105,6 +105,7 @@ function ModalBody({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projectPage, setProjectPage] = useState(0);
   const [pageDirection, setPageDirection] = useState(1);
+  const [activeAccordion, setActiveAccordion] = useState<string | null>('tech');
   if (card.type === 'certifications') {
     return (
       <>
@@ -296,6 +297,11 @@ function ModalBody({
           >
             <span className={`timeline-dot ${role.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
             <div className="timeline-content">
+              {role.logo && (
+                <div className="experience-logo-container">
+                  <img src={role.logo} alt={`${role.company} logo`} className="experience-logo" />
+                </div>
+              )}
               <div className="timeline-title-row">
                 <span className="timeline-role">{role.role}</span>
                 <span className="timeline-separator"> • </span>
@@ -418,30 +424,89 @@ function ModalBody({
                 {activeProject.summary}
               </motion.p>
 
-              <motion.div variants={projectItemVariants} className="project-detail-section">
-                <div className="modal-row-title">Technologies and Skills</div>
-                <div className="d-flex flex-wrap gap-2">
-                  {activeProject.stack.map((tag) => (
-                    <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
-                      {tag.name}
-                    </span>
-                  ))}
+              <div className="project-detail-accordion">
+                {/* Section 1: Technologies */}
+                <div className="accordion-item">
+                  <button
+                    className={`accordion-header ${activeAccordion === 'tech' ? 'active' : ''}`}
+                    onClick={() => setActiveAccordion(activeAccordion === 'tech' ? null : 'tech')}
+                  >
+                    <span className="modal-row-title">Technologies and Skills</span>
+                    <FontAwesomeIcon icon={faChevronDown} className={`accordion-chevron ${activeAccordion === 'tech' ? 'rotated' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {activeAccordion === 'tech' && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                        className="accordion-content"
+                      >
+                        <div className="d-flex flex-wrap gap-2 pt-2 pb-3">
+                          {activeProject.stack.map((tag) => (
+                            <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
 
-              <motion.div variants={projectItemVariants} className="project-detail-section">
-                <div className="modal-row-title">Challenges I faced</div>
-                <motion.p variants={projectItemVariants} className="project-detail-summary">
-                  {activeProject.challenges}
-                </motion.p>
-              </motion.div>
+                {/* Section 2: Challenges */}
+                <div className="accordion-item">
+                  <button
+                    className={`accordion-header ${activeAccordion === 'challenges' ? 'active' : ''}`}
+                    onClick={() => setActiveAccordion(activeAccordion === 'challenges' ? null : 'challenges')}
+                  >
+                    <span className="modal-row-title">Challenges I faced</span>
+                    <FontAwesomeIcon icon={faChevronDown} className={`accordion-chevron ${activeAccordion === 'challenges' ? 'rotated' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {activeAccordion === 'challenges' && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                        className="accordion-content"
+                      >
+                        <p className="project-detail-summary pt-2 pb-3">
+                          {activeProject.challenges || "Information coming soon..."}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <motion.div variants={projectItemVariants} className="project-detail-section">
-                <div className="modal-row-title">What I learnt</div>
-                <motion.p variants={projectItemVariants} className="project-detail-summary">
-                  {activeProject.whatILearnt}
-                </motion.p>
-              </motion.div>
+                {/* Section 3: What I learnt */}
+                <div className="accordion-item">
+                  <button
+                    className={`accordion-header ${activeAccordion === 'learnt' ? 'active' : ''}`}
+                    onClick={() => setActiveAccordion(activeAccordion === 'learnt' ? null : 'learnt')}
+                  >
+                    <span className="modal-row-title">What I learnt</span>
+                    <FontAwesomeIcon icon={faChevronDown} className={`accordion-chevron ${activeAccordion === 'learnt' ? 'rotated' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {activeAccordion === 'learnt' && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                        className="accordion-content"
+                      >
+                        <p className="project-detail-summary pt-2 pb-3">
+                          {activeProject.whatILearnt || "Information coming soon..."}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
 
               <motion.div variants={projectItemVariants} className="project-detail-actions">
                 {activeProject.links?.map((link) => (

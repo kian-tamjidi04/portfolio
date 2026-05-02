@@ -35,6 +35,7 @@ export interface ExperienceRole {
   impact: string;
   skills: string[];
   isRecent: boolean;
+  logo?: string;
 }
 
 export interface TagItem {
@@ -182,7 +183,7 @@ export const portfolioCards: PortfolioCard[] = [
     id: 'social',
     type: 'social',
     label: 'Social',
-    title: 'Where to contact me',
+    title: 'How to get in touch',
     summary: 'Find me across the platforms where I build and share.',
     placementClass: 'place-social',
     links: [
@@ -220,18 +221,19 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. Brainstormed and rapidly prototyped a variety of feature to reduce tickets raised and costs for the bank. ',
+        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. Brainstormed and rapidly prototyped a variety of features to reduce tickets raised, including a more conversational internal chatbot and gamified dashboards. Redesigned the self-support mobile app, working with developers and business analysts to strike a balance between feasibility and innovation.',
         skills: ['React', 'TypeScript', 'Angular', 'Figma', 'HTML', 'CSS', 'Communication', 'Innovation', 'UX Design'],
         isRecent: true,
+        logo: '/UBS.svg',
       },
       {
         role: 'IEUK Technology Stream Participant',
         company: 'Bright Network',
         dates: '2024',
-        impact:
-          'Prototyped high-traffic account settings flows and validated interaction changes through moderated tests. Delivered developer-ready specs and token proposals that accelerated implementation handoff.',
+        impact: "Engaged in workshops from industry professionals across a variety of discplines, including data science and software engineering. Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2.5k+ attendees to attend an event hosted by BT group, recognised for outstanding contribution in the program.",
         skills: ['Collaboration', 'Communication', 'Research'],
         isRecent: false,
+        logo: '/bright_network.svg',
       },
     ],
   },
@@ -340,7 +342,7 @@ export const portfolioCards: PortfolioCard[] = [
         id: 'project-02',
         title: 'Traffic Junction Simulator',
         summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
-        stack: [{ name: 'React' }, { name: 'Java' }, { name: 'Springboot' }, { name: 'Project Management' }, { name: 'Version Control' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Leadership' }, { name: 'Gantt Charts' }, { name: 'Leadership' }, { name: 'Test Driven Development' },],
+        stack: [{ name: 'React' }, { name: 'Java' }, { name: 'Springboot' }, { name: 'Project Management' }, { name: 'Version Control' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Gantt Charts' }, { name: 'Test Driven Development' },],
         links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
         grade: '70%'
       },
@@ -407,10 +409,9 @@ export const portfolioCards: PortfolioCard[] = [
       "I strongly believe in working at the intersection of ambitious product design and engineering excellence. I am most passionate when I am able to both conceptualize and execute on ideas, taking them from a working proof of concept to fully scalable solution.",
     ],
     goals: [
-      'Join a product team building something genuinely novel',
-      'Deepen expertise in AI-native interfaces and tooling',
-      'Ship products that measurably improve how people work',
-      'Eventually lead product strategy on a focused team',
+      'Expand my skills in UX and product design, connecting with professionals from various backgrounds',
+      'Deepen expertise in AI-first tools and products, embracing innovations and pushing boundaries',
+      'Ship products that measurably improve how people work, interact and live',
     ],
   },
 ];
