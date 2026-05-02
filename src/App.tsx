@@ -99,6 +99,25 @@ const cardPreviewIcons = {
   vision: faRocket,
 } as const;
 
+function InteractiveList({ text, className = "" }: { text: string; className?: string }) {
+  const sentences = useMemo(() => {
+    // Split by . ! or ? followed by whitespace, keeping the punctuation
+    return text
+      .split(/(?<=[.!?])\s+/)
+      .filter((s) => s.trim().length > 0);
+  }, [text]);
+
+  return (
+    <ul className={`interactive-bullet-list ${className}`}>
+      {sentences.map((s, i) => (
+        <li key={i} className="interactive-bullet-item">
+          {s}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function ModalBody({
   card,
 }: {
@@ -246,7 +265,7 @@ function ModalBody({
                 <span className="timeline-company">{entry.institution}</span>
               </div>
               <p className="timeline-dates">{entry.dates}</p>
-              <p className="modal-text education-details">{entry.details}</p>
+              <InteractiveList text={entry.details} />
               <div className="education-modules-section">
                 {entry.degree == 'A Levels' ? (
                   <div className="modal-row-title">Subjects</div>
@@ -311,9 +330,13 @@ function ModalBody({
                 <span className="timeline-company">{role.company}</span>
               </div>
               <p className="timeline-dates">{role.dates}</p>
-              <p className="modal-text">{role.impact}</p>
+              <InteractiveList text={role.impact} />
               <div className="d-flex flex-wrap gap-2">
-                {role.skills.map((s) => <span className="tag" key={s}>{s}</span>)}
+                {role.skills.map((s) => (
+                  <span className={`tag ${s.primary ? 'is-primary' : ''}`} key={s.name}>
+                    {s.name}
+                  </span>
+                ))}
               </div>
             </div>
           </motion.article>
@@ -443,9 +466,9 @@ function ModalBody({
                   <div className="project-detail-grade">Grade Achieved: {activeProject.grade}</div>
                 )}
               </motion.div>
-              <motion.p variants={projectItemVariants} className="project-detail-summary">
-                {activeProject.summary}
-              </motion.p>
+              <motion.div variants={projectItemVariants}>
+                <InteractiveList text={activeProject.summary} />
+              </motion.div>
 
               <div className="project-detail-accordion">
                 {/* Section 1: Technologies */}
@@ -495,9 +518,9 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <p className="project-detail-summary challenges-details pt-2 pb-3">
-                          {activeProject.challenges || "Information coming soon..."}
-                        </p>
+                        <div className="pt-2 pb-3">
+                          <InteractiveList text={activeProject.challenges || "Information coming soon..."} />
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -515,6 +538,12 @@ function ModalBody({
                     {link.label}
                   </a>
                 ))}
+                {activeProject.id === 'project-07' && (
+                  <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
+                    <img src="/figma.svg" alt="Figma" className="project-action-icon-svg" />
+                    Figma coming soon...
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           )}

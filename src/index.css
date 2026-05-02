@@ -796,6 +796,50 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
 }
 
+/* ─── Interactive Sentence List ──────────────────────────────────── */
+.interactive-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.interactive-bullet-item {
+  position: relative;
+  padding-left: 24px;
+  color: var(--text-secondary);
+  font-size: var(--font-base);
+  line-height: 1.5;
+  transition: color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+  display: block;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.interactive-bullet-item::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  top: 0; /* Pin to top to prevent vertical shifting */
+  color: var(--accent);
+  font-weight: bold;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.interactive-bullet-item:hover {
+  color: var(--accent);
+  transform: translate3d(6px, 0, 0);
+}
+
+.interactive-bullet-item:hover::before {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 .experience-logo-container {
   position: absolute;
   top: 16px;
@@ -1215,6 +1259,22 @@ html:not(.light) .card-title {
 .project-action-btn-secondary:hover {
   border-color: var(--text-primary);
   background: var(--surface);
+}
+
+.project-action-icon-svg {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.project-action-btn-coming-soon {
+  cursor: default;
+}
+
+.project-action-btn-coming-soon:hover {
+  background: var(--text-primary);
+  color: var(--bg);
+  transform: none;
 }
 
 .project-sidebar-close-mobile,
