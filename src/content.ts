@@ -53,7 +53,7 @@ export interface ProjectPreviewItem {
   summary: string;
   stack: TagItem[];
   impact: string[];
-  links: ExternalLink[];
+  links?: ExternalLink[];
 }
 
 export interface CertItem {
@@ -61,6 +61,7 @@ export interface CertItem {
   issuer: string;
   date: string;
   icon: string;
+  takeaway: string;
 }
 
 export interface EducationEntry {
@@ -262,24 +263,28 @@ export const portfolioCards: PortfolioCard[] = [
         name: 'Introduction to Agent Skills',
         issuer: 'Anthropic',
         date: '2026',
+        takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents',
         icon: '../public/anthopic.svg',
       },
       {
         name: 'Advanced React',
         issuer: 'Meta',
         date: '2026',
+        takeaway: 'Learnt a greater array of React skills, putting them into practice during my Year in Industry',
         icon: '../public/meta.svg',
       },
       {
         name: 'AI-900 Azure AI Fundamentals',
         issuer: 'Microsoft',
-        date: '2024',
+        date: '2025',
+        takeaway: 'Gained a strong understanding of core AI concepts and how they relate to Microsoft Azure, including Generative AI, Natural Language Processing, Computer Vision and Responsible AI.',
         icon: '../public/microsoft.svg',
       },
       {
         name: 'UX Design Professional Certificate',
         issuer: 'Google',
         date: 'NEED TO COMPLETE',
+        takeaway: 'Developed a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma.',
         icon: '../public/google.svg',
       },
     ],
@@ -294,7 +299,7 @@ export const portfolioCards: PortfolioCard[] = [
     categories: [
       {
         label: 'Languages',
-        items: ['Java', 'TypeScript', 'Python', 'JavaScript', 'SQL', 'HTML / CSS', 'Swift / SwiftUI'],
+        items: ['Java', 'TypeScript', 'Python', 'JavaScript', 'SQL', 'HTML / CSS', 'Swift / SwiftUI', 'Haskell'],
       },
       {
         label: 'AI Tools',
@@ -302,7 +307,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         label: 'Dev Tools',
-        items: ['React', 'Xcode', 'Node.js', 'Git', 'PostgreSQL', 'Angular'],
+        items: ['React', 'Xcode', 'Node.js', 'Git', 'GitLab', 'PostgreSQL', 'Angular', 'Jupyter Notebook'],
       },
       {
         label: 'Design',
@@ -324,7 +329,7 @@ export const portfolioCards: PortfolioCard[] = [
     items: [
       {
         id: 'project-01',
-        title: 'Project One',
+        title: 'AI Connect 4',
         summary: 'A placeholder concept focused on practical workflow improvements.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'React', primary: true }, { name: 'TypeScript', primary: true }, { name: 'API' }],
@@ -332,7 +337,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-02',
-        title: 'Project Two',
+        title: 'Traffic Junction Simulator (70% on final report)',
         summary: 'A placeholder concept for a data-rich product experience.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'Next.js', primary: true }, { name: 'Node.js' }, { name: 'PostgreSQL' }],
@@ -340,7 +345,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-03',
-        title: 'Project Three',
+        title: 'Intrusion Detection System',
         summary: 'A placeholder concept designed around team collaboration.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'Figma', primary: true }, { name: 'Framer Motion' }, { name: 'Design System' }],
@@ -348,7 +353,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-04',
-        title: 'Project Four',
+        title: 'Full-Stack Ticketing Web Application',
         summary: 'A placeholder concept with an emphasis on onboarding clarity.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'Vite', primary: true }, { name: 'React Query' }, { name: 'Tailwind CSS' }],
@@ -356,7 +361,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-05',
-        title: 'Project Five',
+        title: 'Custom Java Lexer, Parser and Interpreter',
         summary: 'A placeholder concept for decision-support tooling.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'Python', primary: true }, { name: 'FastAPI' }, { name: 'OpenAI API' }],
@@ -364,7 +369,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-06',
-        title: 'Project Six',
+        title: 'Binary Options XR Trading Simulator Game',
         summary: 'A placeholder concept for simplifying recurring operations.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'Docker', primary: true }, { name: 'Redis' }, { name: 'Celery' }],
@@ -372,18 +377,18 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         id: 'project-07',
-        title: 'Project Seven',
+        title: 'Daily UI Challenge',
         summary: 'A placeholder concept for mobile-first product delivery.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
         stack: [{ name: 'React Native', primary: true }, { name: 'Expo' }, { name: 'Supabase' }],
         links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
       },
       {
-        id: 'project-08',
-        title: 'Project Eight',
-        summary: 'A placeholder concept centered on analytics and reporting.',
+        id: 'project-07',
+        title: 'Music Practice App',
+        summary: 'A placeholder concept for mobile-first product delivery.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'D3', primary: true }, { name: 'TypeScript' }, { name: 'PostgreSQL' }],
+        stack: [{ name: 'React Native', primary: true }, { name: 'Expo' }, { name: 'Supabase' }],
         links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
       },
     ],
@@ -396,7 +401,7 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'What I want to build, and the kind of work that drives me forward.',
     placementClass: 'place-vision',
     body: [
-      "I want to work at the intersection of ambitious product ideas and the engineering discipline to ship them reliably. I'm drawn to teams that treat craft and speed as compatible — not opposing — forces.",
+      "I strongly believe in working at the intersection of ambitious product design and engineering excellence. I am most passionate when I am able to both conceptualize and execute on ideas, taking them from a working proof of concept to fully scalable solution.",
     ],
     goals: [
       'Join a product team building something genuinely novel',

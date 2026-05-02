@@ -305,7 +305,7 @@ function ModalBody({
               aria-hidden={isHidden || undefined}
             >
               <h3 className="project-preview-title">{item.title}</h3>
-              <p className="project-preview-summary">{item.summary}</p>
+              {/* <p className="project-preview-summary">{item.summary}</p> */}
             </motion.button>
           );
         })}
