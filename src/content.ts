@@ -168,14 +168,15 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'Product-minded engineer focused on useful, durable interfaces.',
     placementClass: 'place-about',
     bio: [
-      'Hi! I\'m Kian. I\'m a Computer Science student, passionate about ideating, integrating and innovating great solutions into people\'s everyday lives',
-      'Most of my background is in engineering, although I am eager to break into the UX and product design space.',
-      'In my free time, you can find me listening and/or playing jazz, in the gym, or exploring new food spots.',
+      'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
+      'I work at the intersection of engineering and design — I care as much about how software feels as how it works.',
+      'In my free time, you can find me listening to and/or playing jazz, in the gym, or exploring new food spots.',
       'Take a look around to learn a little more about me; feel free to reach out via the social card below.',
     ],
     beliefs: [
-      'Fail early, fail oftem, but always fail forward - John C. Maxwell',
-      'While great art makes you wonder, great design makes things clear - John Maeda',
+      '"Fail early, fail often, but always fail forward" - John C. Maxwell',
+      '"While great art makes you wonder, great design makes things clear" - John Maeda',
+      '"Anyone can make the simple complicated. Creativity is making the complicated simple" - Charles Mingus',
     ],
   },
   {
@@ -220,7 +221,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. Brainstormed and rapidly prototyped a variety of features to reduce tickets raised, including a more conversational internal chatbot and gamified dashboards. Redesigned the self-support mobile app, working with developers and business analysts to strike a balance between feasibility and innovation.',
+        impact: 'Part of a small frontend team keeping a self-support site running for 140k UBS employees. Prototyped and deployed a conversational internal chatbot and gamified dashboards to cut ticket volume. Redesigned the mobile app from the ground up alongside developers and business analysts.',
         skills: [
           { name: 'React', primary: true },
           { name: 'TypeScript', primary: true },
@@ -239,7 +240,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'IEUK Technology Stream Participant',
         company: 'Bright Network',
         dates: '2024',
-        impact: "Engaged in workshops from industry professionals across a variety of discplines, including data science and software engineering. Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2.5k+ attendees to attend an event hosted by BT group, recognised for outstanding contribution in the program.",
+        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK — invited to a BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
         skills: [{ name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
@@ -280,6 +281,13 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-certifications',
     certs: [
       {
+        name: 'UX Design Professional Certificate',
+        issuer: 'Google',
+        date: 'In progress',
+        takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma.',
+        icon: './google.svg',
+      },
+      {
         name: 'Introduction to Agent Skills',
         issuer: 'Anthropic',
         date: '2026',
@@ -299,13 +307,6 @@ export const portfolioCards: PortfolioCard[] = [
         date: '2025',
         takeaway: 'Gained a strong understanding of core AI concepts and how they relate to Microsoft Azure, including Generative AI, Natural Language Processing, Computer Vision and Responsible AI.',
         icon: './microsoft.svg',
-      },
-      {
-        name: 'UX Design Professional Certificate',
-        issuer: 'Google',
-        date: 'NEED TO COMPLETE',
-        takeaway: 'Developed a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma.',
-        icon: './google.svg',
       },
     ],
   },
@@ -352,7 +353,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Traffic Junction Simulator',
         summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
         stack: [{ name: 'React', primary: true }, { name: 'Java', primary: true }, { name: 'Springboot', primary: true }, { name: 'Version Control', primary: true }, { name: 'Test Driven Development', primary: true }, { name: 'Project Management' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Gantt Charts' },],
-        challenges: 'Everyone at university has varying styles of working, attitudes towards learning and schedules. As such, efficiently managing and accommodating different team members helped to build my organisational and people skills.',
+        challenges: "The harder challenge wasn't the technical stack — it was keeping six people aligned when priorities and working styles clashed. I had to learn quickly how to have direct conversations about progress without killing team morale and momentum.",
         links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
         grade: '70%'
       },
@@ -361,29 +362,29 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Intrusion Detection System',
         summary: 'Engineered a multithreaded packet sniffing system in C to analyze network traffic. Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution. Added mutex locks to prevent race conditions and deadlocks.',
         stack: [{ name: 'C', primary: true }, { name: 'Multithreading', primary: true }, { name: 'pthreads', primary: true }, { name: 'Resilience' }, { name: 'Efficiency' }],
-        challenges: 'Whilst I found the content of this module relatively straight forward, putting into practice in a low-level language like C proved more difficult. Completing this coursework required a strong sense of resilience, in particular when translating the original single-threaded solution I designed to be multi-threaded.',
+        challenges: "Translating a working single-threaded design into a concurrent, race-condition-safe system required a complete rethink of state management — something the lecture content hadn\'t fully prepared me for.",
         grade: '89%'
       },
       {
         id: 'project-07',
         title: 'Daily UI Challenge',
-        summary: 'Currently improving my design skills through a variety of UI/UX exercises. Researching best practices and putting them into practice with Figma Hi-Fi prototyping. Using AI tools to ideate mock content where necessary to focus on design style and structure.',
+        summary: 'Working through daily UI prompts to sharpen my design eye. Researching best practices on Dribbble and Mobbin, then building hi-fi prototypes in Figma to put them into practice. Using AI tools to ideate mock content, keeping my focus on design structure and visual decisions.',
         stack: [{ name: 'Figma Design', primary: true }, { name: 'UX Design', primary: true }, { name: 'Prototyping', primary: true }, { name: 'Prompt Engineering', primary: true }, { name: 'Claude', primary: true }],
-        challenges: 'As UX and product design is relatively new for me, coming up with novel ideas sometimes proves tricky. However, through the use of public sites such as Dribbble and Mobbin, along with AI brainstorming interactions, I am starting to learn and get past such hurdles, improving my creativity and expanding my way of design thinking.'
+        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap — I now start with the flow before touching aesthetics."
       },
       {
         id: 'project-06',
         title: 'Binary Options XR Trading Simulator Game',
-        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to employees from across the bank. Received positive feedback and interest from different divisions to deploy the technology into their teams.',
+        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to employees from across the bank. Received interest from multiple divisions across the bank about deploying the technology within their own teams."',
         stack: [{ name: 'MR / XR', primary: true }, { name: 'Swift', primary: true }, { name: 'visionOS', primary: true }, { name: 'AI-assisted development', primary: true }, { name: 'Blender', primary: true }, { name: 'Reality Composer Pro', primary: true }],
-        challenges: 'This game was deemed a side project, rather than business-as-usual, and I only had 3 weeks to build the product out end to end. Learning good mixed reality practices and visionOS development from scratch was challenging, however with good time management and AI assisted learning and development, I was able to produce a popular MVP.'
+        challenges: 'I had three weeks to learn visionOS and RealityKit from scratch, build a working MVP, and present it at a bank-wide event in London. Good time management and leaning heavily on AI-assisted learning got me there.'
       },
       {
         id: 'project-01',
         title: 'AI Connect 4',
         summary: 'Implemented the minimax adversarial search algorithm in Python 3, applying concepts from lectures to development. Optimised my code through the use of alpha-beta pruning. Evaluated algorithm performance by tracking expanded nodes and pruning frequency across varying board sizes and win conditions.',
         stack: [{ name: 'Python', primary: true }, { name: 'Minimax', primary: true }, { name: 'Adversarial Search', primary: true }],
-        challenges: 'During the testing process, if my algorithm was not efficient enough and the testing constraints were sufficiently complex, my program would get stuck, unable to complete and output any results. This led to wasted time and some frustration from my end. However, it did force me to take a step back from the problem, thinking details through more abstractly before writing code; this often led to efficiency gains and improved results.',
+        challenges: 'It forced a better habit: stepping back from the code entirely, reasoning through the algorithm abstractly, then returning to implement. That shift alone cut my debugging time significantly.',
         grade: '74%'
       },
       {
@@ -392,7 +393,7 @@ export const portfolioCards: PortfolioCard[] = [
         summary: 'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits. Conducted market research and user interviews prior to design and development. Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
         stack: [{ name: 'Swift / SwiftUI', primary: true }, { name: 'iOS', primary: true }, { name: 'Mobile Development', primary: true }, { name: 'Project Management' }, { name: 'UX Research' }],
         links: [{ label: 'GitHub', href: 'https://github.com/kian-tamjidi04/MusicApp' }],
-        challenges: 'This project was incredibly demanding, not only for the scope of the build, but also for the large amount of documentation associated with it. Market research, structure diagrams, UI designs and usability testing all had to be carried out and documented thoroughly, on top of developing a working MVP. This helped me to understand the full scope of software engineering, beyond just coding features.',
+        challenges: "Beyond building a working app, I had to conduct and document market research, usability testing, and system design to a professional standard — all simultaneously. It taught me that shipping software is the smallest part of building a product.",
         grade: '100%'
       },
       {
@@ -421,12 +422,12 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'What I want to build, and the kind of work that drives me forward.',
     placementClass: 'place-vision',
     body: [
-      "I strongly believe in working at the intersection of ambitious product design and engineering excellence. I am most passionate when I am able to both conceptualize and execute on ideas, taking them from a working proof of concept to fully scalable solution.",
+      "My favourite version of a project is one where I get to go from rough idea to shipped thing. I care about the gap between 'technically works' and 'actually good to use' — and I want to keep closing it."
     ],
     goals: [
-      'Expand my skills in UX and product design, connecting with professionals from various backgrounds',
-      'Deepen expertise in AI-first tools and products, embracing innovations and pushing boundaries',
-      'Ship products that measurably improve how people work, interact and live',
+      'Expand my skills in UX and product design, connecting with professionals from various backgrounds.',
+      'Build fluency in AI-first products — understanding not just how to use the tools, but how to design experiences around them that genuinely change how people work.',
+      'Ship products that measurably improve how people work, interact and live.',
     ],
   },
 ];
