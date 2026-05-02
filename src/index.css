@@ -944,11 +944,28 @@ html:not(.light) .card-title {
   flex: 1;
 }
 
+.project-detail-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
 .project-detail-header {
   font-size: var(--font-modal-title);
   font-family: 'Regular', serif;
   color: var(--text-primary);
   margin: 0;
+}
+
+.project-detail-grade {
+  color: var(--accent);
+  font-family: 'Bold';
+  font-size: var(--font-xl);
+  line-height: 1.2;
+  white-space: nowrap;
+  padding-top: 8px;
+  /* visually align with header text */
 }
 
 .project-detail-summary {
@@ -987,11 +1004,10 @@ html:not(.light) .card-title {
 .project-action-btn-primary {
   background: var(--text-primary);
   color: var(--bg);
-  border: 1px solid var(--text-primary);
 }
 
 .project-action-btn-primary:hover {
-  background: transparent;
+  background: color-mix(in srgb, var(--accent), transparent 70%);
   color: var(--text-primary);
 }
 
@@ -1102,6 +1118,7 @@ html:not(.light) .card-title {
   .projects-split-view {
     flex-direction: column;
   }
+
   .projects-sidebar {
     flex: 0 0 auto;
     max-height: 250px;

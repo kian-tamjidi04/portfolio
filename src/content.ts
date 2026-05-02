@@ -52,8 +52,10 @@ export interface ProjectPreviewItem {
   title: string;
   summary: string;
   stack: TagItem[];
-  impact: string[];
   links?: ExternalLink[];
+  challenges?: string;
+  whatILearnt?: string;
+  grade?: string;
 }
 
 export interface CertItem {
@@ -70,6 +72,7 @@ export interface EducationEntry {
   dates: string;
   details: string;
   modules: string[];
+  isRecent?: boolean;
 }
 
 export interface SkillCategory {
@@ -108,7 +111,6 @@ export interface ProjectCard extends CardBase {
   type: 'project';
   imageTitle: string;
   description: string;
-  impact: string[];
   stack: TagItem[];
   links: ExternalLink[];
 }
@@ -218,9 +220,8 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact:
-          'Led a design-to-code system refresh that reduced UI inconsistency across 12 core flows. Partnered with PM and design to launch a new onboarding path that improved week-one activation by 18%.',
-        skills: ['React', 'TypeScript', 'Angular', 'Figma', 'HTML', 'CSS'],
+        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. ',
+        skills: ['React', 'TypeScript', 'Angular', 'Figma', 'HTML', 'CSS', 'Communication', 'Innovation'],
         isRecent: true,
       },
       {
@@ -246,8 +247,16 @@ export const portfolioCards: PortfolioCard[] = [
         degree: 'BSc Computer Science with Intercalated Year',
         institution: 'University of Warwick',
         dates: '2023 - 2027',
-        details: 'First Class Honours (predicted). Dissertation on adaptive UI personalisation using reinforcement learning.',
+        details: 'Achieved First Class (1:1) in my first two years. Member of the University Small Band, playing multiple gigs throughout the year for paying clients.',
         modules: ['Data Structures & Algorithms', 'Artificial Intelligence', 'Formal Languages', 'Software Engineering', 'Database Systems', 'Operating Systems and Computer Networks', 'Data Analytics'],
+        isRecent: true,
+      },
+      {
+        degree: 'A Levels',
+        institution: 'Hill House School',
+        dates: '2021 - 2023',
+        details: 'Selected as Head Boy, delivering a speech to 200+ attendees and organising a team of 10+ prefects. Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
+        modules: ['Further Mathematics (A*)', 'Mathematics (A*)', 'Computer Science (A*)', 'Music (A)'],
       },
     ],
   },
@@ -255,7 +264,7 @@ export const portfolioCards: PortfolioCard[] = [
     id: 'certifications',
     type: 'certifications',
     label: 'Certifications',
-    title: 'Credentials',
+    title: "What I've earnt",
     summary: 'Verified skills across cloud, AI, and engineering.',
     placementClass: 'place-certifications',
     certs: [
@@ -328,68 +337,62 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-projects',
     items: [
       {
-        id: 'project-01',
-        title: 'AI Connect 4',
-        summary: 'A placeholder concept focused on practical workflow improvements.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'React', primary: true }, { name: 'TypeScript', primary: true }, { name: 'API' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
-      },
-      {
         id: 'project-02',
-        title: 'Traffic Junction Simulator (70% on final report)',
-        summary: 'A placeholder concept for a data-rich product experience.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'Next.js', primary: true }, { name: 'Node.js' }, { name: 'PostgreSQL' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+        title: 'Traffic Junction Simulator',
+        summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
+        stack: [{ name: 'React' }, { name: 'Java' }, { name: 'Springboot' }, { name: 'Project Management' }, { name: 'Version Control' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Leadership' }, { name: 'Gantt Charts' }, { name: 'Leadership' }, { name: 'Test Driven Development' },],
+        links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
+        grade: '70%'
       },
       {
         id: 'project-03',
         title: 'Intrusion Detection System',
-        summary: 'A placeholder concept designed around team collaboration.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'Figma', primary: true }, { name: 'Framer Motion' }, { name: 'Design System' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
-      },
-      {
-        id: 'project-04',
-        title: 'Full-Stack Ticketing Web Application',
-        summary: 'A placeholder concept with an emphasis on onboarding clarity.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'Vite', primary: true }, { name: 'React Query' }, { name: 'Tailwind CSS' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
-      },
-      {
-        id: 'project-05',
-        title: 'Custom Java Lexer, Parser and Interpreter',
-        summary: 'A placeholder concept for decision-support tooling.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'Python', primary: true }, { name: 'FastAPI' }, { name: 'OpenAI API' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
-      },
-      {
-        id: 'project-06',
-        title: 'Binary Options XR Trading Simulator Game',
-        summary: 'A placeholder concept for simplifying recurring operations.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'Docker', primary: true }, { name: 'Redis' }, { name: 'Celery' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+        summary: 'Engineered a multithreaded packet sniffing system in C to analyze network traffic. Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution. Added mutex locks to prevent race conditions and deadlocks.',
+        stack: [{ name: 'C' }, { name: 'Multithreading' }, { name: 'pthreads' }, { name: 'Resilience' }, { name: 'Efficiency' }],
+        grade: '89%'
       },
       {
         id: 'project-07',
         title: 'Daily UI Challenge',
-        summary: 'A placeholder concept for mobile-first product delivery.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'React Native', primary: true }, { name: 'Expo' }, { name: 'Supabase' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+        summary: 'Currently improving my design skills through a variety of UI/UX exercises. Researching best practices and putting them into practice with Figma Hi-Fi prototyping. Using AI tools to ideate mock content where necessary to focus on design style and structure.',
+        stack: [{ name: 'Figma Design' }, { name: 'UX Design' }, { name: 'Prototyping' }, { name: 'Prompt Engineering' }, { name: 'Claude' }],
+      },
+      {
+        id: 'project-06',
+        title: 'Binary Options XR Trading Simulator Game',
+        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to employees from across the bank. Received positive feedback and interest from different divisions to deploy the technology into their teams.',
+        stack: [{ name: 'XR' }, { name: 'Swift' }, { name: 'visionOS' }, { name: 'AI-assisted development' }, { name: 'Blender' }, { name: 'Reality Composer Pro' }],
+      },
+      {
+        id: 'project-01',
+        title: 'AI Connect 4',
+        summary: 'Implemented the minimax adversarial search algorithm in Python 3, applying concepts from lectures to development. Optimised my code through the use of alpha-beta pruning. Evaluated algorithm performance by tracking expanded nodes and pruning frequency across varying board sizes and win conditions.',
+        stack: [{ name: 'Python' }, { name: 'Minimax' }, { name: 'Adversarial Search' }],
+        challenges: 'During the implementation process, sometie',
+        whatILearnt: '',
+        grade: '74%'
       },
       {
         id: 'project-08',
         title: 'Music Practice App',
-        summary: 'A placeholder concept for mobile-first product delivery.',
-        impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],
-        stack: [{ name: 'React Native', primary: true }, { name: 'Expo' }, { name: 'Supabase' }],
-        links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
+        summary: 'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits. Conducted market research and user interviews prior to design and development. Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
+        stack: [{ name: 'Swift / SwiftUI' }, { name: 'iOS' }, { name: 'Mobile Development' }, { name: 'Project Management' }, , { name: 'UX Research' }],
+        links: [{ label: 'GitHub', href: 'https://github.com/kian-tamjidi04/MusicApp' }],
+        grade: '100%'
+      },
+      {
+        id: 'project-04',
+        title: 'Full-Stack Ticketing Web Application',
+        summary: 'Designed and implemented a web app for users to purchase tickets for various events. Implemented secure user registration and role-based authentication for superusers and general attendees. Highlighted for a "significant quantity of heuristic design towards usability".',
+        stack: [{ name: 'Python' }, { name: 'Flask' }, { name: 'SQLAlchemy' }, { name: 'Web Design' }, { name: 'Jinja' }, { name: 'JavaScript' }, { name: 'HTML / CSS' }, { name: 'UX / UI' },],
+        grade: '84%'
+      },
+      {
+        id: 'project-05',
+        title: 'Custom Java Interpreter',
+        summary: 'Developed a custom lexer, parser and interpreter using JavaCC. Engineered the system to validate positive linear arithmetic, evaluate conditional step instructions and detect invalid programs. Decoded JavaCC exceptions to build a robust error-reporting system that accurately flags syntax violations.',
+        stack: [{ name: 'JavaCC' }, { name: 'Time Management' }, { name: 'Parser' }, { name: 'Semantic Analysis' }, { name: 'Exception Handling' }],
+        grade: '83%'
       },
     ],
   },

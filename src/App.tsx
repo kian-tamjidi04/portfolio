@@ -214,7 +214,7 @@ function ModalBody({
             key={`${entry.institution}-${entry.degree}`}
             variants={modalItemVariants}
           >
-            <span className="timeline-dot" aria-hidden="true" />
+            <span className={`timeline-dot ${entry.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
             <div className="timeline-content">
               <div className="timeline-title-row">
                 <span className="timeline-role">{entry.degree}</span>
@@ -224,7 +224,11 @@ function ModalBody({
               <p className="timeline-dates">{entry.dates}</p>
               <p className="modal-text education-details">{entry.details}</p>
               <div className="education-modules-section">
-                <div className="modal-row-title">Key Modules</div>
+                {entry.degree == 'A Levels' ? (
+                  <div className="modal-row-title">Subjects</div>
+                ) : (
+                  <div className="modal-row-title">Key Modules</div>
+                )}
                 <div className="d-flex flex-wrap gap-2 education-modules-tags">
                   {entry.modules.map((m) => (
                     <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
@@ -289,48 +293,11 @@ function ModalBody({
     );
   }
 
-  if (card.type === 'project') {
-    return (
-      <>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="project-image-placeholder" role="img" aria-label={card.imageTitle}>
-            {card.imageTitle}
-          </div>
-        </motion.section>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">{card.description}</p>
-        </motion.section>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="modal-row-title">Impact</div>
-          <div className="d-flex flex-wrap gap-2">
-            {card.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
-          </div>
-        </motion.section>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="modal-row-title">Stack</div>
-          <div className="d-flex flex-wrap gap-2">
-            {card.stack.map((i) => (
-              <span className={`tag ${i.primary ? 'is-primary' : ''}`} key={i.name}>{i.name}</span>
-            ))}
-          </div>
-        </motion.section>
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="modal-row-title">Links</div>
-          <div className="link-row d-flex gap-2">
-            {card.links.map((l) => (
-              <a href={l.href} key={l.label} target="_blank" rel="noreferrer">{l.label}</a>
-            ))}
-          </div>
-        </motion.section>
-      </>
-    );
-  }
-
   if (card.type === 'projects') {
     const itemsPerPage = 4;
     const totalPages = Math.ceil(card.items.length / itemsPerPage);
     const visibleItems = card.items.slice(projectPage * itemsPerPage, (projectPage + 1) * itemsPerPage);
-    
+
     // Automatically select the first visible project if none is actively set or it's out of bounds
     // But honestly, keeping the activeProject no matter the page is fine.
     const activeProject = card.items.find((i) => i.id === selectedProjectId) || card.items[0];
@@ -392,7 +359,6 @@ function ModalBody({
                       type="button"
                     >
                       <div className="project-sidebar-btn-content">
-                        <span className="project-sidebar-category">PROJECT</span>
                         <h3 className="project-sidebar-title">{item.title}</h3>
                       </div>
                       <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
@@ -422,24 +388,18 @@ function ModalBody({
               variants={projectContainerVariants}
               className="projects-detail-content"
             >
-              <motion.div variants={projectItemVariants}>
+              <motion.div variants={projectItemVariants} className="project-detail-header-row">
                 <h2 className="project-detail-header">{activeProject.title}</h2>
+                {activeProject.grade && (
+                  <div className="project-detail-grade">Grade Achieved: {activeProject.grade}</div>
+                )}
               </motion.div>
               <motion.p variants={projectItemVariants} className="project-detail-summary">
                 {activeProject.summary}
               </motion.p>
-              
-              {activeProject.impact && activeProject.impact.length > 0 && (
-                <motion.div variants={projectItemVariants} className="project-detail-section">
-                  <div className="modal-row-title">Impact</div>
-                  <div className="d-flex flex-wrap gap-2">
-                    {activeProject.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
-                  </div>
-                </motion.div>
-              )}
 
               <motion.div variants={projectItemVariants} className="project-detail-section">
-                <div className="modal-row-title">Technologies</div>
+                <div className="modal-row-title">Technologies and Skills</div>
                 <div className="d-flex flex-wrap gap-2">
                   {activeProject.stack.map((tag) => (
                     <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
@@ -447,6 +407,20 @@ function ModalBody({
                     </span>
                   ))}
                 </div>
+              </motion.div>
+
+              <motion.div variants={projectItemVariants} className="project-detail-section">
+                <div className="modal-row-title">Challenges I faced</div>
+                <motion.p variants={projectItemVariants} className="project-detail-summary">
+                  {activeProject.challenges}
+                </motion.p>
+              </motion.div>
+
+              <motion.div variants={projectItemVariants} className="project-detail-section">
+                <div className="modal-row-title">What I learnt</div>
+                <motion.p variants={projectItemVariants} className="project-detail-summary">
+                  {activeProject.whatILearnt}
+                </motion.p>
               </motion.div>
 
               <motion.div variants={projectItemVariants} className="project-detail-actions">
@@ -624,53 +598,53 @@ function CardInner({ card }: { card: PortfolioCard }) {
 
 /* ─── Viewport progress border ────────────────────────────────── */
 
-const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
-const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
+// const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
+// const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
 
-function ViewportProgress({ viewedCount }: { viewedCount: number }) {
-  const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
-  const clamped = Math.min(100, Math.max(0, pct));
-  const pathRef = useRef<SVGPathElement | null>(null);
-  const [pathLength, setPathLength] = useState(0);
-  const [isReady, setIsReady] = useState(false);
+// function ViewportProgress({ viewedCount }: { viewedCount: number }) {
+//   const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
+//   const clamped = Math.min(100, Math.max(0, pct));
+//   const pathRef = useRef<SVGPathElement | null>(null);
+//   const [pathLength, setPathLength] = useState(0);
+//   const [isReady, setIsReady] = useState(false);
 
-  useLayoutEffect(() => {
-    const node = pathRef.current;
-    if (!node) return undefined;
+//   useLayoutEffect(() => {
+//     const node = pathRef.current;
+//     if (!node) return undefined;
 
-    const updateLength = () => {
-      setPathLength(node.getTotalLength());
-    };
+//     const updateLength = () => {
+//       setPathLength(node.getTotalLength());
+//     };
 
-    updateLength();
-    window.addEventListener('resize', updateLength);
-    return () => window.removeEventListener('resize', updateLength);
-  }, []);
+//     updateLength();
+//     window.addEventListener('resize', updateLength);
+//     return () => window.removeEventListener('resize', updateLength);
+//   }, []);
 
-  useEffect(() => {
-    if (pathLength > 0) {
-      setIsReady(true);
-    }
-  }, [pathLength]);
+//   useEffect(() => {
+//     if (pathLength > 0) {
+//       setIsReady(true);
+//     }
+//   }, [pathLength]);
 
-  const dasharray = pathLength || 0;
-  const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
+//   const dasharray = pathLength || 0;
+//   const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
 
-  return (
-    <div className="viewport-progress" aria-hidden="true">
-      <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path
-          ref={pathRef}
-          className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
-          d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
-          fill="none"
-          strokeDasharray={dasharray}
-          strokeDashoffset={dashoffset}
-        />
-      </svg>
-    </div>
-  );
-}
+//   return (
+//     <div className="viewport-progress" aria-hidden="true">
+//       <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+//         <path
+//           ref={pathRef}
+//           className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
+//           d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
+//           fill="none"
+//           strokeDasharray={dasharray}
+//           strokeDashoffset={dashoffset}
+//         />
+//       </svg>
+//     </div>
+//   );
+// }
 
 function App() {
   /* Dark mode */
@@ -688,7 +662,7 @@ function App() {
   /* Viewed cards (session only — resets on refresh) */
   const [viewedCards, setViewedCards] = useState<Set<string>>(() => new Set());
 
-  const viewedCount = viewedCards.size;
+  // const viewedCount = viewedCards.size;
 
   /* Flip state */
   interface FlipState { cardId: string; fromRect: FromRect; }
@@ -740,8 +714,8 @@ function App() {
 
       {/* Bento grid */}
       <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>
-        <motion.section 
-          className="portfolio-grid" 
+        <motion.section
+          className="portfolio-grid"
           aria-label="Portfolio card grid"
           initial="hidden"
           animate="visible"
