@@ -199,7 +199,7 @@ function ModalBody({
     return (
       <div className="about-layout">
         <motion.div className="about-image-col" variants={modalItemVariants}>
-          <img src="/Pic.svg" alt="Profile" className="about-image" />
+          <img src="./Pic.svg" alt="Profile" className="about-image" />
         </motion.div>
         <div className="about-text-col">
           {card.bio.map((p) => (
