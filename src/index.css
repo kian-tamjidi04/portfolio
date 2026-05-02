@@ -803,9 +803,7 @@ html:not(.light) .card-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface);
   border-radius: 8px;
-  border: 1px solid var(--border);
   padding: 6px;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
@@ -934,6 +932,7 @@ html:not(.light) .card-title {
   height: 100%;
   min-height: 0;
   padding: 16px 22px 22px 22px;
+  position: relative;
 }
 
 .projects-sidebar {
@@ -1085,11 +1084,11 @@ html:not(.light) .card-title {
   flex: 1;
 }
 
-.project-detail-header-row {
+.project-detail-header-group {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
 }
 
 .project-detail-header {
@@ -1102,11 +1101,10 @@ html:not(.light) .card-title {
 .project-detail-grade {
   color: var(--accent);
   font-family: 'Bold';
-  font-size: var(--font-xl);
+  font-size: var(--font-lg);
   line-height: 1.2;
   white-space: nowrap;
-  padding-top: 8px;
-  /* visually align with header text */
+  padding-bottom: 4px;
 }
 
 .project-detail-summary {
@@ -1114,6 +1112,10 @@ html:not(.light) .card-title {
   color: var(--text-secondary);
   line-height: 1.5;
   margin: 0;
+
+  &.challenges-details {
+    font-size: var(--font-base);
+  }
 }
 
 .project-detail-accordion {
@@ -1215,6 +1217,11 @@ html:not(.light) .card-title {
   background: var(--surface);
 }
 
+.project-sidebar-close-mobile,
+.project-list-hamburger {
+  display: none;
+}
+
 /* ─── Viewport progress border ─────────────────────────────────── */
 .viewport-progress {
   position: fixed;
@@ -1310,11 +1317,65 @@ html:not(.light) .card-title {
 
   .projects-split-view {
     flex-direction: column;
+    padding: 0;
   }
 
   .projects-sidebar {
-    flex: 0 0 auto;
-    max-height: 250px;
+    display: none;
+  }
+
+  .projects-sidebar.sidebar-open,
+  .sidebar-open .projects-sidebar {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: var(--surface);
+    padding: 40px 24px 24px 24px;
+    flex: 1;
+    max-height: none;
+  }
+
+  .project-sidebar-close-mobile {
+    display: flex;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .project-list-hamburger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: var(--accent);
+    font-family: 'Bold';
+    font-size: var(--font-base);
+    cursor: pointer;
+    margin-bottom: 16px;
+    width: fit-content;
+    transition: all 0.2s ease;
+  }
+
+  .project-list-hamburger:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+
+  .projects-detail-pane {
+    padding: 24px;
+    border-radius: 16px;
+    flex: 1;
+    margin: 10px;
+    /* border: 1px solid var(--border); */
   }
 }
 

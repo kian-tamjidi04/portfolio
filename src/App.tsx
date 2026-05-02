@@ -17,7 +17,9 @@ import {
   faChevronUp,
   faChevronDown,
   faCode,
-  faArrowUpRightFromSquare
+  faArrowUpRightFromSquare,
+  faBars,
+  faListUl
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
@@ -106,12 +108,13 @@ function ModalBody({
   const [projectPage, setProjectPage] = useState(0);
   const [pageDirection, setPageDirection] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState<string | null>('tech');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   if (card.type === 'certifications') {
     return (
       <>
         {card.certs.map((cert) => (
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
-            <motion.div 
+            <motion.div
               className="cert-row"
               initial="initial"
               whileHover="hovered"
@@ -353,7 +356,7 @@ function ModalBody({
     };
 
     return (
-      <div className="projects-split-view">
+      <div className={`projects-split-view ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="projects-sidebar">
           <button
             className="project-nav-arrow"
@@ -381,7 +384,10 @@ function ModalBody({
                     <button
                       className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
                       key={item.id}
-                      onClick={() => setSelectedProjectId(item.id)}
+                      onClick={() => {
+                        setSelectedProjectId(item.id);
+                        setIsSidebarOpen(false);
+                      }}
                       type="button"
                     >
                       <div className="project-sidebar-btn-content">
@@ -403,9 +409,26 @@ function ModalBody({
           >
             <FontAwesomeIcon icon={faChevronDown} />
           </button>
+
+          {/* Mobile Close Button for Sidebar */}
+          <button
+            className="project-sidebar-close-mobile"
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Close project list"
+          >
+            <FontAwesomeIcon icon={faCircleXmark} />
+          </button>
         </div>
 
         <div className="projects-detail-pane">
+          <button
+            className="project-list-hamburger"
+            onClick={() => setIsSidebarOpen(true)}
+            type="button"
+          >
+            <FontAwesomeIcon icon={faListUl} />
+            <span>Project List</span>
+          </button>
           {activeProject && (
             <motion.div
               key={activeProject.id}
@@ -414,7 +437,7 @@ function ModalBody({
               variants={projectContainerVariants}
               className="projects-detail-content"
             >
-              <motion.div variants={projectItemVariants} className="project-detail-header-row">
+              <motion.div variants={projectItemVariants} className="project-detail-header-group">
                 <h2 className="project-detail-header">{activeProject.title}</h2>
                 {activeProject.grade && (
                   <div className="project-detail-grade">Grade Achieved: {activeProject.grade}</div>
@@ -455,13 +478,12 @@ function ModalBody({
                   </AnimatePresence>
                 </div>
 
-                {/* Section 2: Challenges */}
                 <div className="accordion-item">
                   <button
                     className={`accordion-header ${activeAccordion === 'challenges' ? 'active' : ''}`}
                     onClick={() => setActiveAccordion(activeAccordion === 'challenges' ? null : 'challenges')}
                   >
-                    <span className="modal-row-title">Challenges I faced</span>
+                    <span className="modal-row-title">Challenges I faced and how I overcame them</span>
                     <FontAwesomeIcon icon={faChevronDown} className={`accordion-chevron ${activeAccordion === 'challenges' ? 'rotated' : ''}`} />
                   </button>
                   <AnimatePresence>
@@ -473,34 +495,8 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <p className="project-detail-summary pt-2 pb-3">
+                        <p className="project-detail-summary challenges-details pt-2 pb-3">
                           {activeProject.challenges || "Information coming soon..."}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Section 3: What I learnt */}
-                <div className="accordion-item">
-                  <button
-                    className={`accordion-header ${activeAccordion === 'learnt' ? 'active' : ''}`}
-                    onClick={() => setActiveAccordion(activeAccordion === 'learnt' ? null : 'learnt')}
-                  >
-                    <span className="modal-row-title">What I learnt</span>
-                    <FontAwesomeIcon icon={faChevronDown} className={`accordion-chevron ${activeAccordion === 'learnt' ? 'rotated' : ''}`} />
-                  </button>
-                  <AnimatePresence>
-                    {activeAccordion === 'learnt' && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                        className="accordion-content"
-                      >
-                        <p className="project-detail-summary pt-2 pb-3">
-                          {activeProject.whatILearnt || "Information coming soon..."}
                         </p>
                       </motion.div>
                     )}

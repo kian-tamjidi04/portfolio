@@ -55,7 +55,6 @@ export interface ProjectPreviewItem {
   stack: TagItem[];
   links?: ExternalLink[];
   challenges?: string;
-  whatILearnt?: string;
   grade?: string;
 }
 
@@ -343,6 +342,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Traffic Junction Simulator',
         summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
         stack: [{ name: 'React' }, { name: 'Java' }, { name: 'Springboot' }, { name: 'Project Management' }, { name: 'Version Control' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Gantt Charts' }, { name: 'Test Driven Development' },],
+        challenges: 'Everyone at university has varying styles of working, attitudes towards learning and schedules. As such, efficiently managing and accommodating different team members helped to build my organisational and people skills.',
         links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
         grade: '70%'
       },
@@ -351,6 +351,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Intrusion Detection System',
         summary: 'Engineered a multithreaded packet sniffing system in C to analyze network traffic. Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution. Added mutex locks to prevent race conditions and deadlocks.',
         stack: [{ name: 'C' }, { name: 'Multithreading' }, { name: 'pthreads' }, { name: 'Resilience' }, { name: 'Efficiency' }],
+        challenges: 'Whilst I found the content of this module relatively straight forward, putting into practice in a low-level language like C proved more difficult. Completing this coursework required a strong sense of resilience, in particular when translating the original single-threaded solution I designed to be multi-threaded.',
         grade: '89%'
       },
       {
@@ -358,20 +359,21 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Daily UI Challenge',
         summary: 'Currently improving my design skills through a variety of UI/UX exercises. Researching best practices and putting them into practice with Figma Hi-Fi prototyping. Using AI tools to ideate mock content where necessary to focus on design style and structure.',
         stack: [{ name: 'Figma Design' }, { name: 'UX Design' }, { name: 'Prototyping' }, { name: 'Prompt Engineering' }, { name: 'Claude' }],
+        challenges: 'As UX and product design is relatively new for me, coming up with novel ideas sometimes proves tricky. However, through the use of public sites such as Dribbble and Mobbin, along with AI brainstorming interactions, I am starting to learn and get past such hurdles, improving my creativity and expanding my way of design thinking.'
       },
       {
         id: 'project-06',
         title: 'Binary Options XR Trading Simulator Game',
         summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to employees from across the bank. Received positive feedback and interest from different divisions to deploy the technology into their teams.',
-        stack: [{ name: 'XR' }, { name: 'Swift' }, { name: 'visionOS' }, { name: 'AI-assisted development' }, { name: 'Blender' }, { name: 'Reality Composer Pro' }],
+        stack: [{ name: 'MR / XR' }, { name: 'Swift' }, { name: 'visionOS' }, { name: 'AI-assisted development' }, { name: 'Blender' }, { name: 'Reality Composer Pro' }],
+        challenges: 'This game was deemed a side project, rather than business-as-usual, and I only had 3 weeks to build the product out end to end. Learning good mixed reality practices and visionOS development from scratch was challenging, however with good time management and AI assisted learning and development, I was able to produce a popular MVP.'
       },
       {
         id: 'project-01',
         title: 'AI Connect 4',
         summary: 'Implemented the minimax adversarial search algorithm in Python 3, applying concepts from lectures to development. Optimised my code through the use of alpha-beta pruning. Evaluated algorithm performance by tracking expanded nodes and pruning frequency across varying board sizes and win conditions.',
         stack: [{ name: 'Python' }, { name: 'Minimax' }, { name: 'Adversarial Search' }],
-        challenges: 'During the implementation process, sometie',
-        whatILearnt: '',
+        challenges: 'During the testing process, if my algorithm was not efficient enough and the testing constraints were sufficiently complex, my program would get stuck, unable to complete and output any results. This led to wasted time and some frustration from my end. However, it did force me to take a step back from the problem, thinking details through more abstractly before writing code; this often led to efficiency gains and improved results.',
         grade: '74%'
       },
       {
@@ -380,13 +382,15 @@ export const portfolioCards: PortfolioCard[] = [
         summary: 'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits. Conducted market research and user interviews prior to design and development. Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
         stack: [{ name: 'Swift / SwiftUI' }, { name: 'iOS' }, { name: 'Mobile Development' }, { name: 'Project Management' }, , { name: 'UX Research' }],
         links: [{ label: 'GitHub', href: 'https://github.com/kian-tamjidi04/MusicApp' }],
+        challenges: 'This project was incredibly demanding, not only for the scope of the build, but also for the large amount of documentation associated with it. Market research, structure diagrams, UI designs and usability testing all had to be carried out and documented thoroughly, on top of developing a working MVP. This helped me to understand the full scope of software engineering, beyond just coding features.',
         grade: '100%'
       },
       {
         id: 'project-04',
         title: 'Full-Stack Ticketing Web Application',
         summary: 'Designed and implemented a web app for users to purchase tickets for various events. Implemented secure user registration and role-based authentication for superusers and general attendees. Highlighted for a "significant quantity of heuristic design towards usability".',
-        stack: [{ name: 'Python' }, { name: 'Flask' }, { name: 'SQLAlchemy' }, { name: 'Web Design' }, { name: 'Jinja' }, { name: 'JavaScript' }, { name: 'HTML / CSS' }, { name: 'UX / UI' },],
+        stack: [{ name: 'Python' }, { name: 'Flask' }, { name: 'SQLAlchemy' }, { name: 'Web Design' }, { name: 'Jinja' }, { name: 'JavaScript' }, { name: 'HTML / CSS' }, { name: 'UX / UI' }, { name: 'Bootstrap 5' }],
+        challenges: 'I had prior experience with HTML, however learning industry standard Bootstrap and Jinja were new to me. Thankfully, the lecture content was comprehensive and the lab tutors helped with my questions.',
         grade: '84%'
       },
       {
@@ -394,6 +398,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Custom Java Interpreter',
         summary: 'Developed a custom lexer, parser and interpreter using JavaCC. Engineered the system to validate positive linear arithmetic, evaluate conditional step instructions and detect invalid programs. Decoded JavaCC exceptions to build a robust error-reporting system that accurately flags syntax violations.',
         stack: [{ name: 'JavaCC' }, { name: 'Time Management' }, { name: 'Parser' }, { name: 'Semantic Analysis' }, { name: 'Exception Handling' }],
+        challenges: 'This coursework was placed at the end of Year 2 Term 2, when I also had 2 other difficult module courseworks to complete. In order to excel, I had to effectively manage my time and optimise my learning, seeking advise from older students which was invaluable.',
         grade: '83%'
       },
     ],
