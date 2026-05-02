@@ -27,8 +27,9 @@ import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './c
 function getModalRect(type?: string) {
   const pad = 42;
   const isProjects = type === 'projects';
-  const maxWidth = isProjects ? 1400 : 900;
-  const maxHeight = isProjects ? 900 : 760;
+  const isAbout = type === 'about';
+  const maxWidth = isProjects ? 1400 : (isAbout ? 1100 : 900);
+  const maxHeight = isProjects ? 900 : (isAbout ? 9999 : 760);
   const w = Math.min(maxWidth, window.innerWidth - pad * 2);
   const h = Math.min(maxHeight, window.innerHeight - pad * 2);
   return {
@@ -160,24 +161,29 @@ function ModalBody({
 
   if (card.type === 'about') {
     return (
-      <>
-        {card.bio.map((p) => (
-          <motion.section className="modal-section" key={p} variants={modalItemVariants}>
-            <p className="modal-text">{p}</p>
+      <div className="about-layout">
+        <motion.div className="about-image-col" variants={modalItemVariants}>
+          <img src="/Pic.svg" alt="Profile" className="about-image" />
+        </motion.div>
+        <div className="about-text-col">
+          {card.bio.map((p) => (
+            <motion.section className="modal-section" key={p} variants={modalItemVariants}>
+              <p className="modal-text">{p}</p>
+            </motion.section>
+          ))}
+          <motion.section className="modal-section" variants={modalItemVariants}>
+            <div className="modal-row-title">Things I believe</div>
+            <ul className="belief-list">
+              {card.beliefs.map((b) => (
+                <li key={b}>
+                  <span className="belief-dot" aria-hidden="true" />
+                  <span className="belief-text">{b}</span>
+                </li>
+              ))}
+            </ul>
           </motion.section>
-        ))}
-        <motion.section className="modal-section" variants={modalItemVariants}>
-          <div className="modal-row-title">Things I believe</div>
-          <ul className="belief-list">
-            {card.beliefs.map((b) => (
-              <li key={b}>
-                <span className="belief-dot" aria-hidden="true" />
-                <span className="belief-text">{b}</span>
-              </li>
-            ))}
-          </ul>
-        </motion.section>
-      </>
+        </div>
+      </div>
     );
   }
 
@@ -529,7 +535,12 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       <motion.div
         className="flip-wrapper"
         initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
-        animate={{ left: modalRect.left, top: modalRect.top, width: modalRect.width, height: modalHeight }}
+        animate={{ 
+          left: (window.innerWidth - modalRect.width) / 2, 
+          top: (window.innerHeight - modalHeight) / 2, 
+          width: modalRect.width, 
+          height: modalHeight 
+        }}
         exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
         transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
       >
