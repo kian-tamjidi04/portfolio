@@ -539,7 +539,7 @@ function ModalBody({
                 ))}
                 {activeProject.id === 'project-07' && (
                   <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
-                    <img src="/figma.svg" alt="Figma" className="project-action-icon-svg" />
+                    <img src="./figma.svg" alt="Figma" className="project-action-icon-svg" />
                     Figma coming soon...
                   </div>
                 )}
