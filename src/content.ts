@@ -384,7 +384,7 @@ export const portfolioCards: PortfolioCard[] = [
         links: [{ label: 'Live Site', href: '#' }, { label: 'GitHub', href: '#' }],
       },
       {
-        id: 'project-07',
+        id: 'project-08',
         title: 'Music Practice App',
         summary: 'A placeholder concept for mobile-first product delivery.',
         impact: ['Placeholder metric to be replaced', 'Placeholder outcome to be replaced'],

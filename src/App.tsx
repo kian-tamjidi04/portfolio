@@ -12,17 +12,25 @@ import {
   faScrewdriverWrench,
   faMoon,
   faSun,
-  faEnvelope
+  faEnvelope,
+  faChevronRight,
+  faChevronUp,
+  faChevronDown,
+  faCode,
+  faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { portfolioCards, type PortfolioCard, type ProjectPreviewItem } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
-function getModalRect() {
+function getModalRect(type?: string) {
   const pad = 42;
-  const w = Math.min(900, window.innerWidth - pad * 2);
-  const h = Math.min(760, window.innerHeight - pad * 2);
+  const isProjects = type === 'projects';
+  const maxWidth = isProjects ? 1400 : 900;
+  const maxHeight = isProjects ? 900 : 760;
+  const w = Math.min(maxWidth, window.innerWidth - pad * 2);
+  const h = Math.min(maxHeight, window.innerHeight - pad * 2);
   return {
     left: (window.innerWidth - w) / 2,
     top: (window.innerHeight - h) / 2,
@@ -53,6 +61,30 @@ const modalBodyVariants = {
   visible: { transition: { staggerChildren: CONTENT_STAGGER } },
 };
 
+const gridContainerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const gridItemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] } },
+};
+
+const projectContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const projectItemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+};
+
 const cardPreviewIcons = {
   certifications: faAward,
   about: faCircleUser,
@@ -66,13 +98,12 @@ const cardPreviewIcons = {
 
 function ModalBody({
   card,
-  onProjectPreviewClick,
-  focusedProjectId,
 }: {
   card: PortfolioCard;
-  onProjectPreviewClick: (item: ProjectPreviewItem, el: HTMLButtonElement) => void;
-  focusedProjectId: string | null;
 }) {
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [projectPage, setProjectPage] = useState(0);
+  const [pageDirection, setPageDirection] = useState(1);
   if (card.type === 'certifications') {
     return (
       <>
@@ -176,29 +207,34 @@ function ModalBody({
 
   if (card.type === 'education') {
     return (
-      <>
+      <div className="timeline" aria-label="Education timeline">
         {card.entries.map((entry) => (
-          <motion.section className="modal-section" key={`${entry.degree}-details`} variants={modalItemVariants}>
-            <div className="timeline-title-row">
-              <span className="timeline-role">{entry.degree}</span>
-              <span className="timeline-separator"> • </span>
-              <span className="timeline-company">{entry.institution}</span>
+          <motion.article
+            className="timeline-item"
+            key={`${entry.institution}-${entry.degree}`}
+            variants={modalItemVariants}
+          >
+            <span className="timeline-dot" aria-hidden="true" />
+            <div className="timeline-content">
+              <div className="timeline-title-row">
+                <span className="timeline-role">{entry.degree}</span>
+                <span className="timeline-separator"> • </span>
+                <span className="timeline-company">{entry.institution}</span>
+              </div>
+              <p className="timeline-dates">{entry.dates}</p>
+              <p className="modal-text education-details">{entry.details}</p>
+              <div className="education-modules-section">
+                <div className="modal-row-title">Key Modules</div>
+                <div className="d-flex flex-wrap gap-2 education-modules-tags">
+                  {entry.modules.map((m) => (
+                    <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
+                  ))}
+                </div>
+              </div>
             </div>
-            <p className="timeline-dates">{entry.dates}</p>
-            <p className="modal-text education-details">{entry.details}</p>
-          </motion.section>
+          </motion.article>
         ))}
-        {card.entries.map((entry) => (
-          <motion.section className="modal-section education-modules-section" key={`${entry.degree}-modules`} variants={modalItemVariants}>
-            <div className="modal-row-title">Key Modules</div>
-            <div className="d-flex flex-wrap gap-2 education-modules-tags">
-              {entry.modules.map((m) => (
-                <span className="tag" key={`${entry.degree}-${m}`}>{m}</span>
-              ))}
-            </div>
-          </motion.section>
-        ))}
-      </>
+      </div>
     );
   }
 
@@ -291,25 +327,144 @@ function ModalBody({
   }
 
   if (card.type === 'projects') {
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(card.items.length / itemsPerPage);
+    const visibleItems = card.items.slice(projectPage * itemsPerPage, (projectPage + 1) * itemsPerPage);
+    
+    // Automatically select the first visible project if none is actively set or it's out of bounds
+    // But honestly, keeping the activeProject no matter the page is fine.
+    const activeProject = card.items.find((i) => i.id === selectedProjectId) || card.items[0];
+
+    const handleNextPage = () => {
+      setPageDirection(1);
+      setProjectPage((p) => Math.min(totalPages - 1, p + 1));
+    };
+
+    const handlePrevPage = () => {
+      setPageDirection(-1);
+      setProjectPage((p) => Math.max(0, p - 1));
+    };
+
+    const pageVariants = {
+      enter: (dir: number) => ({
+        y: dir > 0 ? 'calc(100% + 8px)' : 'calc(-100% - 8px)',
+      }),
+      center: {
+        y: 0,
+        transition: { duration: 0.6, ease: [0.65, 0, 0.35, 1] },
+      },
+      exit: (dir: number) => ({
+        y: dir > 0 ? 'calc(-100% - 8px)' : 'calc(100% + 8px)',
+        transition: { duration: 0.6, ease: [0.65, 0, 0.35, 1] },
+      }),
+    };
+
     return (
-      <section className="projects-preview-grid" aria-label="Projects overview cards">
-        {card.items.map((item) => {
-          const isHidden = focusedProjectId === item.id;
-          return (
-            <motion.button
-              className={`project-preview-card${isHidden ? ' project-preview-card-hidden' : ''}`}
-              key={item.id}
-              variants={modalItemVariants}
-              onClick={isHidden ? undefined : (event) => onProjectPreviewClick(item, event.currentTarget)}
-              type="button"
-              aria-hidden={isHidden || undefined}
+      <div className="projects-split-view">
+        <div className="projects-sidebar">
+          <button
+            className="project-nav-arrow"
+            onClick={handlePrevPage}
+            disabled={projectPage === 0}
+            aria-label="Previous projects"
+          >
+            <FontAwesomeIcon icon={faChevronUp} />
+          </button>
+
+          <div className="projects-sidebar-list-container">
+            <AnimatePresence custom={pageDirection}>
+              <motion.div
+                key={projectPage}
+                custom={pageDirection}
+                variants={pageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="projects-sidebar-list"
+              >
+                {visibleItems.map((item) => {
+                  const isActive = activeProject?.id === item.id;
+                  return (
+                    <button
+                      className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
+                      key={item.id}
+                      onClick={() => setSelectedProjectId(item.id)}
+                      type="button"
+                    >
+                      <div className="project-sidebar-btn-content">
+                        <span className="project-sidebar-category">PROJECT</span>
+                        <h3 className="project-sidebar-title">{item.title}</h3>
+                      </div>
+                      <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
+                    </button>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <button
+            className="project-nav-arrow"
+            onClick={handleNextPage}
+            disabled={projectPage === totalPages - 1}
+            aria-label="Next projects"
+          >
+            <FontAwesomeIcon icon={faChevronDown} />
+          </button>
+        </div>
+
+        <div className="projects-detail-pane">
+          {activeProject && (
+            <motion.div
+              key={activeProject.id}
+              initial="hidden"
+              animate="visible"
+              variants={projectContainerVariants}
+              className="projects-detail-content"
             >
-              <h3 className="project-preview-title">{item.title}</h3>
-              {/* <p className="project-preview-summary">{item.summary}</p> */}
-            </motion.button>
-          );
-        })}
-      </section>
+              <motion.div variants={projectItemVariants}>
+                <h2 className="project-detail-header">{activeProject.title}</h2>
+              </motion.div>
+              <motion.p variants={projectItemVariants} className="project-detail-summary">
+                {activeProject.summary}
+              </motion.p>
+              
+              {activeProject.impact && activeProject.impact.length > 0 && (
+                <motion.div variants={projectItemVariants} className="project-detail-section">
+                  <div className="modal-row-title">Impact</div>
+                  <div className="d-flex flex-wrap gap-2">
+                    {activeProject.impact.map((i) => <span className="pill" key={i}>{i}</span>)}
+                  </div>
+                </motion.div>
+              )}
+
+              <motion.div variants={projectItemVariants} className="project-detail-section">
+                <div className="modal-row-title">Technologies</div>
+                <div className="d-flex flex-wrap gap-2">
+                  {activeProject.stack.map((tag) => (
+                    <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div variants={projectItemVariants} className="project-detail-actions">
+                {activeProject.links?.map((link) => (
+                  <a href={link.href} key={link.label} target="_blank" rel="noreferrer" className={`project-action-btn ${(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? 'project-action-btn-primary' : 'project-action-btn-secondary'}`}>
+                    {(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? (
+                      <FontAwesomeIcon icon={faCode} />
+                    ) : (
+                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                    )}
+                    {link.label}
+                  </a>
+                ))}
+              </motion.div>
+            </motion.div>
+          )}
+        </div>
+      </div>
     );
   }
 }
@@ -330,27 +485,29 @@ interface ProjectFocusState {
 }
 
 function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
-  const [modalRect, setModalRect] = useState(() => getModalRect());
+  const [modalRect, setModalRect] = useState(() => getModalRect(card.type));
   const [modalHeight, setModalHeight] = useState(modalRect.height);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
-  const [projectFocus, setProjectFocus] = useState<ProjectFocusState | null>(null);
-  const [projectFocusClosedId, setProjectFocusClosedId] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
 
   const computeHeight = useCallback((rect: ReturnType<typeof getModalRect>) => {
+    if (card.type === 'projects') {
+      setModalHeight(rect.height);
+      return;
+    }
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
     const bodyHeight = bodyRef.current?.scrollHeight ?? 0;
     const contentHeight = headerHeight + bodyHeight;
     const targetHeight = Math.min(rect.height, contentHeight || rect.height);
     setModalHeight(targetHeight);
-  }, []);
+  }, [card.type]);
 
   const measureModal = useCallback(() => {
-    const nextRect = getModalRect();
+    const nextRect = getModalRect(card.type);
     setModalRect(nextRect);
     computeHeight(nextRect);
-  }, [computeHeight]);
+  }, [computeHeight, card.type]);
 
   useLayoutEffect(() => {
     measureModal();
@@ -376,72 +533,11 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
   useEffect(() => {
     setIsContentRevealed(false);
-    setProjectFocus(null);
-    setProjectFocusClosedId(null);
     const revealTimer = window.setTimeout(() => {
       setIsContentRevealed(true);
     }, CONTENT_REVEAL_DELAY * 1000);
     return () => window.clearTimeout(revealTimer);
   }, [card.id]);
-
-  const projectFocusRect = useMemo(() => {
-    const headerHeight = headerRef.current?.offsetHeight ?? 0;
-    const topOffset = headerHeight + 10;
-    const viewportPadding = 24;
-
-    const baseWidth = modalRect.width + 84;
-    const baseHeight = Math.max(250, modalHeight - topOffset + 28);
-
-    const targetWidth = baseWidth * 1.5;
-    const targetHeight = baseHeight * 1.5;
-
-    const maxWidth = Math.max(320, window.innerWidth - viewportPadding * 2);
-    const maxHeight = Math.max(250, window.innerHeight - viewportPadding * 2);
-
-    const focusWidth = Math.min(maxWidth, targetWidth);
-    const focusHeight = Math.min(maxHeight, targetHeight);
-
-    const left = (window.innerWidth - focusWidth) / 2;
-    const top = (window.innerHeight - focusHeight) / 2;
-
-    return {
-      left,
-      top,
-      width: focusWidth,
-      height: focusHeight,
-    };
-  }, [modalHeight, modalRect]);
-
-  const handleProjectPreviewClick = useCallback((item: ProjectPreviewItem, el: HTMLButtonElement) => {
-    const rect = el.getBoundingClientRect();
-    setProjectFocusClosedId(null);
-    setProjectFocus({
-      item,
-      fromRect: {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-      },
-    });
-  }, []);
-
-  const closeProjectFocus = useCallback(() => {
-    setProjectFocusClosedId(projectFocus?.item.id ?? null);
-    setProjectFocus(null);
-  }, [projectFocus]);
-
-  useEffect(() => {
-    if (!projectFocus) return undefined;
-    const onProjectEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      event.stopPropagation();
-      event.preventDefault();
-      setProjectFocus(null);
-    };
-    window.addEventListener('keydown', onProjectEscape, true);
-    return () => window.removeEventListener('keydown', onProjectEscape, true);
-  }, [projectFocus]);
 
   return (
     <>
@@ -457,7 +553,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
       {/* The flying card — framer-motion owns position + size */}
       <motion.div
-        className={`flip-wrapper${projectFocus ? ' flip-wrapper-nested-focus' : ''}`}
+        className="flip-wrapper"
         initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
         animate={{ left: modalRect.left, top: modalRect.top, width: modalRect.width, height: modalHeight }}
         exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
@@ -473,12 +569,12 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Front face — exact copy of the card */}
-          <div className={`flip-face flip-front`} style={{ transition: 'background-color 0.6s ease' }}>
+          <div className="flip-face flip-front" style={{ transition: 'background-color 0.6s ease' }}>
             <CardInner card={card} />
           </div>
 
           {/* Back face — modal content (rotated 180deg base, visible when inner=180) */}
-          <div className={`flip-face flip-back${projectFocus ? ' flip-back-nested-focus' : ''}`}>
+          <div className="flip-face flip-back">
             <div style={{ width: modalRect.width, display: 'flex', flexDirection: 'column', height: '100%' }}>
               <header className="portfolio-modal-header" ref={headerRef}>
                 <div>
@@ -493,107 +589,14 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                 exit="hidden"
                 variants={modalBodyVariants}
                 ref={bodyRef}
+                style={card.type === 'projects' ? { flex: 1, padding: 0, minHeight: 0 } : undefined}
               >
-                <ModalBody
-                  card={card}
-                  focusedProjectId={projectFocus?.item.id ?? projectFocusClosedId}
-                  onProjectPreviewClick={handleProjectPreviewClick}
-                />
+                <ModalBody card={card} />
               </motion.div>
             </div>
           </div>
         </motion.div>
       </motion.div>
-
-      <AnimatePresence onExitComplete={() => setProjectFocusClosedId(null)}>
-        {projectFocus && (
-          <>
-            <motion.button
-              className="project-focus-scrim"
-              aria-label="Close project details"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={closeProjectFocus}
-              type="button"
-            />
-            <motion.div
-              className="project-focus-wrapper"
-              initial={{
-                left: projectFocus.fromRect.left,
-                top: projectFocus.fromRect.top,
-                width: projectFocus.fromRect.width,
-                height: projectFocus.fromRect.height,
-              }}
-              animate={projectFocusRect}
-              exit={{
-                left: projectFocus.fromRect.left,
-                top: projectFocus.fromRect.top,
-                width: projectFocus.fromRect.width,
-                height: projectFocus.fromRect.height,
-              }}
-              transition={{ duration: 0.48, ease: FLIP_EASE }}
-            >
-              <motion.div
-                className="project-focus-inner"
-                initial={{ rotateX: 0 }}
-                animate={{ rotateX: 180 }}
-                exit={{ rotateX: 0 }}
-                transition={{ duration: 0.48, ease: FLIP_EASE }}
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <div className="project-focus-face project-focus-front">
-                  <h3 className="project-preview-title">{projectFocus.item.title}</h3>
-                  <p className="project-preview-summary">{projectFocus.item.summary}</p>
-                </div>
-                <div className="project-focus-face project-focus-back">
-                  <header className="project-focus-header">
-                    <div>
-                      <h3 className="project-focus-title">{projectFocus.item.title}</h3>
-                    </div>
-                    <button
-                      aria-label="Close focused project"
-                      className="modal-close"
-                      onClick={closeProjectFocus}
-                      type="button"
-                    >
-                      <FontAwesomeIcon icon={faCircleXmark} />
-                    </button>
-                  </header>
-                  <div className="project-focus-body">
-                    <section className="modal-section">
-                      <p className="modal-text">{projectFocus.item.summary}</p>
-                    </section>
-                    <section className="modal-section">
-                      <div className="modal-row-title">Impact</div>
-                      <div className="d-flex flex-wrap gap-2">
-                        {projectFocus.item.impact.map((impactPoint) => <span className="pill" key={impactPoint}>{impactPoint}</span>)}
-                      </div>
-                    </section>
-                    <section className="modal-section">
-                      <div className="modal-row-title">Stack</div>
-                      <div className="d-flex flex-wrap gap-2">
-                        {projectFocus.item.stack.map((tag) => (
-                          <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>{tag.name}</span>
-                        ))}
-                      </div>
-                    </section>
-                    <section className="modal-section">
-                      <div className="modal-row-title">Links</div>
-                      <div className="link-row d-flex gap-2">
-                        {projectFocus.item.links.map((link) => (
-                          <a href={link.href} key={link.label} target="_blank" rel="noreferrer">{link.label}</a>
-                        ))}
-                      </div>
-                    </section>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </>
   );
 }
@@ -737,7 +740,13 @@ function App() {
 
       {/* Bento grid */}
       <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>
-        <section className="portfolio-grid" aria-label="Portfolio card grid">
+        <motion.section 
+          className="portfolio-grid" 
+          aria-label="Portfolio card grid"
+          initial="hidden"
+          animate="visible"
+          variants={gridContainerVariants}
+        >
           {portfolioCards.map((card) => {
             const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
             const isNonClickable = card.nonClickable === true;
@@ -745,29 +754,31 @@ function App() {
 
             if (isNonClickable) {
               return (
-                <div
+                <motion.div
                   className={`portfolio-card card-${card.type} ${card.placementClass} card-non-clickable${isHidden ? ' card-hidden' : ''}`}
                   key={card.id}
                   aria-label={card.title}
+                  variants={gridItemVariants}
                 >
                   <CardInner card={card} />
-                </div>
+                </motion.div>
               );
             }
 
             return (
-              <button
+              <motion.button
                 aria-label={card.title}
                 className={`portfolio-card card-${card.type} ${card.placementClass}${isHidden ? ' card-hidden' : ''}`}
                 key={card.id}
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}
                 type="button"
+                variants={gridItemVariants}
               >
                 <CardInner card={card} />
-              </button>
+              </motion.button>
             );
           })}
-        </section>
+        </motion.section>
       </main>
 
       {/* Flying flip card */}
