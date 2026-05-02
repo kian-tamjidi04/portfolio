@@ -110,9 +110,13 @@ function ModalBody({
       <>
         {card.certs.map((cert) => (
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
-            <div className="cert-row">
+            <motion.div 
+              className="cert-row"
+              initial="initial"
+              whileHover="hovered"
+            >
               <div className="cert-icon" aria-hidden="true">
-                <img src={cert.icon} className="cert-icon-image" height={32} width={32} />
+                <img src={cert.icon} className="cert-icon-image" height={64} width={64} />
               </div>
               <div className="d-flex flex-column">
                 <div className="cert-title-row">
@@ -121,8 +125,18 @@ function ModalBody({
                   <span className="cert-company">{cert.issuer}</span>
                 </div>
                 <div className="cert-date">{cert.date}</div>
+                <motion.div
+                  variants={{
+                    initial: { height: 0, opacity: 0, marginTop: 0 },
+                    hovered: { height: 'auto', opacity: 1, marginTop: 8 }
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <p className="cert-takeaway">{cert.takeaway}</p>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </motion.section>
         ))}
       </>
@@ -535,11 +549,11 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       <motion.div
         className="flip-wrapper"
         initial={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
-        animate={{ 
-          left: (window.innerWidth - modalRect.width) / 2, 
-          top: (window.innerHeight - modalHeight) / 2, 
-          width: modalRect.width, 
-          height: modalHeight 
+        animate={{
+          left: (window.innerWidth - modalRect.width) / 2,
+          top: (window.innerHeight - modalHeight) / 2,
+          width: modalRect.width,
+          height: modalHeight
         }}
         exit={{ left: fromRect.left, top: fromRect.top, width: fromRect.width, height: fromRect.height }}
         transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}

@@ -191,14 +191,14 @@ export const portfolioCards: PortfolioCard[] = [
         handle: '@kian-tamjidi04',
         description: 'Code, experiments, and archived product prototypes.',
         href: 'https://github.com/kian-tamjidi04',
-        icon: '../public/custom_github.svg',
+        icon: '../public/github.svg',
       },
       {
         platform: 'LinkedIn',
         handle: '/in/kian-tamjidi',
         description: 'Experience highlights and writing about shipping teams.',
         href: 'https://www.linkedin.com/in/kian-tamjidi',
-        icon: '../public/custom_linkedin.svg',
+        icon: '../public/linkedin.svg',
       },
       {
         platform: 'Email',
@@ -220,8 +220,8 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. ',
-        skills: ['React', 'TypeScript', 'Angular', 'Figma', 'HTML', 'CSS', 'Communication', 'Innovation'],
+        impact: 'Collaborated with a global team maintaining an self-support website for 140k employees. Brainstormed and rapidly prototyped a variety of feature to reduce tickets raised and costs for the bank. ',
+        skills: ['React', 'TypeScript', 'Angular', 'Figma', 'HTML', 'CSS', 'Communication', 'Innovation', 'UX Design'],
         isRecent: true,
       },
       {

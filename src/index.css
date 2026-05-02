@@ -541,7 +541,7 @@ html:not(.light) .card-title {
 /* ─── Certifications Modal ───────────────────────────────────────── */
 .cert-row {
   display: grid;
-  grid-template-columns: 40px 1fr;
+  grid-template-columns: 80px 1fr;
   gap: 14px;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -556,9 +556,9 @@ html:not(.light) .card-title {
   background: var(--accent-sky-dim);
 }
 
-.cert-badge {
-  width: 40px;
-  height: 40px;
+.cert-icon {
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
   background: var(--accent-dim);
   color: var(--accent);
@@ -568,10 +568,21 @@ html:not(.light) .card-title {
   justify-content: center;
 }
 
+.cert-icon-image {
+  border-radius: 6px;
+}
+
 .cert-date {
   margin: 4px 0 0;
   font-size: var(--font-md);
   color: var(--text-muted);
+}
+
+.cert-takeaway {
+  margin: 0;
+  font-size: var(--font-base);
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 /* ─── About Modal ────────────────────────────────────────────────── */
