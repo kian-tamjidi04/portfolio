@@ -771,11 +771,11 @@ function App() {
   const [isDark, setIsDark] = useState<boolean>(() => {
     const stored = localStorage.getItem('portfolio-theme');
     if (stored) return stored === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false;
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle('light', !isDark);
+    document.documentElement.classList.toggle('dark', isDark);
     localStorage.setItem('portfolio-theme', isDark ? 'dark' : 'light');
   }, [isDark]);
 

@@ -1,41 +1,5 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 :root {
-  --bg: #16161c;
-  --surface: #23232b;
-  --surface-subtle: #1f1f28;
-  --border: #2a2a36;
-  --accent: #f97316;
-  --accent-dim: rgba(249, 115, 22, 0.14);
-  --accent-sky: #22d3ee;
-  --accent-sky-dim: rgba(34, 211, 238, 0.12);
-  --accent-emerald: #2dd4bf;
-  --accent-emerald-dim: rgba(45, 212, 191, 0.12);
-  --text-primary: #f0f1f5;
-  --text-secondary: #9094a8;
-  --text-muted: #52566b;
-  --orb: rgba(249, 115, 22, 0.18);
-  --viewed-border: rgba(45, 212, 191, 0.45);
-  --viewed-bg-mix: rgba(45, 212, 191, 0.07);
-  --viewed-shadow: rgba(45, 212, 191, 0.18);
-  --health-liquid: #2dd4bf;
-  --health-liquid-dim: rgba(45, 212, 191, 0.18);
-  --health-track: rgba(45, 212, 191, 0.08);
-  --health-track-border: rgba(45, 212, 191, 0.18);
-  --font-base: 1.25rem;
-  --font-md: 1.5rem;
-  --font-lg: 1.75rem;
-  --font-xl: 2rem;
-  --font-card-title: 2.75rem;
-  --font-modal-title: 3.25rem;
-  --font-hero-title: 5.25rem;
-  --card-radius: 16px;
-  --modal-radius: 20px;
-  --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
-}
-
-/* Light mode override */
-html.light {
   --bg: #eeeeee;
   --surface: #ffffff;
   --surface-subtle: #eef0f5;
@@ -59,6 +23,42 @@ html.light {
   --health-liquid-dim: rgba(13, 148, 136, 0.18);
   --health-track: rgba(13, 148, 136, 0.07);
   --health-track-border: rgba(13, 148, 136, 0.20);
+  --font-base: 0.95rem;
+  --font-md: 1.15rem;
+  --font-lg: 1.4rem;
+  --font-xl: 1.6rem;
+  --font-card-title: 1.9rem;
+  --font-modal-title: 2.4rem;
+  --font-hero-title: 3.75rem;
+  --card-radius: 12px;
+  --modal-radius: 16px;
+}
+
+/* Dark mode override */
+html.dark {
+  --bg: #16161c;
+  --surface: #23232b;
+  --surface-subtle: #1f1f28;
+  --border: #2a2a36;
+  --accent: #f97316;
+  --accent-dim: rgba(249, 115, 22, 0.14);
+  --accent-sky: #22d3ee;
+  --accent-sky-dim: rgba(34, 211, 238, 0.12);
+  --accent-emerald: #2dd4bf;
+  --accent-emerald-dim: rgba(45, 212, 191, 0.12);
+  --text-primary: #f0f1f5;
+  --text-secondary: #9094a8;
+  --text-muted: #52566b;
+  --orb: rgba(249, 115, 22, 0.18);
+  --viewed-border: rgba(45, 212, 191, 0.45);
+  --viewed-bg-mix: rgba(45, 212, 191, 0.07);
+  --viewed-shadow: rgba(45, 212, 191, 0.18);
+  --health-liquid: #2dd4bf;
+  --health-liquid-dim: rgba(45, 212, 191, 0.18);
+  --health-track: rgba(45, 212, 191, 0.08);
+  --health-track-border: rgba(45, 212, 191, 0.18);
+  --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────── */
@@ -143,7 +143,7 @@ option {
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   height: 100vh;
-  padding: 22px;
+  padding: 10px;
   background: var(--bg);
   display: flex;
   align-items: center;
@@ -167,7 +167,7 @@ option {
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 10px;
+  gap: 6px;
   align-items: stretch;
   transition: grid-template-columns 0.4s ease, gap 0.4s ease;
 }
@@ -231,11 +231,11 @@ option {
   justify-content: flex-end;
   gap: 10px;
   width: 100%;
-  min-height: 170px;
+  min-height: 125px;
   border: none !important;
   border-radius: var(--card-radius);
   background: var(--surface);
-  padding: 22px;
+  padding: 14px;
   cursor: pointer;
   text-align: left;
   /* hover interactions + smooth grid resize */
@@ -300,8 +300,8 @@ option {
   color: var(--text-primary);
 }
 
-/* Guardrail: keep card titles token-driven in default dark mode. */
-html:not(.light) .card-title {
+/* Guardrail: keep card titles token-driven in dark mode. */
+html.dark .card-title {
   color: var(--text-primary);
 }
 
@@ -327,7 +327,7 @@ html:not(.light) .card-title {
 
 .card-hero {
   justify-content: flex-end;
-  min-height: 365px;
+  min-height: 260px;
 }
 
 .card-hero .card-title {
@@ -385,7 +385,7 @@ html:not(.light) .card-title {
   align-items: flex-start;
   justify-content: flex-end;
   gap: 10px;
-  padding: 22px;
+  padding: 14px;
   /* box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
@@ -419,7 +419,7 @@ html:not(.light) .card-title {
   align-items: flex-start;
   justify-content: space-between;
   gap: 18px;
-  padding: 22px 22px 8px 22px;
+  padding: 14px 14px 6px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
@@ -493,7 +493,7 @@ html:not(.light) .card-title {
 
 .modal-section {
   border-left: 4px solid var(--border);
-  padding: 16px;
+  padding: 14px;
   background: var(--surface-subtle);
 }
 
@@ -517,7 +517,7 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-subtle);
-  padding: 16px;
+  padding: 14px;
   display: flex;
   gap: 14px;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -570,7 +570,7 @@ html:not(.light) .card-title {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-subtle);
-  padding: 16px;
+  padding: 14px;
   align-items: flex-start;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
@@ -977,12 +977,12 @@ html:not(.light) .card-title {
   gap: 24px;
   height: 100%;
   min-height: 0;
-  padding: 16px 22px 22px 22px;
+  padding: 12px 18px 18px 18px;
   position: relative;
 }
 
 .projects-sidebar {
-  flex: 0 0 350px;
+  flex: 0 0 300px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1040,7 +1040,7 @@ html:not(.light) .card-title {
   border: 1px solid transparent;
   border-radius: 12px;
   background: var(--surface-subtle);
-  padding: 18px 20px;
+  padding: 14px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1097,7 +1097,7 @@ html:not(.light) .card-title {
   flex: 1;
   background: var(--surface-subtle);
   border-radius: 16px;
-  padding: 40px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
