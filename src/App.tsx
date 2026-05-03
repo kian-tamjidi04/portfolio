@@ -29,7 +29,7 @@ function getModalRect(type?: string) {
   const pad = 42;
   const isProjects = type === 'projects';
   const isAbout = type === 'about';
-  const maxWidth = isProjects ? 1400 : (isAbout ? 1100 : 900);
+  const maxWidth = isProjects ? 1400 : (isAbout ? 1300 : 900);
   const maxHeight = isProjects ? 900 : (isAbout ? 9999 : 760);
   const w = Math.min(maxWidth, window.innerWidth - pad * 2);
   const h = Math.min(maxHeight, window.innerHeight - pad * 2);
@@ -214,6 +214,17 @@ function ModalBody({
                 <li key={b}>
                   <span className="belief-dot" aria-hidden="true" />
                   <span className="belief-text">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+          <motion.section className="modal-section" variants={modalItemVariants}>
+            <div className="modal-row-title">Hobbies</div>
+            <ul className="belief-list">
+              {card.hobbies.map((h) => (
+                <li key={h}>
+                  <span className="belief-dot" aria-hidden="true" />
+                  <span className="belief-text">{h}</span>
                 </li>
               ))}
             </ul>

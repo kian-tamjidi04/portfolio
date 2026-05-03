@@ -100,6 +100,7 @@ export interface AboutCard extends CardBase {
   type: 'about';
   bio: string[];
   beliefs: string[];
+  hobbies: string[];
 }
 
 export interface ExperienceCard extends CardBase {
@@ -170,13 +171,19 @@ export const portfolioCards: PortfolioCard[] = [
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
       'I work at the intersection of engineering and design — I care as much about how software feels as how it works.',
-      'In my free time, you can find me listening to and/or playing jazz, in the gym, or exploring new food spots.',
       'Take a look around to learn a little more about me; feel free to reach out via the social card below.',
     ],
     beliefs: [
       '"Fail early, fail often, but always fail forward" - John C. Maxwell',
       '"While great art makes you wonder, great design makes things clear" - John Maeda',
       '"Anyone can make the simple complicated. Creativity is making the complicated simple" - Charles Mingus',
+      '"Stay hungry, stay foolish" - Steve Jobs'
+    ],
+    hobbies: [
+      'Listening to and/or playing jazz on my sax',
+      'Meditating or in the gym',
+      'Exploring new food spots',
+      'Enjoying (at least one) coffee in the sun',
     ],
   },
   {
