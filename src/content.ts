@@ -170,7 +170,7 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-about',
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
-      'I work at the intersection of engineering and design — I care as much about how software feels as how it works.',
+      'I work at the intersection of engineering and design - I care as much about how software feels as how it works.',
       'Take a look around to learn a little more about me; feel free to reach out via the social card below.',
     ],
     beliefs: [
@@ -228,7 +228,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact: 'Part of a small frontend team keeping a self-support site running for 140k UBS employees. Prototyped and deployed a conversational internal chatbot and gamified dashboards to cut ticket volume. Redesigned the mobile app from the ground up alongside developers and business analysts.',
+        impact: 'Part of a small frontend team keeping a self-support site running for 140k UBS employees. Prototyped and deployed an upgraded internal chatbot and gamified dashboards to cut ticket volume by 12%. Redesigned the mobile app from the ground up alongside developers and business analysts.',
         skills: [
           { name: 'React', primary: true },
           { name: 'TypeScript', primary: true },
@@ -247,7 +247,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'IEUK Technology Stream Participant',
         company: 'Bright Network',
         dates: '2024',
-        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK — invited to a BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
+        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK - invited to a BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
         skills: [{ name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
@@ -360,7 +360,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Traffic Junction Simulator',
         summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
         stack: [{ name: 'React', primary: true }, { name: 'Java', primary: true }, { name: 'Springboot', primary: true }, { name: 'Version Control', primary: true }, { name: 'Test Driven Development', primary: true }, { name: 'Project Management' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Gantt Charts' },],
-        challenges: "The harder challenge wasn't the technical stack — it was keeping six people aligned when priorities and working styles clashed. I had to learn quickly how to have direct conversations about progress without killing team morale and momentum.",
+        challenges: "The harder challenge wasn't the technical stack - it was keeping six people aligned when priorities and working styles clashed. I had to learn quickly how to have direct conversations about progress without killing team morale and momentum.",
         links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
         grade: '70%'
       },
@@ -369,7 +369,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Intrusion Detection System',
         summary: 'Engineered a multithreaded packet sniffing system in C to analyze network traffic. Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution. Added mutex locks to prevent race conditions and deadlocks.',
         stack: [{ name: 'C', primary: true }, { name: 'Multithreading', primary: true }, { name: 'pthreads', primary: true }, { name: 'Resilience' }, { name: 'Efficiency' }],
-        challenges: "Translating a working single-threaded design into a concurrent, race-condition-safe system required a complete rethink of state management — something the lecture content hadn\'t fully prepared me for.",
+        challenges: "Translating a working single-threaded design into a concurrent, race-condition-safe system required a complete rethink of state management - something the lecture content hadn\'t fully prepared me for.",
         grade: '89%'
       },
       {
@@ -377,7 +377,7 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Daily UI Challenge',
         summary: 'Working through daily UI prompts to sharpen my design eye. Researching best practices on Dribbble and Mobbin, then building hi-fi prototypes in Figma to put them into practice. Using AI tools to ideate mock content, keeping my focus on design structure and visual decisions.',
         stack: [{ name: 'Figma Design', primary: true }, { name: 'UX Design', primary: true }, { name: 'Prototyping', primary: true }, { name: 'Prompt Engineering', primary: true }, { name: 'Claude', primary: true }],
-        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap — I now start with the flow before touching aesthetics."
+        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap - I now start with the flow before touching aesthetics."
       },
       {
         id: 'project-06',
@@ -400,7 +400,7 @@ export const portfolioCards: PortfolioCard[] = [
         summary: 'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits. Conducted market research and user interviews prior to design and development. Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
         stack: [{ name: 'Swift / SwiftUI', primary: true }, { name: 'iOS', primary: true }, { name: 'Mobile Development', primary: true }, { name: 'Project Management' }, { name: 'UX Research' }],
         links: [{ label: 'GitHub', href: 'https://github.com/kian-tamjidi04/MusicApp' }],
-        challenges: "Beyond building a working app, I had to conduct and document market research, usability testing, and system design to a professional standard — all simultaneously. It taught me that shipping software is the smallest part of building a product.",
+        challenges: "Beyond building a working app, I had to conduct and document market research, usability testing, and system design to a professional standard - all simultaneously. It taught me that shipping software is the smallest part of building a product.",
         grade: '100%'
       },
       {
@@ -429,11 +429,11 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'What I want to build, and the kind of work that drives me forward.',
     placementClass: 'place-vision',
     body: [
-      "My favourite version of a project is one where I get to go from rough idea to shipped thing. I care about the gap between 'technically works' and 'actually good to use' — and I want to keep closing it."
+      "My favourite version of a project is one where I get to go from rough idea to shipped thing. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
     ],
     goals: [
       'Expand my skills in UX and product design, connecting with professionals from various backgrounds.',
-      'Build fluency in AI-first products — understanding not just how to use the tools, but how to design experiences around them that genuinely change how people work.',
+      'Build fluency in AI-first products - understanding not just how to use the tools, but how to design experiences around them that genuinely change how people work.',
       'Ship products that measurably improve how people work, interact and live.',
     ],
   },

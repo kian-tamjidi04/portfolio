@@ -639,9 +639,7 @@ html.dark .card-title {
   flex: 2;
 }
 
-.about-text-col .modal-section {
-  flex: 1;
-}
+.about-text-col .modal-section {}
 
 @media (max-width: 768px) {
   .about-layout {
@@ -825,7 +823,8 @@ html.dark .card-title {
   content: "•";
   position: absolute;
   left: 4px;
-  top: 0; /* Pin to top to prevent vertical shifting */
+  top: 0;
+  /* Pin to top to prevent vertical shifting */
   color: var(--accent);
   font-weight: bold;
   opacity: 0.6;
@@ -909,10 +908,6 @@ html.dark .card-title {
 
 .education-details {
   margin-top: 8px;
-}
-
-.education-modules-section {
-  margin-top: 12px;
 }
 
 .education-modules-tags {
