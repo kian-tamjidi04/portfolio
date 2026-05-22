@@ -117,6 +117,77 @@ function InteractiveList({ text, className = "" }: { text: string; className?: s
   );
 }
 
+function AboutSection({ card }: { card: PortfolioCard }) {
+  const [textHeight, setTextHeight] = useState<number | null>(null);
+  const textColRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const textCol = textColRef.current;
+    if (!textCol) return;
+
+    const updateHeight = () => {
+      setTextHeight(textCol.offsetHeight);
+    };
+
+    // Measure initially
+    updateHeight();
+
+    // Observe changes to the text column size (hovers, window resize, fonts loading)
+    const resizeObserver = new ResizeObserver(() => {
+      updateHeight();
+    });
+    resizeObserver.observe(textCol);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  // Pic.svg aspect ratio is 1537 / 2730
+  const imageWidth = textHeight ? textHeight * (1537 / 2730) : undefined;
+
+  return (
+    <div className="about-layout">
+      <motion.div
+        className="about-image-col"
+        variants={modalItemVariants}
+        style={textHeight ? { height: textHeight, width: imageWidth, flex: '0 0 auto' } : undefined}
+      >
+        <img src="./Pic.svg" alt="Profile" className="about-image" />
+      </motion.div>
+      <div className="about-text-col" ref={textColRef}>
+        {card.bio.map((p) => (
+          <motion.section className="modal-section" key={p} variants={modalItemVariants}>
+            <p className="modal-text">{p}</p>
+          </motion.section>
+        ))}
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <div className="modal-row-title">Things I believe</div>
+          <ul className="belief-list">
+            {card.beliefs.map((b) => (
+              <li key={b}>
+                <span className="belief-dot" aria-hidden="true" />
+                <span className="belief-text">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.section>
+        <motion.section className="modal-section" variants={modalItemVariants}>
+          <div className="modal-row-title">Hobbies</div>
+          <ul className="belief-list">
+            {card.hobbies.map((h) => (
+              <li key={h}>
+                <span className="belief-dot" aria-hidden="true" />
+                <span className="belief-text">{h}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.section>
+      </div>
+    </div>
+  );
+}
+
 function ModalBody({
   card,
 }: {
@@ -196,42 +267,7 @@ function ModalBody({
   }
 
   if (card.type === 'about') {
-    return (
-      <div className="about-layout">
-        <motion.div className="about-image-col" variants={modalItemVariants}>
-          <img src="./Pic.svg" alt="Profile" className="about-image" />
-        </motion.div>
-        <div className="about-text-col">
-          {card.bio.map((p) => (
-            <motion.section className="modal-section" key={p} variants={modalItemVariants}>
-              <p className="modal-text">{p}</p>
-            </motion.section>
-          ))}
-          <motion.section className="modal-section" variants={modalItemVariants}>
-            <div className="modal-row-title">Things I believe</div>
-            <ul className="belief-list">
-              {card.beliefs.map((b) => (
-                <li key={b}>
-                  <span className="belief-dot" aria-hidden="true" />
-                  <span className="belief-text">{b}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.section>
-          <motion.section className="modal-section" variants={modalItemVariants}>
-            <div className="modal-row-title">Hobbies</div>
-            <ul className="belief-list">
-              {card.hobbies.map((h) => (
-                <li key={h}>
-                  <span className="belief-dot" aria-hidden="true" />
-                  <span className="belief-text">{h}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.section>
-        </div>
-      </div>
-    );
+    return <AboutSection card={card} />;
   }
 
   if (card.type === 'skills') {

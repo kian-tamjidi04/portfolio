@@ -620,6 +620,7 @@ html.dark .card-title {
 .about-image-col {
   flex: 1;
   display: flex;
+  min-height: 0;
 }
 
 .about-image {
@@ -649,10 +650,10 @@ html.dark .card-title {
 
   .about-image-col {
     position: static;
-    flex: none;
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+    flex: none !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: auto !important;
     margin-bottom: 24px;
   }
 
