@@ -14,7 +14,6 @@ import {
   faSun,
   faEnvelope,
   faChevronRight,
-  faChevronUp,
   faChevronDown,
   faCode,
   faArrowUpRightFromSquare,
@@ -194,8 +193,6 @@ function ModalBody({
   card: PortfolioCard;
 }) {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [projectPage, setProjectPage] = useState(0);
-  const [pageDirection, setPageDirection] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState<string | null>('tech');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   if (card.type === 'certifications') {
@@ -392,92 +389,34 @@ function ModalBody({
   }
 
   if (card.type === 'projects') {
-    const itemsPerPage = 4;
-    const totalPages = Math.ceil(card.items.length / itemsPerPage);
-    const visibleItems = card.items.slice(projectPage * itemsPerPage, (projectPage + 1) * itemsPerPage);
-
-    // Automatically select the first visible project if none is actively set or it's out of bounds
-    // But honestly, keeping the activeProject no matter the page is fine.
     const activeProject = card.items.find((i) => i.id === selectedProjectId) || card.items[0];
-
-    const handleNextPage = () => {
-      setPageDirection(1);
-      setProjectPage((p) => Math.min(totalPages - 1, p + 1));
-    };
-
-    const handlePrevPage = () => {
-      setPageDirection(-1);
-      setProjectPage((p) => Math.max(0, p - 1));
-    };
-
-    const pageVariants = {
-      enter: (dir: number) => ({
-        y: dir > 0 ? 'calc(100% + 8px)' : 'calc(-100% - 8px)',
-      }),
-      center: {
-        y: 0,
-        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
-      },
-      exit: (dir: number) => ({
-        y: dir > 0 ? 'calc(-100% - 8px)' : 'calc(100% + 8px)',
-        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
-      }),
-    };
 
     return (
       <div className={`projects-split-view ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="projects-sidebar">
-          <button
-            className="project-nav-arrow"
-            onClick={handlePrevPage}
-            disabled={projectPage === 0}
-            aria-label="Previous projects"
-          >
-            <FontAwesomeIcon icon={faChevronUp} />
-          </button>
-
           <div className="projects-sidebar-list-container">
-            <AnimatePresence custom={pageDirection}>
-              <motion.div
-                key={projectPage}
-                custom={pageDirection}
-                variants={pageVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="projects-sidebar-list"
-              >
-                {visibleItems.map((item) => {
-                  const isActive = activeProject?.id === item.id;
-                  return (
-                    <button
-                      className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
-                      key={item.id}
-                      onClick={() => {
-                        setSelectedProjectId(item.id);
-                        setIsSidebarOpen(false);
-                      }}
-                      type="button"
-                    >
-                      <div className="project-sidebar-btn-content">
-                        <h3 className="project-sidebar-title">{item.title}</h3>
-                      </div>
-                      <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
-                    </button>
-                  );
-                })}
-              </motion.div>
-            </AnimatePresence>
+            <div className="projects-sidebar-list">
+              {card.items.map((item) => {
+                const isActive = activeProject?.id === item.id;
+                return (
+                  <button
+                    className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
+                    key={item.id}
+                    onClick={() => {
+                      setSelectedProjectId(item.id);
+                      setIsSidebarOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <div className="project-sidebar-btn-content">
+                      <h3 className="project-sidebar-title">{item.title}</h3>
+                    </div>
+                    <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-
-          <button
-            className="project-nav-arrow"
-            onClick={handleNextPage}
-            disabled={projectPage === totalPages - 1}
-            aria-label="Next projects"
-          >
-            <FontAwesomeIcon icon={faChevronDown} />
-          </button>
 
           {/* Mobile Close Button for Sidebar */}
           <button
@@ -516,7 +455,7 @@ function ModalBody({
                 <InteractiveList text={activeProject.summary} />
               </motion.div>
 
-              <div className="project-detail-accordion">
+              <motion.div variants={projectItemVariants} className="project-detail-accordion">
                 {/* Section 1: Technologies */}
                 <div className="accordion-item">
                   <button
@@ -535,7 +474,7 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <div className="d-flex flex-wrap gap-2 pt-2 pb-3">
+                        <div className="d-flex flex-wrap gap-2 pt-3 pb-1">
                           {activeProject.stack.map((tag) => (
                             <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
                               {tag.name}
@@ -564,14 +503,14 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <div className="pt-2 pb-3">
+                        <div className="pt-2">
                           <InteractiveList text={activeProject.challenges || "Information coming soon..."} />
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </div>
+              </motion.div>
 
               <motion.div variants={projectItemVariants} className="project-detail-actions">
                 {activeProject.links?.map((link) => (
