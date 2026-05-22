@@ -418,6 +418,50 @@ html.dark .card-title {
   padding: 14px 14px 6px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+  transition: padding-right 0.2s ease;
+}
+
+.modal-close-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  background: var(--surface-subtle);
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: 'Regular';
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close-cta:hover {
+  background: var(--accent-sky-dim);
+  color: var(--text-primary);
+}
+
+.modal-close-cta:active {
+  transform: scale(0.96);
+}
+
+.modal-close-cta-text {
+  font-size: var(--font-sm);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 560px) {
+  .portfolio-modal-header {
+    padding-right: 96px;
+    padding-left: 14px;
+  }
+
+  .modal-close-cta {
+    padding: 6px 10px;
+    top: 12px;
+    right: 12px;
+    gap: 6px;
+  }
 }
 
 .modal-label {
@@ -696,7 +740,7 @@ html.dark .card-title {
 }
 
 .skill-category:hover {
-  background-color: rgba(6, 182, 212, 0.15);
+  background-color: var(--accent-sky-dim);
 }
 
 .skill-category-label {

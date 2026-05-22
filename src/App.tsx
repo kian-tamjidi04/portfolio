@@ -18,6 +18,7 @@ import {
   faListUl
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark as faRegularCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { portfolioCards, type PortfolioCard, type AboutCard } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
@@ -648,6 +649,10 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                   <p className="modal-label">{card.label}</p>
                   <h2 className="modal-title">{card.title}</h2>
                 </div>
+                <button className="modal-close-cta" onClick={onClose} aria-label="Close modal">
+                  <span className="modal-close-cta-text">Close</span>
+                  <FontAwesomeIcon icon={faRegularCircleXmark} />
+                </button>
               </header>
               <motion.div
                 className="portfolio-modal-body"
