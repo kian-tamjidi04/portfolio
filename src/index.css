@@ -47,8 +47,8 @@ html.dark {
   --accent-emerald: #2dd4bf;
   --accent-emerald-dim: rgba(45, 212, 191, 0.12);
   --text-primary: #f0f1f5;
-  --text-secondary: #9094a8;
-  --text-muted: #52566b;
+  --text-secondary: #b0b4c8;
+  --text-muted: #8a8fa8;
   --orb: rgba(249, 115, 22, 0.18);
   --viewed-border: rgba(45, 212, 191, 0.45);
   --viewed-bg-mix: rgba(45, 212, 191, 0.07);
@@ -122,7 +122,7 @@ option {
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: none;
   background: var(--surface);
   color: var(--text-secondary);
   font-size: var(--font-md);
@@ -252,12 +252,7 @@ option {
 }
 
 .portfolio-card:hover {
-  /* border-color: var(--accent); */
   background-color: color-mix(in srgb, var(--accent), transparent 85%);
-  /* box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 -24px 34px rgba(0, 0, 0, 0.24),
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent); */
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -266,11 +261,8 @@ option {
 }
 
 .card-non-clickable:hover {
-  border-color: var(--border);
+  /* border-color: var(--border); */
   background: var(--surface);
-  /* box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
 /* ─── Card invisible while flying card is live ──────────────────── */
@@ -514,7 +506,7 @@ html.dark .card-title {
 .social-row {
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 14px;
@@ -524,7 +516,6 @@ html.dark .card-title {
 }
 
 .social-row:hover {
-  border-color: var(--accent-sky);
   background: var(--accent-sky-dim);
 }
 
@@ -557,7 +548,7 @@ html.dark .card-title {
 .modal-row-subtitle {
   margin: 4px 0px;
   font-size: var(--font-md);
-  color: var(--accent-sky);
+  color: var(--accent);
   /* font-weight: 600; */
   font-family: 'Bold';
 }
@@ -567,7 +558,7 @@ html.dark .card-title {
   display: grid;
   grid-template-columns: 80px 1fr;
   gap: 14px;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 14px;
@@ -576,7 +567,6 @@ html.dark .card-title {
 }
 
 .cert-row:hover {
-  border-color: var(--accent-sky);
   background: var(--accent-sky-dim);
 }
 
@@ -628,7 +618,7 @@ html.dark .card-title {
   height: 100%;
   object-fit: cover;
   border-radius: var(--modal-radius);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   box-shadow: var(--shadow-card);
   display: block;
 }
@@ -794,7 +784,7 @@ html.dark .card-title {
   background: var(--surface-subtle);
   padding: 16px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
 }
 
 /* ─── Interactive Sentence List ──────────────────────────────────── */
@@ -930,7 +920,7 @@ html.dark .card-title {
 
 /* ─── Project Modal ──────────────────────────────────────────────── */
 .project-image-placeholder {
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   background: var(--surface-subtle);
   border-radius: 12px;
   min-height: 180px;
@@ -1042,7 +1032,7 @@ html.dark .card-title {
 }
 
 .project-sidebar-btn:hover {
-  background: color-mix(in srgb, var(--accent), transparent 85%);
+  background: var(--accent-sky-dim);
 }
 
 .project-sidebar-btn.active {
@@ -1113,7 +1103,7 @@ html.dark .card-title {
 }
 
 .projects-detail-pane::-webkit-scrollbar-thumb {
-  background: var(--border);
+  /* background: var(--border); */
   border-radius: 10px;
 }
 
@@ -1168,7 +1158,7 @@ html.dark .card-title {
 }
 
 .accordion-item {
-  border-bottom: 1px solid var(--border);
+  /* border-bottom: 1px solid var(--border); */
 }
 
 .accordion-header {
@@ -1253,7 +1243,7 @@ html.dark .card-title {
 .project-action-btn-secondary {
   background: transparent;
   color: var(--text-primary);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
 }
 
 .project-action-btn-secondary:hover {
@@ -1413,7 +1403,7 @@ html.dark .card-title {
     align-items: center;
     gap: 10px;
     background: var(--surface-subtle);
-    border: 1px solid var(--border);
+    /* border: 1px solid var(--border); */
     border-radius: 12px;
     padding: 10px 16px;
     color: var(--accent);

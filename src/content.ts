@@ -326,8 +326,16 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-skills',
     categories: [
       {
-        label: 'Languages',
-        items: ['Java', 'TypeScript', 'Python', 'JavaScript', 'SQL', 'HTML / CSS', 'Swift / SwiftUI', 'Haskell'],
+        label: 'Languages and Frameworks',
+        items: ['Java', 'TypeScript', 'Python', 'JavaScript', 'SQL', 'HTML / CSS', 'React', 'Angular', 'PostgreSQL', 'Swift / SwiftUI', 'Haskell'],
+      },
+      {
+        label: 'Soft Skills',
+        items: ['Quick Learner', 'Product Thinking', 'Cross-Functional Collaboration', 'Time Management', 'Critical Thinking', 'Attention to Detail', 'Adaptability'],
+      },
+      {
+        label: 'Design',
+        items: ['Figma', 'Prototyping', 'Design Systems', 'Wireframing', 'User-centered design', 'User Experience'],
       },
       {
         label: 'AI Tools',
@@ -335,15 +343,7 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         label: 'Dev Tools',
-        items: ['React', 'Xcode', 'Node.js', 'Git', 'GitLab', 'PostgreSQL', 'Angular', 'Jupyter Notebook'],
-      },
-      {
-        label: 'Design',
-        items: ['Figma', 'Prototyping', 'Design Systems'],
-      },
-      {
-        label: 'Soft Skills',
-        items: ['Product Thinking', 'Cross-Functional Collaboration', 'Time Management', 'Attention to Detail', 'Adaptability'],
+        items: ['Xcode', 'Node.js', 'Git', 'GitLab', 'Jupyter Notebook', 'Visual Studio Code'],
       },
     ],
   },

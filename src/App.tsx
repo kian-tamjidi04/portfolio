@@ -21,7 +21,7 @@ import {
   faListUl
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { portfolioCards, type PortfolioCard } from './content';
+import { portfolioCards, type PortfolioCard, type AboutCard } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
@@ -117,7 +117,7 @@ function InteractiveList({ text, className = "" }: { text: string; className?: s
   );
 }
 
-function AboutSection({ card }: { card: PortfolioCard }) {
+function AboutSection({ card }: { card: AboutCard }) {
   const [textHeight, setTextHeight] = useState<number | null>(null);
   const textColRef = useRef<HTMLDivElement | null>(null);
 
@@ -274,7 +274,7 @@ function ModalBody({
     return (
       <>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">I believe in product creation and not being limited by any single set of tools</p>
+          <p className="modal-text">I believe in product creation and not being limited by any single set of tools. That being said, here is a list of skills I pride myself on, and am consistently developing.</p>
         </motion.section>
         <div className="skills-grid">
           {card.categories.map((cat) => (
@@ -751,57 +751,6 @@ function CardInner({ card }: { card: PortfolioCard }) {
 }
 
 /* ─── App ────────────────────────────────────────────────────────── */
-
-/* ─── Viewport progress border ────────────────────────────────── */
-
-// const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
-// const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
-
-// function ViewportProgress({ viewedCount }: { viewedCount: number }) {
-//   const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
-//   const clamped = Math.min(100, Math.max(0, pct));
-//   const pathRef = useRef<SVGPathElement | null>(null);
-//   const [pathLength, setPathLength] = useState(0);
-//   const [isReady, setIsReady] = useState(false);
-
-//   useLayoutEffect(() => {
-//     const node = pathRef.current;
-//     if (!node) return undefined;
-
-//     const updateLength = () => {
-//       setPathLength(node.getTotalLength());
-//     };
-
-//     updateLength();
-//     window.addEventListener('resize', updateLength);
-//     return () => window.removeEventListener('resize', updateLength);
-//   }, []);
-
-//   useEffect(() => {
-//     if (pathLength > 0) {
-//       setIsReady(true);
-//     }
-//   }, [pathLength]);
-
-//   const dasharray = pathLength || 0;
-//   const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
-
-//   return (
-//     <div className="viewport-progress" aria-hidden="true">
-//       <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-//         <path
-//           ref={pathRef}
-//           className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
-//           d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
-//           fill="none"
-//           strokeDasharray={dasharray}
-//           strokeDashoffset={dashoffset}
-//         />
-//       </svg>
-//     </div>
-//   );
-// }
-
 function App() {
   /* Dark mode */
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -849,10 +798,8 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      {/* <ViewportProgress viewedCount={viewedCount} /> */}
-
-      {/* Dark-mode toggle */}
-      <button
+      {/* Dark-mode toggle - hidden for now */}
+      {/* <button
         id="theme-toggle"
         className="theme-toggle"
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -860,7 +807,7 @@ function App() {
         type="button"
       >
         {isDark ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
-      </button>
+      </button> */}
 
       {/* Bento grid */}
       <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>
