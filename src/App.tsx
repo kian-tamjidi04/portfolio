@@ -10,8 +10,6 @@ import {
   faHammer,
   faRocket,
   faScrewdriverWrench,
-  faMoon,
-  faSun,
   faEnvelope,
   faChevronRight,
   faChevronDown,
@@ -692,7 +690,7 @@ function CardInner({ card }: { card: PortfolioCard }) {
 /* ─── App ────────────────────────────────────────────────────────── */
 function App() {
   /* Dark mode */
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  const [isDark] = useState<boolean>(() => {
     const stored = localStorage.getItem('portfolio-theme');
     if (stored) return stored === 'dark';
     return false;
