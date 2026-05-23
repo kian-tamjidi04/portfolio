@@ -10,18 +10,15 @@ import {
   faHammer,
   faRocket,
   faScrewdriverWrench,
-  faMoon,
-  faSun,
   faEnvelope,
   faChevronRight,
-  faChevronUp,
   faChevronDown,
-  faCode,
   faArrowUpRightFromSquare,
   faListUl
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { portfolioCards, type PortfolioCard } from './content';
+import { faCircleXmark as faRegularCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import { portfolioCards, type PortfolioCard, type AboutCard } from './content';
 
 /* ─── Helpers ────────────────────────────────────────────────────── */
 
@@ -117,7 +114,7 @@ function InteractiveList({ text, className = "" }: { text: string; className?: s
   );
 }
 
-function AboutSection({ card }: { card: PortfolioCard }) {
+function AboutSection({ card }: { card: AboutCard }) {
   const [textHeight, setTextHeight] = useState<number | null>(null);
   const textColRef = useRef<HTMLDivElement | null>(null);
 
@@ -194,8 +191,6 @@ function ModalBody({
   card: PortfolioCard;
 }) {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [projectPage, setProjectPage] = useState(0);
-  const [pageDirection, setPageDirection] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState<string | null>('tech');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   if (card.type === 'certifications') {
@@ -203,8 +198,11 @@ function ModalBody({
       <>
         {card.certs.map((cert) => (
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
-            <motion.div
+            <motion.a
               className="cert-row"
+              href={cert.href}
+              target="_blank"
+              rel="noreferrer"
               initial="initial"
               whileHover="hovered"
             >
@@ -229,7 +227,7 @@ function ModalBody({
                   <p className="cert-takeaway">{cert.takeaway}</p>
                 </motion.div>
               </div>
-            </motion.div>
+            </motion.a>
           </motion.section>
         ))}
       </>
@@ -251,7 +249,7 @@ function ModalBody({
                 {link.icon
                   ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={64} width={64} />
                   : link.platform === 'Email'
-                    ? <FontAwesomeIcon icon={faEnvelope} size="2xl" />
+                    ? <FontAwesomeIcon icon={faEnvelope} size="2xl" style={{ transform: 'scale(1.5)' }} />
                     : <span>{link.platform}</span>}
               </div>
               <div>
@@ -274,7 +272,7 @@ function ModalBody({
     return (
       <>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">I believe in product creation and not being limited by any single set of tools</p>
+          <p className="modal-text">I'm a tool-agnostic engineer - I cultivate an adaptable mindset to pick up new tools quickly. Here are the skills I'm actively developing:</p>
         </motion.section>
         <div className="skills-grid">
           {card.categories.map((cat) => (
@@ -392,92 +390,34 @@ function ModalBody({
   }
 
   if (card.type === 'projects') {
-    const itemsPerPage = 4;
-    const totalPages = Math.ceil(card.items.length / itemsPerPage);
-    const visibleItems = card.items.slice(projectPage * itemsPerPage, (projectPage + 1) * itemsPerPage);
-
-    // Automatically select the first visible project if none is actively set or it's out of bounds
-    // But honestly, keeping the activeProject no matter the page is fine.
     const activeProject = card.items.find((i) => i.id === selectedProjectId) || card.items[0];
-
-    const handleNextPage = () => {
-      setPageDirection(1);
-      setProjectPage((p) => Math.min(totalPages - 1, p + 1));
-    };
-
-    const handlePrevPage = () => {
-      setPageDirection(-1);
-      setProjectPage((p) => Math.max(0, p - 1));
-    };
-
-    const pageVariants = {
-      enter: (dir: number) => ({
-        y: dir > 0 ? 'calc(100% + 8px)' : 'calc(-100% - 8px)',
-      }),
-      center: {
-        y: 0,
-        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
-      },
-      exit: (dir: number) => ({
-        y: dir > 0 ? 'calc(-100% - 8px)' : 'calc(100% + 8px)',
-        transition: { duration: 0.6, ease: cubicBezier(0.65, 0, 0.35, 1) },
-      }),
-    };
 
     return (
       <div className={`projects-split-view ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="projects-sidebar">
-          <button
-            className="project-nav-arrow"
-            onClick={handlePrevPage}
-            disabled={projectPage === 0}
-            aria-label="Previous projects"
-          >
-            <FontAwesomeIcon icon={faChevronUp} />
-          </button>
-
           <div className="projects-sidebar-list-container">
-            <AnimatePresence custom={pageDirection}>
-              <motion.div
-                key={projectPage}
-                custom={pageDirection}
-                variants={pageVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="projects-sidebar-list"
-              >
-                {visibleItems.map((item) => {
-                  const isActive = activeProject?.id === item.id;
-                  return (
-                    <button
-                      className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
-                      key={item.id}
-                      onClick={() => {
-                        setSelectedProjectId(item.id);
-                        setIsSidebarOpen(false);
-                      }}
-                      type="button"
-                    >
-                      <div className="project-sidebar-btn-content">
-                        <h3 className="project-sidebar-title">{item.title}</h3>
-                      </div>
-                      <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
-                    </button>
-                  );
-                })}
-              </motion.div>
-            </AnimatePresence>
+            <div className="projects-sidebar-list">
+              {card.items.map((item) => {
+                const isActive = activeProject?.id === item.id;
+                return (
+                  <button
+                    className={`project-sidebar-btn ${isActive ? 'active' : ''}`}
+                    key={item.id}
+                    onClick={() => {
+                      setSelectedProjectId(item.id);
+                      setIsSidebarOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <div className="project-sidebar-btn-content">
+                      <h3 className="project-sidebar-title">{item.title}</h3>
+                    </div>
+                    <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-
-          <button
-            className="project-nav-arrow"
-            onClick={handleNextPage}
-            disabled={projectPage === totalPages - 1}
-            aria-label="Next projects"
-          >
-            <FontAwesomeIcon icon={faChevronDown} />
-          </button>
 
           {/* Mobile Close Button for Sidebar */}
           <button
@@ -516,7 +456,7 @@ function ModalBody({
                 <InteractiveList text={activeProject.summary} />
               </motion.div>
 
-              <div className="project-detail-accordion">
+              <motion.div variants={projectItemVariants} className="project-detail-accordion">
                 {/* Section 1: Technologies */}
                 <div className="accordion-item">
                   <button
@@ -535,7 +475,7 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <div className="d-flex flex-wrap gap-2 pt-2 pb-3">
+                        <div className="d-flex flex-wrap gap-2 pt-3 pb-1">
                           {activeProject.stack.map((tag) => (
                             <span className={`tag ${tag.primary ? 'is-primary' : ''}`} key={tag.name}>
                               {tag.name}
@@ -564,20 +504,20 @@ function ModalBody({
                         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                         className="accordion-content"
                       >
-                        <div className="pt-2 pb-3">
+                        <div className="pt-2">
                           <InteractiveList text={activeProject.challenges || "Information coming soon..."} />
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </div>
+              </motion.div>
 
               <motion.div variants={projectItemVariants} className="project-detail-actions">
                 {activeProject.links?.map((link) => (
                   <a href={link.href} key={link.label} target="_blank" rel="noreferrer" className={`project-action-btn ${(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? 'project-action-btn-primary' : 'project-action-btn-secondary'}`}>
                     {(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? (
-                      <FontAwesomeIcon icon={faCode} />
+                      <img src="./github.svg" alt="GitHub" className="project-action-icon-svg" />
                     ) : (
                       <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                     )}
@@ -587,7 +527,7 @@ function ModalBody({
                 {activeProject.id === 'project-07' && (
                   <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
                     <img src="./figma.svg" alt="Figma" className="project-action-icon-svg" />
-                    Figma coming soon...
+                    Figma coming soon
                   </div>
                 )}
               </motion.div>
@@ -711,6 +651,10 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                   <p className="modal-label">{card.label}</p>
                   <h2 className="modal-title">{card.title}</h2>
                 </div>
+                <button className="modal-close-cta" onClick={onClose} aria-label="Close modal">
+                  <span className="modal-close-cta-text">Close</span>
+                  <FontAwesomeIcon icon={faRegularCircleXmark} />
+                </button>
               </header>
               <motion.div
                 className="portfolio-modal-body"
@@ -751,60 +695,9 @@ function CardInner({ card }: { card: PortfolioCard }) {
 }
 
 /* ─── App ────────────────────────────────────────────────────────── */
-
-/* ─── Viewport progress border ────────────────────────────────── */
-
-// const TRACKABLE_CARDS = portfolioCards.filter((c) => !c.nonClickable);
-// const TOTAL_SECTIONS = TRACKABLE_CARDS.length;
-
-// function ViewportProgress({ viewedCount }: { viewedCount: number }) {
-//   const pct = TOTAL_SECTIONS > 0 ? (viewedCount / TOTAL_SECTIONS) * 100 : 0;
-//   const clamped = Math.min(100, Math.max(0, pct));
-//   const pathRef = useRef<SVGPathElement | null>(null);
-//   const [pathLength, setPathLength] = useState(0);
-//   const [isReady, setIsReady] = useState(false);
-
-//   useLayoutEffect(() => {
-//     const node = pathRef.current;
-//     if (!node) return undefined;
-
-//     const updateLength = () => {
-//       setPathLength(node.getTotalLength());
-//     };
-
-//     updateLength();
-//     window.addEventListener('resize', updateLength);
-//     return () => window.removeEventListener('resize', updateLength);
-//   }, []);
-
-//   useEffect(() => {
-//     if (pathLength > 0) {
-//       setIsReady(true);
-//     }
-//   }, [pathLength]);
-
-//   const dasharray = pathLength || 0;
-//   const dashoffset = pathLength ? pathLength * (1 - clamped / 100) : 0;
-
-//   return (
-//     <div className="viewport-progress" aria-hidden="true">
-//       <svg className="viewport-progress-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-//         <path
-//           ref={pathRef}
-//           className={`viewport-progress-path${isReady ? ' viewport-progress-ready' : ''}`}
-//           d="M 0 0 L 100 0 L 100 100 L 0 100 Z"
-//           fill="none"
-//           strokeDasharray={dasharray}
-//           strokeDashoffset={dashoffset}
-//         />
-//       </svg>
-//     </div>
-//   );
-// }
-
 function App() {
   /* Dark mode */
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  const [isDark] = useState<boolean>(() => {
     const stored = localStorage.getItem('portfolio-theme');
     if (stored) return stored === 'dark';
     return false;
@@ -849,10 +742,8 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      {/* <ViewportProgress viewedCount={viewedCount} /> */}
-
-      {/* Dark-mode toggle */}
-      <button
+      {/* Dark-mode toggle - hidden for now */}
+      {/* <button
         id="theme-toggle"
         className="theme-toggle"
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -860,7 +751,7 @@ function App() {
         type="button"
       >
         {isDark ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
-      </button>
+      </button> */}
 
       {/* Bento grid */}
       <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>

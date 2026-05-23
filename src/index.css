@@ -16,6 +16,8 @@
   --orb: rgba(234, 101, 8, 0.13);
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
+  --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
   --viewed-border: rgba(13, 148, 136, 0.40);
   --viewed-bg-mix: rgba(13, 148, 136, 0.06);
   --viewed-shadow: rgba(13, 148, 136, 0.14);
@@ -47,8 +49,8 @@ html.dark {
   --accent-emerald: #2dd4bf;
   --accent-emerald-dim: rgba(45, 212, 191, 0.12);
   --text-primary: #f0f1f5;
-  --text-secondary: #9094a8;
-  --text-muted: #52566b;
+  --text-secondary: #b0b4c8;
+  --text-muted: #8a8fa8;
   --orb: rgba(249, 115, 22, 0.18);
   --viewed-border: rgba(45, 212, 191, 0.45);
   --viewed-bg-mix: rgba(45, 212, 191, 0.07);
@@ -59,6 +61,8 @@ html.dark {
   --health-track-border: rgba(45, 212, 191, 0.18);
   --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
+  --shadow-accordion-idle: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-accordion-hover: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────── */
@@ -122,7 +126,7 @@ option {
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: none;
   background: var(--surface);
   color: var(--text-secondary);
   font-size: var(--font-md);
@@ -252,12 +256,7 @@ option {
 }
 
 .portfolio-card:hover {
-  /* border-color: var(--accent); */
   background-color: color-mix(in srgb, var(--accent), transparent 85%);
-  /* box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 -24px 34px rgba(0, 0, 0, 0.24),
-    inset 0 0 0 1px color-mix(in srgb, var(--accent) 26%, transparent); */
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -266,11 +265,8 @@ option {
 }
 
 .card-non-clickable:hover {
-  border-color: var(--border);
+  /* border-color: var(--border); */
   background: var(--surface);
-  /* box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -20px 30px rgba(0, 0, 0, 0.16); */
 }
 
 /* ─── Card invisible while flying card is live ──────────────────── */
@@ -422,6 +418,50 @@ html.dark .card-title {
   padding: 14px 14px 6px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+  transition: padding-right 0.2s ease;
+}
+
+.modal-close-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  background: var(--surface-subtle);
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: 'Regular';
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close-cta:hover {
+  background: var(--accent-dim);
+  color: var(--text-primary);
+}
+
+.modal-close-cta:active {
+  transform: scale(0.96);
+}
+
+.modal-close-cta-text {
+  font-size: var(--font-sm);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 560px) {
+  .portfolio-modal-header {
+    padding-right: 96px;
+    padding-left: 14px;
+  }
+
+  .modal-close-cta {
+    padding: 6px 10px;
+    top: 12px;
+    right: 12px;
+    gap: 6px;
+  }
 }
 
 .modal-label {
@@ -514,7 +554,7 @@ html.dark .card-title {
 .social-row {
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 14px;
@@ -524,23 +564,19 @@ html.dark .card-title {
 }
 
 .social-row:hover {
-  border-color: var(--accent-sky);
-  background: var(--accent-sky-dim);
+  background: var(--accent-dim);
 }
 
 .social-icon {
   width: 80px;
   height: 80px;
   border-radius: 10px;
-  background: var(--accent-dim);
   color: var(--accent);
-  /* font-weight: 700; */
   font-family: 'Bold';
   font-size: var(--font-base);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* letter-spacing: 0.06em; */
 }
 
 .social-icon-image {
@@ -557,9 +593,7 @@ html.dark .card-title {
 .modal-row-subtitle {
   margin: 4px 0px;
   font-size: var(--font-md);
-  color: var(--accent-sky);
-  /* font-weight: 600; */
-  font-family: 'Bold';
+  color: var(--accent);
 }
 
 /* ─── Certifications Modal ───────────────────────────────────────── */
@@ -567,24 +601,25 @@ html.dark .card-title {
   display: grid;
   grid-template-columns: 80px 1fr;
   gap: 14px;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   border-radius: 12px;
   background: var(--surface-subtle);
   padding: 14px;
   align-items: flex-start;
   transition: border-color 0.2s ease, background 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .cert-row:hover {
-  border-color: var(--accent-sky);
-  background: var(--accent-sky-dim);
+  background: var(--accent-dim);
 }
 
 .cert-icon {
   width: 80px;
   height: 80px;
   border-radius: 10px;
-  background: var(--accent-dim);
   color: var(--accent);
   font-size: var(--font-md);
   display: inline-flex;
@@ -628,7 +663,7 @@ html.dark .card-title {
   height: 100%;
   object-fit: cover;
   border-radius: var(--modal-radius);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   box-shadow: var(--shadow-card);
   display: block;
 }
@@ -702,7 +737,7 @@ html.dark .card-title {
 }
 
 .skill-category:hover {
-  background-color: rgba(6, 182, 212, 0.15);
+  background-color: var(--accent-dim);
 }
 
 .skill-category-label {
@@ -794,7 +829,7 @@ html.dark .card-title {
   background: var(--surface-subtle);
   padding: 16px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
 }
 
 /* ─── Interactive Sentence List ──────────────────────────────────── */
@@ -828,18 +863,7 @@ html.dark .card-title {
   /* Pin to top to prevent vertical shifting */
   color: var(--accent);
   font-weight: bold;
-  opacity: 0.6;
   transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.interactive-bullet-item:hover {
-  color: var(--accent);
-  transform: translate3d(6px, 0, 0);
-}
-
-.interactive-bullet-item:hover::before {
-  opacity: 1;
-  transform: scale(1.1);
 }
 
 .experience-logo-container {
@@ -930,7 +954,7 @@ html.dark .card-title {
 
 /* ─── Project Modal ──────────────────────────────────────────────── */
 .project-image-placeholder {
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
   background: var(--surface-subtle);
   border-radius: 12px;
   min-height: 180px;
@@ -946,8 +970,8 @@ html.dark .card-title {
   border-radius: 10px;
   padding: 8px 10px;
   font-size: var(--font-base);
-  color: var(--accent-sky);
-  background: var(--accent-sky-dim);
+  color: var(--accent);
+  background: var(--accent-dim);
 }
 
 .link-row a {
@@ -1042,7 +1066,7 @@ html.dark .card-title {
 }
 
 .project-sidebar-btn:hover {
-  background: color-mix(in srgb, var(--accent), transparent 85%);
+  background: var(--accent-dim);
 }
 
 .project-sidebar-btn.active {
@@ -1068,7 +1092,6 @@ html.dark .card-title {
 .project-sidebar-title {
   margin: 0;
   font-size: var(--font-md);
-  font-family: 'Bold';
   color: var(--text-primary);
   transition: color 0.2s ease;
 }
@@ -1113,7 +1136,7 @@ html.dark .card-title {
 }
 
 .projects-detail-pane::-webkit-scrollbar-thumb {
-  background: var(--border);
+  /* background: var(--border); */
   border-radius: 10px;
 }
 
@@ -1165,10 +1188,13 @@ html.dark .card-title {
 .project-detail-accordion {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
 }
 
 .accordion-item {
-  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
 }
 
 .accordion-header {
@@ -1178,40 +1204,56 @@ html.dark .card-title {
   align-items: center;
   background: transparent;
   border: none;
-  padding: 16px 0;
+  border-radius: 12px;
+  padding: 16px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-shadow: var(--shadow-accordion-idle);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
 }
 
 .accordion-header .modal-row-title {
   font-size: var(--font-md);
   color: var(--text-secondary);
-  transition: color 0.2s ease;
+  transition: color 0.25s ease;
 }
 
-.accordion-header:hover .modal-row-title {
-  color: var(--text-primary);
+.accordion-header:hover {
+  background: var(--accent-dim);
+  box-shadow: var(--shadow-accordion-hover);
+}
+
+.accordion-header.active {
+  background: var(--text-primary);
+  box-shadow: var(--shadow-accordion-idle);
+}
+
+.accordion-header.active:hover {
+  transform: none;
+  box-shadow: var(--shadow-accordion-idle);
 }
 
 .accordion-header.active .modal-row-title {
-  color: var(--accent);
-  font-family: 'Bold';
+  color: var(--bg);
 }
 
 .accordion-chevron {
   color: var(--text-muted);
   font-size: 0.9rem;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
 }
 
 .accordion-chevron.rotated {
   transform: rotate(180deg);
-  color: var(--accent);
+}
+
+.accordion-header.active .accordion-chevron {
+  color: var(--bg);
 }
 
 .accordion-content {
   overflow: hidden;
+  padding: 0 20px;
 }
 
 .project-detail-section {
@@ -1253,7 +1295,7 @@ html.dark .card-title {
 .project-action-btn-secondary {
   background: transparent;
   color: var(--text-primary);
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
 }
 
 .project-action-btn-secondary:hover {
@@ -1265,6 +1307,16 @@ html.dark .card-title {
   width: 18px;
   height: 18px;
   object-fit: contain;
+}
+
+/* Invert the black SVG to white in light mode since primary button is dark */
+.project-action-btn-primary .project-action-icon-svg {
+  filter: invert(1);
+}
+
+/* Keep the black SVG black in dark mode since primary button is light */
+html.dark .project-action-btn-primary .project-action-icon-svg {
+  filter: invert(0);
 }
 
 .project-action-btn-coming-soon {
@@ -1413,7 +1465,7 @@ html.dark .card-title {
     align-items: center;
     gap: 10px;
     background: var(--surface-subtle);
-    border: 1px solid var(--border);
+    /* border: 1px solid var(--border); */
     border-radius: 12px;
     padding: 10px 16px;
     color: var(--accent);
