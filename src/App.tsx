@@ -249,7 +249,7 @@ function ModalBody({
                 {link.icon
                   ? <img src={link.icon} alt={`${link.platform} icon`} className="social-icon-image" height={64} width={64} />
                   : link.platform === 'Email'
-                    ? <FontAwesomeIcon icon={faEnvelope} size="2xl" />
+                    ? <FontAwesomeIcon icon={faEnvelope} size="2xl" style={{ transform: 'scale(1.5)' }} />
                     : <span>{link.platform}</span>}
               </div>
               <div>
