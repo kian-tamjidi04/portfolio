@@ -13,7 +13,6 @@ import {
   faEnvelope,
   faChevronRight,
   faChevronDown,
-  faCode,
   faArrowUpRightFromSquare,
   faListUl
 } from '@fortawesome/free-solid-svg-icons';
@@ -199,8 +198,11 @@ function ModalBody({
       <>
         {card.certs.map((cert) => (
           <motion.section className="modal-section modal-section-plain" key={cert.name} variants={modalItemVariants}>
-            <motion.div
+            <motion.a
               className="cert-row"
+              href={cert.href}
+              target="_blank"
+              rel="noreferrer"
               initial="initial"
               whileHover="hovered"
             >
@@ -225,7 +227,7 @@ function ModalBody({
                   <p className="cert-takeaway">{cert.takeaway}</p>
                 </motion.div>
               </div>
-            </motion.div>
+            </motion.a>
           </motion.section>
         ))}
       </>
@@ -270,7 +272,7 @@ function ModalBody({
     return (
       <>
         <motion.section className="modal-section" variants={modalItemVariants}>
-          <p className="modal-text">I believe in product creation and not being limited by any single set of tools. That being said, here is a list of skills I pride myself on, and am consistently developing.</p>
+          <p className="modal-text">I'm a tool-agnostic engineer - I cultivate an adaptable mindset to pick up new tools quickly. Here are the skills I'm actively developing:</p>
         </motion.section>
         <div className="skills-grid">
           {card.categories.map((cat) => (
@@ -515,7 +517,7 @@ function ModalBody({
                 {activeProject.links?.map((link) => (
                   <a href={link.href} key={link.label} target="_blank" rel="noreferrer" className={`project-action-btn ${(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? 'project-action-btn-primary' : 'project-action-btn-secondary'}`}>
                     {(link.label.toLowerCase().includes('github') || link.label.toLowerCase().includes('source')) ? (
-                      <FontAwesomeIcon icon={faCode} />
+                      <img src="./github.svg" alt="GitHub" className="project-action-icon-svg" />
                     ) : (
                       <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                     )}
@@ -525,7 +527,7 @@ function ModalBody({
                 {activeProject.id === 'project-07' && (
                   <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
                     <img src="./figma.svg" alt="Figma" className="project-action-icon-svg" />
-                    Figma coming soon...
+                    Figma coming soon
                   </div>
                 )}
               </motion.div>
