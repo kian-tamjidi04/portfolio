@@ -64,6 +64,7 @@ export interface CertItem {
   date: string;
   icon: string;
   takeaway: string;
+  href?: string;
 }
 
 export interface EducationEntry {
@@ -171,7 +172,7 @@ export const portfolioCards: PortfolioCard[] = [
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
       'I work at the intersection of engineering and design - I care as much about how software feels as how it works.',
-      'Take a look around to learn a little more about me; feel free to reach out via the social card below.',
+      'Take a look around to learn a little more about me; feel free to reach out via the social card below!',
     ],
     beliefs: [
       '"Fail early, fail often, but always fail forward" - John C. Maxwell',
@@ -227,7 +228,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: '2025 - Present',
-        impact: 'Part of a small frontend team keeping a self-support site running for 140k UBS employees. Prototyped and deployed an upgraded internal chatbot and gamified dashboards to cut ticket volume by 12%. Redesigned the mobile app from the ground up alongside developers and business analysts.',
+        impact: 'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026. Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%. Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
         skills: [
           { name: 'React', primary: true },
           { name: 'TypeScript', primary: true },
@@ -247,7 +248,7 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'IEUK Tech Stream Participant',
         company: 'Bright Network',
         dates: '2024',
-        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK - invited to a BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
+        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK for an exclusive BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
         skills: [{ name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
@@ -266,7 +267,7 @@ export const portfolioCards: PortfolioCard[] = [
         degree: 'BSc Computer Science with Intercalated Year',
         institution: 'University of Warwick',
         dates: '2023 - 2027',
-        details: 'Achieved First Class (1:1) in my first two years. Member of the University Small Band, playing multiple gigs throughout the year for paying clients.',
+        details: 'Achieved First Class (1:1) in my first two years, averaging over 73%. Member of the University Small Band, playing multiple gigs throughout the year for paying clients.',
         modules: ['Data Structures & Algorithms', 'Artificial Intelligence', 'Formal Languages', 'Software Engineering', 'Database Systems', 'Operating Systems and Computer Networks', 'Data Analytics'],
         isRecent: true,
       },
@@ -274,7 +275,7 @@ export const portfolioCards: PortfolioCard[] = [
         degree: 'A Levels',
         institution: 'Hill House School',
         dates: '2021 - 2023',
-        details: 'Selected as Head Boy, delivering a speech to 200+ attendees and organising a team of 10+ prefects. Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
+        details: 'Selected as Head Boy, organising a team of 10+ prefects and delivering a speech to 200+ attendees. Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
         modules: ['Further Mathematics (A*)', 'Mathematics (A*)', 'Computer Science (A*)', 'Music (A)'],
       },
     ],
@@ -293,6 +294,7 @@ export const portfolioCards: PortfolioCard[] = [
         date: 'In progress',
         takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma.',
         icon: './google.svg',
+        href: 'https://www.coursera.org/professional-certificates/google-ux-design',
       },
       {
         name: 'Introduction to Agent Skills',
@@ -300,6 +302,7 @@ export const portfolioCards: PortfolioCard[] = [
         date: '2026',
         takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents',
         icon: './anthopic.svg',
+        href: 'https://www.linkedin.com/in/kian-tamjidi/overlay/Certifications/1928659962/treasury/?profileId=ACoAADZLfeIBsg2vo-dFw3sZMNrzv3rRIIWu_BE',
       },
       {
         name: 'Advanced React',
@@ -307,6 +310,7 @@ export const portfolioCards: PortfolioCard[] = [
         date: '2026',
         takeaway: 'Learnt a greater array of React skills, putting them into practice during my Year in Industry',
         icon: './meta.svg',
+        href: 'https://www.coursera.org/learn/advanced-react-meta',
       },
       {
         name: 'AI-900 Azure AI Fundamentals',
@@ -314,6 +318,7 @@ export const portfolioCards: PortfolioCard[] = [
         date: '2025',
         takeaway: 'Gained a strong understanding of core AI concepts and how they relate to Microsoft Azure, including Generative AI, Natural Language Processing, Computer Vision and Responsible AI.',
         icon: './microsoft.svg',
+        href: 'https://learn.microsoft.com/en-gb/users/kiantamjidi-3551/credentials/483a5f4134a7964f?ref=https%3A%2F%2Fwww.linkedin.com%2F',
       },
     ],
   },
