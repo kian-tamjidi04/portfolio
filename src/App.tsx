@@ -148,7 +148,10 @@ function AboutSection({ card }: { card: AboutCard }) {
       <motion.div
         className="about-image-col"
         variants={modalItemVariants}
-        style={textHeight ? { height: textHeight, width: imageWidth, flex: '0 0 auto' } : undefined}
+        style={textHeight
+          ? { height: textHeight, width: imageWidth, flex: '0 0 auto' }
+          : { flex: '0 0 0px', overflow: 'hidden' }
+        }
       >
         <img src="./Pic.svg" alt="Profile" className="about-image" />
       </motion.div>
