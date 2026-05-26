@@ -291,8 +291,8 @@ export const portfolioCards: PortfolioCard[] = [
       {
         name: 'UX Design Professional Certificate',
         issuer: 'Google',
-        date: 'In progress',
-        takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma.',
+        date: 'In progress - 5/8 Certifications Obtained',
+        takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma. Applied those skills to create interactive prototypes for a mobile app whilst at UBS.',
         icon: './google.svg',
         href: 'https://www.coursera.org/professional-certificates/google-ux-design',
       },
@@ -303,14 +303,6 @@ export const portfolioCards: PortfolioCard[] = [
         takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents',
         icon: './anthopic.svg',
         href: 'https://www.linkedin.com/in/kian-tamjidi/overlay/Certifications/1928659962/treasury/?profileId=ACoAADZLfeIBsg2vo-dFw3sZMNrzv3rRIIWu_BE',
-      },
-      {
-        name: 'Advanced React',
-        issuer: 'Meta',
-        date: '2026',
-        takeaway: 'Learnt a greater array of React skills, putting them into practice during my Year in Industry',
-        icon: './meta.svg',
-        href: 'https://www.coursera.org/learn/advanced-react-meta',
       },
       {
         name: 'AI-900 Azure AI Fundamentals',
