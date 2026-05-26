@@ -487,6 +487,7 @@ html.dark .card-title {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  position: relative;
   -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
   -webkit-scrollbar-color: var(--border) transparent;

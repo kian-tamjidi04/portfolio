@@ -562,7 +562,21 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       return;
     }
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
-    const bodyHeight = bodyRef.current?.scrollHeight ?? 0;
+    
+    let bodyHeight = 0;
+    if (bodyRef.current) {
+      const bodyEl = bodyRef.current;
+      const children = Array.from(bodyEl.children);
+      if (children.length > 0) {
+        const lastChild = children[children.length - 1] as HTMLElement;
+        const style = window.getComputedStyle(bodyEl);
+        const paddingBottom = parseFloat(style.paddingBottom) || 0;
+        bodyHeight = lastChild.offsetTop + lastChild.offsetHeight + paddingBottom;
+      } else {
+        bodyHeight = bodyEl.scrollHeight;
+      }
+    }
+
     const contentHeight = headerHeight + bodyHeight;
     const targetHeight = Math.min(rect.height, contentHeight || rect.height);
     setModalHeight(targetHeight);
