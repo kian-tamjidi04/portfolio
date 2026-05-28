@@ -300,7 +300,7 @@ export const portfolioCards: PortfolioCard[] = [
         name: 'Introduction to Agent Skills',
         issuer: 'Anthropic',
         date: '2026',
-        takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents',
+        takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents.',
         icon: './anthopic.svg',
         href: 'https://www.linkedin.com/in/kian-tamjidi/overlay/Certifications/1928659962/treasury/?profileId=ACoAADZLfeIBsg2vo-dFw3sZMNrzv3rRIIWu_BE',
       },
@@ -379,7 +379,7 @@ export const portfolioCards: PortfolioCard[] = [
       {
         id: 'project-06',
         title: 'Binary Options XR Trading Simulator Game',
-        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to 2.5k employees from across the bank. Received interest from multiple divisions across the bank about deploying the technology within their own teams."',
+        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to 2.5k employees from across the bank. Received interest from multiple divisions across the bank about deploying the technology within their own teams.',
         stack: [{ name: 'MR / XR', primary: true }, { name: 'Swift', primary: true }, { name: 'visionOS', primary: true }, { name: 'AI-assisted development', primary: true }, { name: 'Blender', primary: true }, { name: 'Reality Composer Pro', primary: true }],
         challenges: 'I had three weeks to learn visionOS and RealityKit from scratch, build a working MVP, and present it at a bank-wide event in London. Strong time management and optimising my learning with AI tools got me there.'
       },
@@ -426,7 +426,7 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'What I want to build, and the kind of work that drives me forward.',
     placementClass: 'place-vision',
     body: [
-      "My favourite version of a project is one where I get to go from rough idea to shipped thing. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
+      "My favourite version of a project is one where go from the rough idea to a shipped product. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
     ],
     goals: [
       'Expand my skills in UX and product design, connecting with professionals from various backgrounds.',
