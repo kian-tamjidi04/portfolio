@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, cubicBezier } from 'framer-motion';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { trackEvent } from './utils/analytics';
 import {
   faAward,
   faBook,
@@ -735,7 +736,22 @@ function App() {
     [flipState],
   );
 
+  const tileMetadata: Record<string, { tile_name: string; tile_category: string }> = {
+    about:          { tile_name: 'About Me',        tile_category: 'cta' },
+    social:         { tile_name: 'Social Links',     tile_category: 'social' },
+    experience:     { tile_name: 'Experience',       tile_category: 'cta' },
+    education:      { tile_name: 'Education',        tile_category: 'cta' },
+    certifications: { tile_name: 'Certifications',   tile_category: 'cta' },
+    skills:         { tile_name: 'Skills',           tile_category: 'cta' },
+    projects:       { tile_name: 'Projects',         tile_category: 'project' },
+    vision:         { tile_name: 'Vision',           tile_category: 'cta' },
+  };
+
   const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
+    const meta = tileMetadata[cardId];
+    if (meta) {
+      trackEvent('tile_click', meta);
+    }
     const r = el.getBoundingClientRect();
     setFlipState({ cardId, fromRect: { left: r.left, top: r.top, width: r.width, height: r.height } });
   }, []);
