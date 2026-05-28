@@ -115,6 +115,7 @@ textarea,
 select,
 option {
   font-family: inherit;
+  color: inherit;
 }
 
 /* ─── Dark-mode Toggle ───────────────────────────────────────────── */
