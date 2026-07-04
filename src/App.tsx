@@ -357,38 +357,129 @@ function ModalBody({
   }
 
   if (card.type === 'experience') {
+    // Group consecutive roles at the same company
+    const groupedExperiences: {
+      company: string;
+      logo?: string;
+      groupTitle?: string;
+      groupSubtitle?: string;
+      groupDates?: string;
+      isRecent: boolean;
+      roles: typeof card.roles;
+    }[] = [];
+
+    card.roles.forEach((role) => {
+      const lastGroup = groupedExperiences[groupedExperiences.length - 1];
+      if (lastGroup && lastGroup.company === role.company) {
+        lastGroup.roles.push(role);
+        if (role.isRecent) {
+          lastGroup.isRecent = true;
+        }
+      } else {
+        groupedExperiences.push({
+          company: role.company,
+          logo: role.logo,
+          groupTitle: role.groupTitle,
+          groupSubtitle: role.groupSubtitle,
+          groupDates: role.groupDates,
+          isRecent: role.isRecent,
+          roles: [role],
+        });
+      }
+    });
+
     return (
       <div className="timeline" aria-label="Experience timeline">
-        {card.roles.map((role) => (
-          <motion.article
-            className="timeline-item"
-            key={`${role.company}-${role.role}`}
-            variants={modalItemVariants}
-          >
-            <span className={`timeline-dot ${role.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
-            <div className="timeline-content">
-              {role.logo && (
-                <div className="experience-logo-container">
-                  <img src={role.logo} alt={`${role.company} logo`} className="experience-logo" />
-                </div>
-              )}
-              <div className="timeline-title-row">
-                <span className="timeline-role">{role.role}</span>
-                <span className="timeline-separator"> • </span>
-                <span className="timeline-company">{role.company}</span>
+        {groupedExperiences.map((group) => {
+          const isGrouped = group.roles.length > 1;
+          const key = `group-${group.company}-${group.roles.map((r) => r.role).join('-')}`;
+
+          return (
+            <motion.article
+              className="timeline-item"
+              key={key}
+              variants={modalItemVariants}
+            >
+              <span className={`timeline-dot ${group.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
+              <div className="timeline-content">
+                {group.logo && (
+                  <div className="experience-logo-container">
+                    <img src={group.logo} alt={`${group.company} logo`} className="experience-logo" />
+                  </div>
+                )}
+
+                {isGrouped ? (
+                  /* Grouped multi-role layout (e.g. UBS rotation) */
+                  <>
+                    <div className="timeline-title-row">
+                      <span className="timeline-role">{group.groupSubtitle}</span>
+                      <span className="timeline-separator"> • </span>
+                      <span className="timeline-company">{group.company}</span>
+                      {group.groupTitle && (
+                        <span className="timeline-group-title-badge">{group.groupTitle}</span>
+                      )}
+                    </div>
+                    {group.groupDates && (
+                      <p className="timeline-dates">{group.groupDates}</p>
+                    )}
+
+                    <div className="sub-timeline">
+                      {group.roles.map((role) => (
+                        <div className="sub-timeline-item" key={role.role}>
+                          <span className={`sub-timeline-dot ${role.isRecent ? 'is-recent' : ''}`} aria-hidden="true" />
+                          <div className="sub-timeline-role-row">
+                            <span className="sub-timeline-role">{role.role}</span>
+                            {role.division && (
+                              <>
+                                <span className="sub-timeline-separator"> • </span>
+                                <span className="sub-timeline-division">{role.division}</span>
+                              </>
+                            )}
+                            {role.badge && (
+                              <span className="sub-timeline-badge">{role.badge}</span>
+                            )}
+                          </div>
+                          <p className="sub-timeline-dates">{role.dates}</p>
+                          <InteractiveList text={role.impact} />
+                          <div className="d-flex flex-wrap gap-2 mt-2">
+                            {role.skills.map((s) => (
+                              <span className={`tag ${s.primary ? 'is-primary' : ''}`} key={s.name}>
+                                {s.name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  /* Standard single-role layout (e.g. Bright Network) */
+                  (() => {
+                    const role = group.roles[0];
+                    return (
+                      <>
+                        <div className="timeline-title-row">
+                          <span className="timeline-role">{role.role}</span>
+                          <span className="timeline-separator"> • </span>
+                          <span className="timeline-company">{role.company}</span>
+                        </div>
+                        <p className="timeline-dates">{role.dates}</p>
+                        <InteractiveList text={role.impact} />
+                        <div className="d-flex flex-wrap gap-2">
+                          {role.skills.map((s) => (
+                            <span className={`tag ${s.primary ? 'is-primary' : ''}`} key={s.name}>
+                              {s.name}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()
+                )}
               </div>
-              <p className="timeline-dates">{role.dates}</p>
-              <InteractiveList text={role.impact} />
-              <div className="d-flex flex-wrap gap-2">
-                {role.skills.map((s) => (
-                  <span className={`tag ${s.primary ? 'is-primary' : ''}`} key={s.name}>
-                    {s.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.article>
-        ))}
+            </motion.article>
+          );
+        })}
       </div>
     );
   }

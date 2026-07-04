@@ -36,6 +36,11 @@ export interface ExperienceRole {
   skills: TagItem[];
   isRecent: boolean;
   logo?: string;
+  badge?: string;
+  groupTitle?: string;
+  groupSubtitle?: string;
+  groupDates?: string;
+  division?: string;
 }
 
 export interface TagItem {
@@ -225,9 +230,32 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-experience',
     roles: [
       {
+        role: 'UX Designer and Creative Technologist',
+        company: 'UBS',
+        dates: 'Jun 2026 - Present',
+        impact: 'Designing production-ready components within the ampliFi and NEMO design systems in Figma. Executing the design-to-production lifecycle by translating Figma components directly into optimised Astro and React code, ready to be used by components in ampliFi, the bank’s personalised, financial tech platform. Creating custom agentic skills to validate UI component compliancy, reducing design QA bottlenecks and accelerating the design - to - development handoff.',
+        skills: [
+          { name: 'Figma', primary: true },
+          { name: 'Design Systems', primary: true },
+          { name: 'React', primary: true },
+          { name: 'Astro', primary: true },
+          { name: 'HTML', primary: true },
+          { name: 'CSS', primary: true },
+          { name: 'UX Design', primary: true },
+          { name: 'Agent Skills', primary: true },
+          { name: 'Critical Thinking' },
+          { name: 'Creativity' },
+        ],
+        isRecent: true,
+        logo: './UBS.svg',
+        groupSubtitle: 'GOTO Technology Placement Program',
+        groupDates: 'Jun 2025 - Present',
+        division: 'Group Finance Technology',
+      },
+      {
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
-        dates: '2025 - Present',
+        dates: 'Jun 2025 - Jun 2026',
         impact: 'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026. Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%. Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
         skills: [
           { name: 'React', primary: true },
@@ -241,15 +269,16 @@ export const portfolioCards: PortfolioCard[] = [
           { name: 'Adaptability' },
           { name: 'Innovation' }
         ],
-        isRecent: true,
+        isRecent: false,
         logo: './UBS.svg',
+        division: 'End User Services',
       },
       {
         role: 'IEUK Tech Stream Participant',
         company: 'Bright Network',
-        dates: '2024',
+        dates: 'Jun 2024',
         impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK for an exclusive BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
-        skills: [{ name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
+        skills: [{ name: 'MS Powerpoint', primary: true }, { name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
       },
@@ -291,7 +320,7 @@ export const portfolioCards: PortfolioCard[] = [
       {
         name: 'UX Design Professional Certificate',
         issuer: 'Google',
-        date: 'In progress - 5/8 Certifications Obtained',
+        date: 'In progress - 6/8 Certifications Obtained',
         takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma. Applied those skills to create interactive prototypes for a mobile app whilst at UBS.',
         icon: './google.svg',
         href: 'https://www.coursera.org/professional-certificates/google-ux-design',
