@@ -225,9 +225,28 @@ export const portfolioCards: PortfolioCard[] = [
     placementClass: 'place-experience',
     roles: [
       {
+        role: 'UX Designer and Creative Technologist',
+        company: 'UBS',
+        dates: '2026 - Present',
+        impact: 'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026. Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%. Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
+        skills: [
+          { name: 'Figma', primary: true },
+          { name: 'Design Systems', primary: true },
+          { name: 'React', primary: true },
+          { name: 'Astro', primary: true },
+          { name: 'Angular', primary: true },
+          { name: 'HTML', primary: true },
+          { name: 'CSS', primary: true },
+          { name: 'UX Design', primary: true },
+          { name: 'Agent Skills', primary: true },
+        ],
+        isRecent: true,
+        logo: './UBS.svg',
+      },
+      {
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
-        dates: '2025 - Present',
+        dates: '2025 - 2026',
         impact: 'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026. Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%. Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
         skills: [
           { name: 'React', primary: true },
@@ -241,7 +260,7 @@ export const portfolioCards: PortfolioCard[] = [
           { name: 'Adaptability' },
           { name: 'Innovation' }
         ],
-        isRecent: true,
+        isRecent: false,
         logo: './UBS.svg',
       },
       {
@@ -249,7 +268,7 @@ export const portfolioCards: PortfolioCard[] = [
         company: 'Bright Network',
         dates: '2024',
         impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK for an exclusive BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
-        skills: [{ name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
+        skills: [{ name: 'MS Powerpoint', primary: true }, { name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
       },
