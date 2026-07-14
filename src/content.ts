@@ -320,10 +320,10 @@ export const portfolioCards: PortfolioCard[] = [
       {
         name: 'UX Design Professional Certificate',
         issuer: 'Google',
-        date: 'In progress - 6/8 Certifications Obtained',
-        takeaway: 'Developing a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma. Applied those skills to create interactive prototypes for a mobile app whilst at UBS.',
+        date: 'July 2026',
+        takeaway: 'Developed a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma. Applied those skills to create interactive prototypes for a mobile app whilst at UBS and case studies within the course.',
         icon: './google.svg',
-        href: 'https://www.coursera.org/professional-certificates/google-ux-design',
+        href: 'https://www.credly.com/badges/33fa41fe-1484-4f57-8d33-5deb050fe535/print',
       },
       {
         name: 'Building with the Claude API',
