@@ -7,7 +7,6 @@ import {
   faBriefcase,
   faBullhorn,
   faCircleUser,
-  faCircleXmark,
   faHammer,
   faRocket,
   faScrewdriverWrench,
@@ -516,11 +515,12 @@ function ModalBody({
 
           {/* Mobile Close Button for Sidebar */}
           <button
-            className="project-sidebar-close-mobile"
+            className="modal-close-cta project-sidebar-close-mobile"
             onClick={() => setIsSidebarOpen(false)}
             aria-label="Close project list"
           >
-            <FontAwesomeIcon icon={faCircleXmark} />
+            <span className="modal-close-cta-text">Close</span>
+            <FontAwesomeIcon icon={faRegularCircleXmark} />
           </button>
         </div>
 
@@ -657,7 +657,7 @@ function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       return;
     }
     const headerHeight = headerRef.current?.offsetHeight ?? 0;
-    
+
     let bodyHeight = 0;
     if (bodyRef.current) {
       const bodyEl = bodyRef.current;
@@ -828,14 +828,14 @@ function App() {
   );
 
   const tileMetadata: Record<string, { tile_name: string; tile_category: string }> = {
-    about:          { tile_name: 'About Me',        tile_category: 'cta' },
-    social:         { tile_name: 'Social Links',     tile_category: 'social' },
-    experience:     { tile_name: 'Experience',       tile_category: 'cta' },
-    education:      { tile_name: 'Education',        tile_category: 'cta' },
-    certifications: { tile_name: 'Certifications',   tile_category: 'cta' },
-    skills:         { tile_name: 'Skills',           tile_category: 'cta' },
-    projects:       { tile_name: 'Projects',         tile_category: 'project' },
-    vision:         { tile_name: 'Vision',           tile_category: 'cta' },
+    about: { tile_name: 'About Me', tile_category: 'cta' },
+    social: { tile_name: 'Social Links', tile_category: 'social' },
+    experience: { tile_name: 'Experience', tile_category: 'cta' },
+    education: { tile_name: 'Education', tile_category: 'cta' },
+    certifications: { tile_name: 'Certifications', tile_category: 'cta' },
+    skills: { tile_name: 'Skills', tile_category: 'cta' },
+    projects: { tile_name: 'Projects', tile_category: 'project' },
+    vision: { tile_name: 'Vision', tile_category: 'cta' },
   };
 
   const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
@@ -935,3 +935,4 @@ function App() {
 }
 
 export default App;
+

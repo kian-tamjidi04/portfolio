@@ -513,8 +513,8 @@ html.dark .card-title {
 }
 
 .modal-section {
-  border-left: 4px solid var(--border);
   padding: 14px;
+  border-radius: var(--card-radius);
   background: var(--surface-subtle);
 }
 
@@ -641,7 +641,6 @@ html.dark .card-title {
   height: 100%;
   object-fit: cover;
   border-radius: var(--modal-radius);
-  box-shadow: var(--shadow-card);
   display: block;
 }
 
@@ -934,8 +933,6 @@ html.dark .card-title {
   vertical-align: middle;
   display: inline-block;
 }
-
-
 
 .sub-timeline {
   margin: 20px 0 10px 8px;
@@ -1488,31 +1485,51 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
     inset: 0;
     z-index: 50;
     background: var(--surface);
-    padding: 40px 24px 24px 24px;
+    padding: 24px;
     flex: 1;
     max-height: none;
+    border-radius: 16px;
+  }
+
+  .projects-sidebar.sidebar-open .projects-sidebar-list-container,
+  .sidebar-open .projects-sidebar .projects-sidebar-list-container {
+    margin-top: 48px;
+    overflow-y: auto;
+  }
+
+  .projects-sidebar.sidebar-open .projects-sidebar-list,
+  .sidebar-open .projects-sidebar .projects-sidebar-list {
+    position: relative;
+    height: auto;
   }
 
   .project-sidebar-close-mobile {
-    display: flex;
+    display: inline-flex;
     position: absolute;
     top: 16px;
     right: 16px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    cursor: pointer;
+    z-index: 10;
+  }
+
+  .project-sidebar-close-mobile:hover {
+    background: var(--accent-dim);
+    color: var(--text-primary);
+  }
+
+  .project-sidebar-close-mobile:active {
+    transform: scale(0.96);
   }
 
   .project-list-hamburger {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    background: var(--surface-subtle);
+    background: var(--text-primary);
+    border: none;
     border-radius: 12px;
-    padding: 10px 16px;
-    color: var(--accent);
+    padding: 10px 18px;
+    color: var(--bg);
     font-family: 'Bold';
     font-size: var(--font-base);
     cursor: pointer;
@@ -1522,8 +1539,8 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   }
 
   .project-list-hamburger:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent), transparent 70%);
+    color: var(--text-primary);
   }
 
   .projects-detail-pane {
