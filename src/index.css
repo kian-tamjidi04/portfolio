@@ -6,29 +6,19 @@
   --border: #d8dce8;
   --accent: #ea6508;
   --accent-dim: rgba(234, 101, 8, 0.10);
-  --accent-sky: #0891b2;
-  --accent-sky-dim: rgba(8, 145, 178, 0.10);
-  --accent-emerald: #0d9488;
-  --accent-emerald-dim: rgba(13, 148, 136, 0.10);
   --text-primary: #0d0e12;
   --text-secondary: #4a4f63;
   --text-muted: #8a8fa8;
-  --orb: rgba(234, 101, 8, 0.13);
+  /* Not currently applied to .portfolio-card - see DESIGN_SYSTEM.md F14. */
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
   --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
   --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
-  --viewed-border: rgba(13, 148, 136, 0.40);
-  --viewed-bg-mix: rgba(13, 148, 136, 0.06);
-  --viewed-shadow: rgba(13, 148, 136, 0.14);
-  --health-liquid: #0d9488;
-  --health-liquid-dim: rgba(13, 148, 136, 0.18);
-  --health-track: rgba(13, 148, 136, 0.07);
-  --health-track-border: rgba(13, 148, 136, 0.20);
+  /* --font-sm resolves to the 16px this previously inherited when undeclared. */
+  --font-sm: 1rem;
   --font-base: 0.95rem;
   --font-md: 1.15rem;
   --font-lg: 1.4rem;
-  --font-xl: 1.6rem;
   --font-card-title: 1.9rem;
   --font-modal-title: 2.4rem;
   --font-hero-title: 3.75rem;
@@ -44,21 +34,9 @@ html.dark {
   --border: #2a2a36;
   --accent: #f97316;
   --accent-dim: rgba(249, 115, 22, 0.14);
-  --accent-sky: #22d3ee;
-  --accent-sky-dim: rgba(34, 211, 238, 0.12);
-  --accent-emerald: #2dd4bf;
-  --accent-emerald-dim: rgba(45, 212, 191, 0.12);
   --text-primary: #f0f1f5;
   --text-secondary: #b0b4c8;
   --text-muted: #8a8fa8;
-  --orb: rgba(249, 115, 22, 0.18);
-  --viewed-border: rgba(45, 212, 191, 0.45);
-  --viewed-bg-mix: rgba(45, 212, 191, 0.07);
-  --viewed-shadow: rgba(45, 212, 191, 0.18);
-  --health-liquid: #2dd4bf;
-  --health-liquid-dim: rgba(45, 212, 191, 0.18);
-  --health-track: rgba(45, 212, 191, 0.08);
-  --health-track-border: rgba(45, 212, 191, 0.18);
   --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
   --shadow-accordion-idle: 0 4px 16px rgba(0, 0, 0, 0.25);
@@ -116,33 +94,6 @@ select,
 option {
   font-family: inherit;
   color: inherit;
-}
-
-/* ─── Dark-mode Toggle ───────────────────────────────────────────── */
-.theme-toggle {
-  position: fixed;
-  top: 18px;
-  left: 18px;
-  z-index: 100;
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  border: none;
-  background: var(--surface);
-  color: var(--text-secondary);
-  font-size: var(--font-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.15s ease;
-  box-shadow: var(--shadow-card);
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: scale(1.08);
 }
 
 /* ─── Page & Grid ────────────────────────────────────────────────── */
@@ -293,12 +244,6 @@ html.dark .card-title {
   color: var(--text-primary);
 }
 
-.card-summary {
-  margin: 0;
-  font-size: var(--font-md);
-  color: var(--text-secondary);
-}
-
 .card-preview-icon {
   position: absolute;
   top: 16px;
@@ -307,10 +252,6 @@ html.dark .card-title {
   font-size: var(--font-lg);
   line-height: 1;
   pointer-events: none;
-}
-
-.card-viewed {
-  background-color: rgba(16, 185, 129, 0.5);
 }
 
 .card-hero {
@@ -339,12 +280,6 @@ html.dark .card-title {
   z-index: 910;
   perspective: 1600px;
   transition: transform 0.42s ease, filter 0.42s ease, opacity 0.42s ease;
-}
-
-.flip-wrapper.flip-wrapper-nested-focus {
-  transform: scale(0.94);
-  filter: saturate(0.82) blur(0.8px);
-  opacity: 0.86;
 }
 
 /* ─── Inner rotating element ──────────────────────────────────────── */
@@ -384,10 +319,6 @@ html.dark .card-title {
   flex-direction: column;
   box-shadow: var(--shadow-modal);
   transition: background-color 0.34s ease, border-color 0.34s ease, box-shadow 0.34s ease;
-}
-
-.portfolio-modal {
-  display: contents;
 }
 
 .portfolio-modal-header {
@@ -460,26 +391,6 @@ html.dark .card-title {
   color: var(--text-primary);
 }
 
-.modal-close {
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: var(--font-xl);
-  padding: 4px;
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-  flex-shrink: 0;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close:hover {
-  color: var(--accent);
-  transform: scale(1.15);
-}
-
 .portfolio-modal-body {
   padding: 1.5rem !important;
   display: flex;
@@ -489,9 +400,7 @@ html.dark .card-title {
   overflow-y: auto;
   min-height: 0;
   position: relative;
-  -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
-  -webkit-scrollbar-color: var(--border) transparent;
   scrollbar-color: var(--border) transparent;
 }
 
@@ -706,10 +615,6 @@ html.dark .card-title {
   transition: background-color 0.22s ease;
 }
 
-.tag {
-  background: var(--surface);
-}
-
 .skill-category:hover {
   background-color: var(--accent-dim);
 }
@@ -898,15 +803,12 @@ html.dark .card-title {
   font-size: var(--font-md);
 }
 
-.education-details {
-  margin-top: 8px;
-}
-
 .education-modules-tags {
   margin-top: 10px;
 }
 
 .tag {
+  background: var(--surface);
   border-radius: 18.5px;
   padding: 5px 10px;
   font-size: var(--font-base);
@@ -914,7 +816,6 @@ html.dark .card-title {
 }
 
 .tag.is-primary {
-  border-color: rgba(249, 115, 22, 0.4);
   color: var(--accent);
   background: var(--accent-dim);
 }
@@ -999,42 +900,6 @@ html.dark .card-title {
   letter-spacing: 0.03em;
 }
 
-/* ─── Project Modal ──────────────────────────────────────────────── */
-.project-image-placeholder {
-  background: var(--surface-subtle);
-  border-radius: 12px;
-  min-height: 180px;
-  display: grid;
-  place-items: center;
-  color: var(--text-muted);
-  font-size: var(--font-base);
-}
-
-.pill {
-  border: 1px solid rgba(34, 211, 238, 0.3);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: var(--font-base);
-  color: var(--accent);
-  background: var(--accent-dim);
-}
-
-.link-row a {
-  text-decoration: none;
-  border: 1px solid rgba(249, 115, 22, 0.35);
-  border-radius: 999px;
-  padding: 7px 14px;
-  font-size: var(--font-base);
-  color: var(--accent);
-  font-family: 'Bold';
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.link-row a:hover {
-  background: var(--accent-dim);
-  border-color: var(--accent);
-}
-
 /* ─── Projects Split View ────────────────────────────────────────── */
 .projects-split-view {
   display: flex;
@@ -1070,31 +935,6 @@ html.dark .card-title {
   gap: 8px;
 }
 
-.project-nav-arrow {
-  align-self: center;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--accent);
-  font-size: var(--font-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.project-nav-arrow:hover:not(:disabled) {
-  background: var(--accent-dim);
-}
-
-.project-nav-arrow:disabled {
-  opacity: 0.3;
-  cursor: default;
-  filter: grayscale(1);
-}
-
 .project-sidebar-btn {
   flex: 1;
   display: flex;
@@ -1121,16 +961,6 @@ html.dark .card-title {
 .project-sidebar-btn-content {
   display: flex;
   flex-direction: column;
-}
-
-.project-sidebar-category {
-  font-size: 0.75rem;
-  font-family: 'Bold';
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-  display: block;
 }
 
 .project-sidebar-title {
@@ -1165,9 +995,7 @@ html.dark .card-title {
   flex-direction: column;
   overflow-y: auto;
   min-height: 0;
-  -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
-  -webkit-scrollbar-color: var(--border) transparent;
   scrollbar-color: var(--border) transparent;
 }
 
@@ -1215,17 +1043,6 @@ html.dark .card-title {
   line-height: 1.2;
   white-space: nowrap;
   padding-bottom: 4px;
-}
-
-.project-detail-summary {
-  font-size: var(--font-md);
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 0;
-
-  &.challenges-details {
-    font-size: var(--font-base);
-  }
 }
 
 .project-detail-accordion {
@@ -1299,12 +1116,6 @@ html.dark .card-title {
   padding: 0 20px;
 }
 
-.project-detail-section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .project-detail-actions {
   display: flex;
   gap: 16px;
@@ -1374,37 +1185,6 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
 .project-sidebar-close-mobile,
 .project-list-hamburger {
   display: none;
-}
-
-/* ─── Viewport progress border ─────────────────────────────────── */
-.viewport-progress {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.viewport-progress-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.viewport-progress-path {
-  stroke: var(--health-liquid);
-  stroke-width: 2px;
-  stroke-linecap: butt;
-  filter:
-    drop-shadow(0 0 6px color-mix(in srgb, var(--health-liquid) 60%, transparent)) drop-shadow(0 0 16px color-mix(in srgb, var(--health-liquid) 28%, transparent));
-  transition: none;
-  /* Disable transition by default */
-}
-
-.viewport-progress-path.viewport-progress-ready {
-  transition: stroke-dashoffset 0.65s ease-out;
-  /* Enable transition only when ready */
 }
 
 /* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
@@ -1600,11 +1380,6 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
     top: 14px;
     right: 14px;
     font-size: var(--font-md);
-  }
-
-  .theme-toggle {
-    top: 12px;
-    left: 12px;
   }
 }
 

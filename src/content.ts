@@ -4,7 +4,6 @@ export type CardType =
   | 'social'
   | 'about'
   | 'experience'
-  | 'project'
   | 'projects'
   | 'education'
   | 'vision'
@@ -61,6 +60,8 @@ export interface ProjectPreviewItem {
   links?: ExternalLink[];
   challenges?: string;
   grade?: string;
+  /** Renders a non-interactive "Figma coming soon" action alongside any links. */
+  figmaComingSoon?: boolean;
 }
 
 export interface CertItem {
@@ -78,6 +79,8 @@ export interface EducationEntry {
   dates: string;
   details: string;
   modules: string[];
+  /** Heading above the module tags. Defaults to "Key Modules". */
+  modulesLabel?: string;
   isRecent?: boolean;
 }
 
@@ -114,14 +117,6 @@ export interface ExperienceCard extends CardBase {
   roles: ExperienceRole[];
 }
 
-export interface ProjectCard extends CardBase {
-  type: 'project';
-  imageTitle: string;
-  description: string;
-  stack: TagItem[];
-  links: ExternalLink[];
-}
-
 export interface ProjectsCard extends CardBase {
   type: 'projects';
   items: ProjectPreviewItem[];
@@ -140,6 +135,7 @@ export interface VisionCard extends CardBase {
 
 export interface SkillsCard extends CardBase {
   type: 'skills';
+  intro: string;
   categories: SkillCategory[];
 }
 
@@ -149,7 +145,6 @@ export type PortfolioCard =
   | SocialCard
   | AboutCard
   | ExperienceCard
-  | ProjectCard
   | ProjectsCard
   | EducationCard
   | VisionCard
@@ -306,6 +301,7 @@ export const portfolioCards: PortfolioCard[] = [
         dates: '2021 - 2023',
         details: 'Selected as Head Boy, organising a team of 10+ prefects and delivering a speech to 200+ attendees. Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
         modules: ['Further Mathematics (A*)', 'Mathematics (A*)', 'Computer Science (A*)', 'Music (A)'],
+        modulesLabel: 'Subjects',
       },
     ],
   },
@@ -358,6 +354,8 @@ export const portfolioCards: PortfolioCard[] = [
     title: 'What I use',
     summary: 'Languages, tools, and the practices that connect them.',
     placementClass: 'place-skills',
+    intro:
+      "I'm a tool-agnostic engineer - I cultivate an adaptable mindset to pick up new tools quickly. Here are the skills I'm actively developing:",
     categories: [
       {
         label: 'Languages and Frameworks',
@@ -411,7 +409,8 @@ export const portfolioCards: PortfolioCard[] = [
         title: 'Daily UI Challenge',
         summary: 'Working through daily UI prompts to sharpen my design eye. Researching best practices on Dribbble and Mobbin, then building hi-fi prototypes in Figma to put them into practice. Using AI tools to ideate mock content, keeping my focus on design structure and visual decisions.',
         stack: [{ name: 'Figma Design', primary: true }, { name: 'Prototyping', primary: true }, { name: 'Prompt Engineering', primary: true }, { name: 'Claude', primary: true }, { name: 'UX Design' }],
-        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap - I now start with the flow before touching aesthetics."
+        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap - I now start with the flow before touching aesthetics.",
+        figmaComingSoon: true
       },
       {
         id: 'project-06',
