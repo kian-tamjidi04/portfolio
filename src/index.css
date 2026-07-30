@@ -272,8 +272,13 @@ option {
 }
 
 /* ─── Card invisible while flying card is live ────────────────────── */
+/* !important is required here: framer-motion leaves an inline opacity:1
+   style on the tile after its entrance animation finishes, and an inline
+   style always beats a class selector regardless of source order. This is
+   unrelated to the Bootstrap-import-order !importants removed elsewhere
+   (see DESIGN_SYSTEM.md F24) — do not remove it in a future cleanup pass. */
 .portfolio-card.card-hidden {
-  opacity: 0;
+  opacity: 0 !important;
   pointer-events: none;
   transition: none;
 }
@@ -612,12 +617,16 @@ option {
     align-items: center;
   }
 
+  /* !important on flex/width/height: AboutSection.tsx sets these same
+     properties inline (measured from the side-by-side text column height),
+     and an inline style always beats a class selector. Without it the image
+     column keeps its side-by-side height once collapsed to a single column. */
   .about-image-col {
     position: static;
-    flex: none;
-    width: 100%;
+    flex: none !important;
+    width: 100% !important;
     max-width: 300px;
-    height: auto;
+    height: auto !important;
     margin-bottom: var(--space-12);
   }
 
