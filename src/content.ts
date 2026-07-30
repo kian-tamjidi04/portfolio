@@ -15,7 +15,6 @@ export interface CardBase {
   label: string;
   title: string;
   summary: string;
-  placementClass: string;
   nonClickable?: boolean;
 }
 
@@ -31,7 +30,7 @@ export interface ExperienceRole {
   role: string;
   company: string;
   dates: string;
-  impact: string;
+  impact: string[];
   skills: TagItem[];
   isRecent: boolean;
   logo?: string;
@@ -55,10 +54,10 @@ export interface ExternalLink {
 export interface ProjectPreviewItem {
   id: string;
   title: string;
-  summary: string;
+  summary: string[];
   stack: TagItem[];
   links?: ExternalLink[];
-  challenges?: string;
+  challenges?: string[];
   grade?: string;
   /** Renders a non-interactive "Figma coming soon" action alongside any links. */
   figmaComingSoon?: boolean;
@@ -77,7 +76,7 @@ export interface EducationEntry {
   degree: string;
   institution: string;
   dates: string;
-  details: string;
+  details: string[];
   modules: string[];
   /** Heading above the module tags. Defaults to "Key Modules". */
   modulesLabel?: string;
@@ -157,7 +156,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Intro',
     title: 'Kian Tamjidi',
     summary: 'Computer Science Student · Software Engineer · Aspiring Product Designer',
-    placementClass: 'place-hero',
     nonClickable: true,
     name: 'Kian Tamjidi',
     subtitle: 'Developer & Product Designer',
@@ -168,7 +166,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'About',
     title: 'Who I am',
     summary: 'Product-minded engineer focused on useful, durable interfaces.',
-    placementClass: 'place-about',
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
       'I work at the intersection of engineering and design - I care as much about how software feels as how it works.',
@@ -192,7 +189,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Social',
     title: 'How to get in touch',
     summary: 'Find me across the platforms where I build and share.',
-    placementClass: 'place-social',
     links: [
       {
         platform: 'GitHub',
@@ -222,13 +218,16 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Experience',
     title: "Where I've worked",
     summary: 'Teams where I shipped measurable improvements across product and UX.',
-    placementClass: 'place-experience',
     roles: [
       {
         role: 'UX Designer and Creative Technologist',
         company: 'UBS',
         dates: 'Jun 2026 - Present',
-        impact: 'Designing production-ready components within the ampliFi and NEMO design systems in Figma. Executing the design-to-production lifecycle by translating Figma components directly into optimised Astro and React code, ready to be used by components in ampliFi, the bank’s personalised, financial tech platform. Creating custom agentic skills to validate UI component compliancy, reducing design QA bottlenecks and accelerating the design - to - development handoff.',
+        impact: [
+          'Designing production-ready components within the ampliFi and NEMO design systems in Figma.',
+          'Executing the design-to-production lifecycle by translating Figma components directly into optimised Astro and React code, ready to be used by components in ampliFi, the bank’s personalised, financial tech platform.',
+          'Creating custom agentic skills to validate UI component compliancy, reducing design QA bottlenecks and accelerating the design - to - development handoff.',
+        ],
         skills: [
           { name: 'Figma', primary: true },
           { name: 'Design Systems', primary: true },
@@ -251,7 +250,11 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'Frontend Engineer and Designer',
         company: 'UBS',
         dates: 'Jun 2025 - Jun 2026',
-        impact: 'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026. Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%. Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
+        impact: [
+          'Maintained a self-support website for 140,000 UBS employees, seeing 347M+ site visits in Q1 2026.',
+          'Prototyped and deployed an upgraded internal chatbot and gamified dashboards, cutting ticket volume by 12%.',
+          'Redesigned the mobile app from the ground up, collaborating with developers, business analysts and users to understand pain points.',
+        ],
         skills: [
           { name: 'React', primary: true },
           { name: 'TypeScript', primary: true },
@@ -272,7 +275,10 @@ export const portfolioCards: PortfolioCard[] = [
         role: 'IEUK Tech Stream Participant',
         company: 'Bright Network',
         dates: 'Jun 2024',
-        impact: "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%. Selected in the top 1% of 2,500+ attendees at IEUK for an exclusive BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.",
+        impact: [
+          "Delivered a strategic presentation, emulating the role of a product manager, aiming to increase an app's paid subscriber count by 20%.",
+          'Selected in the top 1% of 2,500+ attendees at IEUK for an exclusive BT Group event in recognition of outstanding contribution across workshops spanning data science and software engineering.',
+        ],
         skills: [{ name: 'MS Powerpoint', primary: true }, { name: 'Collaboration' }, { name: 'Communication' }, { name: 'Research' }],
         isRecent: false,
         logo: './bright_network.svg',
@@ -285,13 +291,15 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Education',
     title: "Where I've studied",
     summary: 'Formal foundations in computing, design, and systems thinking.',
-    placementClass: 'place-education',
     entries: [
       {
         degree: 'BSc Computer Science with Intercalated Year',
         institution: 'University of Warwick',
         dates: '2023 - 2027',
-        details: 'Achieved First Class (1:1) in my first two years, averaging over 73%. Member of the University Small Band, playing multiple gigs throughout the year for paying clients.',
+        details: [
+          'Achieved First Class (1:1) in my first two years, averaging over 73%.',
+          'Member of the University Small Band, playing multiple gigs throughout the year for paying clients.',
+        ],
         modules: ['Data Structures & Algorithms', 'Artificial Intelligence', 'Formal Languages', 'Software Engineering', 'Database Systems', 'Operating Systems and Computer Networks', 'Data Analytics'],
         isRecent: true,
       },
@@ -299,7 +307,10 @@ export const portfolioCards: PortfolioCard[] = [
         degree: 'A Levels',
         institution: 'Hill House School',
         dates: '2021 - 2023',
-        details: 'Selected as Head Boy, organising a team of 10+ prefects and delivering a speech to 200+ attendees. Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
+        details: [
+          'Selected as Head Boy, organising a team of 10+ prefects and delivering a speech to 200+ attendees.',
+          'Lead saxophonist in Jazz Orchestra and member of student-led Jazz Quartet.',
+        ],
         modules: ['Further Mathematics (A*)', 'Mathematics (A*)', 'Computer Science (A*)', 'Music (A)'],
         modulesLabel: 'Subjects',
       },
@@ -311,7 +322,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Certifications',
     title: "What I've earnt",
     summary: 'Verified skills across cloud, AI, and engineering.',
-    placementClass: 'place-certifications',
     certs: [
       {
         name: 'UX Design Professional Certificate',
@@ -353,7 +363,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Skills',
     title: 'What I use',
     summary: 'Languages, tools, and the practices that connect them.',
-    placementClass: 'place-skills',
     intro:
       "I'm a tool-agnostic engineer - I cultivate an adaptable mindset to pick up new tools quickly. Here are the skills I'm actively developing:",
     categories: [
@@ -385,71 +394,128 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Projects',
     title: 'What I build',
     summary: 'Selected experiments, products, and systems in progress.',
-    placementClass: 'place-projects',
     items: [
       {
         id: 'project-02',
         title: 'Traffic Junction Simulator',
-        summary: 'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software. Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam. Oversaw project management using a kanban methodology, achieving an overall first for the project.',
+        summary: [
+          'Led a group of 6 students as project manager to execute a full stack junction modelling application, based on a brief from Dorset Software.',
+          'Designed the UI using paper prototyping and iteratively improved the UI with the frontend subteam.',
+          'Oversaw project management using a kanban methodology, achieving an overall first for the project.',
+        ],
         stack: [{ name: 'React', primary: true }, { name: 'Java', primary: true }, { name: 'Springboot', primary: true }, { name: 'Version Control', primary: true }, { name: 'Test Driven Development', primary: true }, { name: 'Project Management' }, { name: 'Leadership' }, { name: 'Kanban' }, { name: 'Gantt Charts' },],
-        challenges: "The main challenge was non-technical - keeping six people aligned when priorities and working styles clashed. I had to learn quickly how to have direct conversations about progress without killing team morale and momentum.",
+        challenges: [
+          'The main challenge was non-technical - keeping six people aligned when priorities and working styles clashed.',
+          'I had to learn quickly how to have direct conversations about progress without killing team morale and momentum.',
+        ],
         links: [{ label: 'GitHub', href: 'https://github.com/ascomlexicon/junction-model' }],
         grade: '70%'
       },
       {
         id: 'project-03',
         title: 'Intrusion Detection System',
-        summary: 'Engineered a multithreaded packet sniffing system in C to analyze network traffic. Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution. Added mutex locks to prevent race conditions and deadlocks.',
+        summary: [
+          'Engineered a multithreaded packet sniffing system in C to analyze network traffic.',
+          'Ensured strict memory safety by utilising Valgrind to verify zero memory leaks upon execution.',
+          'Added mutex locks to prevent race conditions and deadlocks.',
+        ],
         stack: [{ name: 'C', primary: true }, { name: 'Multithreading', primary: true }, { name: 'pthreads', primary: true }, { name: 'Resilience' }, { name: 'Efficiency' }],
-        challenges: "Translating a working single-threaded design into a concurrent, race-condition-safe system required a complete rethink of state management. While the lectures had laid the fundamentals, this only took me so far, and so this project required strong perseverance.",
+        challenges: [
+          'Translating a working single-threaded design into a concurrent, race-condition-safe system required a complete rethink of state management.',
+          'While the lectures had laid the fundamentals, this only took me so far, and so this project required strong perseverance.',
+        ],
         grade: '89%'
       },
       {
         id: 'project-07',
         title: 'Daily UI Challenge',
-        summary: 'Working through daily UI prompts to sharpen my design eye. Researching best practices on Dribbble and Mobbin, then building hi-fi prototypes in Figma to put them into practice. Using AI tools to ideate mock content, keeping my focus on design structure and visual decisions.',
+        summary: [
+          'Working through daily UI prompts to sharpen my design eye.',
+          'Researching best practices on Dribbble and Mobbin, then building hi-fi prototypes in Figma to put them into practice.',
+          'Using AI tools to ideate mock content, keeping my focus on design structure and visual decisions.',
+        ],
         stack: [{ name: 'Figma Design', primary: true }, { name: 'Prototyping', primary: true }, { name: 'Prompt Engineering', primary: true }, { name: 'Claude', primary: true }, { name: 'UX Design' }],
-        challenges: "Early on I kept designing what I thought looked good rather than what made sense for the user. Studying references on Dribbble and Mobbin helped me understand the gap - I now start with the flow before touching aesthetics.",
+        challenges: [
+          'Early on I kept designing what I thought looked good rather than what made sense for the user.',
+          'Studying references on Dribbble and Mobbin helped me understand the gap - I now start with the flow before touching aesthetics.',
+        ],
         figmaComingSoon: true
       },
       {
         id: 'project-06',
         title: 'Binary Options XR Trading Simulator Game',
-        summary: 'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data. Presented the application at UBS Digital Day in London to 2.5k employees from across the bank. Received interest from multiple divisions across the bank about deploying the technology within their own teams.',
+        summary: [
+          'Developed a game for the Apple Vision Pro that allowed users to buy/sell tech stocks based on historical data.',
+          'Presented the application at UBS Digital Day in London to 2.5k employees from across the bank.',
+          'Received interest from multiple divisions across the bank about deploying the technology within their own teams.',
+        ],
         stack: [{ name: 'MR / XR', primary: true }, { name: 'Swift', primary: true }, { name: 'visionOS', primary: true }, { name: 'AI-assisted development', primary: true }, { name: 'Blender', primary: true }, { name: 'Reality Composer Pro', primary: true }],
-        challenges: 'I had three weeks to learn visionOS and RealityKit from scratch, build a working MVP, and present it at a bank-wide event in London. Strong time management and optimising my learning with AI tools got me there.'
+        challenges: [
+          'I had three weeks to learn visionOS and RealityKit from scratch, build a working MVP, and present it at a bank-wide event in London.',
+          'Strong time management and optimising my learning with AI tools got me there.',
+        ]
       },
       {
         id: 'project-01',
         title: 'AI Connect 4',
-        summary: 'Implemented the minimax adversarial search algorithm in Python 3, applying concepts from lectures to development. Optimised my code through the use of alpha-beta pruning. Evaluated algorithm performance by tracking expanded nodes and pruning frequency across varying board sizes and win conditions.',
+        summary: [
+          'Implemented the minimax adversarial search algorithm in Python 3, applying concepts from lectures to development.',
+          'Optimised my code through the use of alpha-beta pruning.',
+          'Evaluated algorithm performance by tracking expanded nodes and pruning frequency across varying board sizes and win conditions.',
+        ],
         stack: [{ name: 'Python', primary: true }, { name: 'Minimax', primary: true }, { name: 'Adversarial Search', primary: true }],
-        challenges: 'During testing, what I thought were successful implementations were very inefficient at first, often running for too long before seeing erroneous results. This project taught me the value of stepping back from the code entirely, reasoning through an algorithm abstractly, then returning to my computer. That shift alone cut my debugging time significantly, improving my productivity and results.',
+        challenges: [
+          'During testing, what I thought were successful implementations were very inefficient at first, often running for too long before seeing erroneous results.',
+          'This project taught me the value of stepping back from the code entirely, reasoning through an algorithm abstractly, then returning to my computer.',
+          'That shift alone cut my debugging time significantly, improving my productivity and results.',
+        ],
         grade: '74%'
       },
       {
         id: 'project-08',
         title: 'Music Practice App',
-        summary: 'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits. Conducted market research and user interviews prior to design and development. Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
+        summary: [
+          'Built a gamified mobile app for musicians to log practice sessions, encouraging improved practice habits.',
+          'Conducted market research and user interviews prior to design and development.',
+          'Fully documented as part of the A Level Computer Science qualification and used as an exemplar project for future year groups.',
+        ],
         stack: [{ name: 'Swift / SwiftUI', primary: true }, { name: 'iOS', primary: true }, { name: 'Mobile Development', primary: true }, { name: 'Project Management' }, { name: 'UX Research' }],
         links: [{ label: 'GitHub', href: 'https://github.com/kian-tamjidi04/MusicApp' }],
-        challenges: "Beyond building a working app, I had to conduct and document market research, usability testing, and system design to a professional standard. It taught me that shipping software is the smallest part of building a product, something reiterated on my Industrial Placement at UBS.",
+        challenges: [
+          'Beyond building a working app, I had to conduct and document market research, usability testing, and system design to a professional standard.',
+          'It taught me that shipping software is the smallest part of building a product, something reiterated on my Industrial Placement at UBS.',
+        ],
         grade: '100%'
       },
       {
         id: 'project-04',
         title: 'Full-Stack Ticketing Web Application',
-        summary: 'Designed and implemented a web app for users to purchase tickets for various events. Implemented secure user registration and role-based authentication for superusers and general attendees. Highlighted for a "significant quantity of heuristic design towards usability".',
+        summary: [
+          'Designed and implemented a web app for users to purchase tickets for various events.',
+          'Implemented secure user registration and role-based authentication for superusers and general attendees.',
+          'Highlighted for a "significant quantity of heuristic design towards usability".',
+        ],
         stack: [{ name: 'Python', primary: true }, { name: 'Flask', primary: true }, { name: 'SQLAlchemy', primary: true }, { name: 'Web Design', primary: true }, { name: 'Jinja', primary: true }, { name: 'JavaScript', primary: true }, { name: 'HTML / CSS', primary: true }, { name: 'UX / UI', primary: true }, { name: 'Bootstrap 5', primary: true }],
-        challenges: 'I had prior experience with HTML, however learning industry standard Bootstrap and Jinja were new to me. Thankfully, the lecture content was comprehensive and the lab tutors helped with my questions. Ensuring my codebase was elegant as well as functionally sound was key to not getting overwhelmed by the project scope.',
+        challenges: [
+          'I had prior experience with HTML, however learning industry standard Bootstrap and Jinja were new to me.',
+          'Thankfully, the lecture content was comprehensive and the lab tutors helped with my questions.',
+          'Ensuring my codebase was elegant as well as functionally sound was key to not getting overwhelmed by the project scope.',
+        ],
         grade: '84%'
       },
       {
         id: 'project-05',
         title: 'Custom Java Interpreter',
-        summary: 'Developed a custom lexer, parser and interpreter using JavaCC. Engineered the system to validate positive linear arithmetic, evaluate conditional step instructions and detect invalid programs. Decoded JavaCC exceptions to build a robust error-reporting system that accurately flags syntax violations.',
+        summary: [
+          'Developed a custom lexer, parser and interpreter using JavaCC.',
+          'Engineered the system to validate positive linear arithmetic, evaluate conditional step instructions and detect invalid programs.',
+          'Decoded JavaCC exceptions to build a robust error-reporting system that accurately flags syntax violations.',
+        ],
         stack: [{ name: 'JavaCC', primary: true }, { name: 'Parser', primary: true }, { name: 'Semantic Analysis', primary: true }, { name: 'Exception Handling', primary: true }, { name: 'Time Management' }],
-        challenges: 'This coursework was placed at the end of Year 2 Term 2, when I also had 2 other difficult module courseworks to complete. In order to excel, I had to effectively manage my time and optimise my learning, seeking advise from older students which was invaluable.',
+        challenges: [
+          'This coursework was placed at the end of Year 2 Term 2, when I also had 2 other difficult module courseworks to complete.',
+          'In order to excel, I had to effectively manage my time and optimise my learning, seeking advise from older students which was invaluable.',
+        ],
         grade: '83%'
       },
     ],
@@ -460,7 +526,6 @@ export const portfolioCards: PortfolioCard[] = [
     label: 'Vision',
     title: "Where I'm going",
     summary: 'What I want to build, and the kind of work that drives me forward.',
-    placementClass: 'place-vision',
     body: [
       "My favourite version of a project is one where go from the rough idea to a shipped product. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
     ],

@@ -6,41 +6,67 @@
   --border: #d8dce8;
   --accent: #ea6508;
   --accent-dim: rgba(234, 101, 8, 0.10);
+  /* Text-only accent: 4.6:1 on --surface, meets WCAG AA. --accent stays the
+     fill color (shapes, dots, bullets), which reads differently and is not
+     held to the same contrast bar. */
+  --accent-text: #c2540a;
   --text-primary: #0d0e12;
   --text-secondary: #4a4f63;
-  --text-muted: #8a8fa8;
-  /* Not currently applied to .portfolio-card - see DESIGN_SYSTEM.md F14. */
+  /* 4.8:1 on --surface-subtle (was #8a8fa8 at 2.8:1, failing WCAG AA). */
+  --text-muted: #64697f;
+
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
   --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
   --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
-  /* --font-sm resolves to the 16px this previously inherited when undeclared. */
-  --font-sm: 1rem;
-  --font-base: 0.95rem;
-  --font-md: 1.15rem;
-  --font-lg: 1.4rem;
-  --font-card-title: 1.9rem;
-  --font-modal-title: 2.4rem;
-  --font-hero-title: 3.75rem;
-  --card-radius: 12px;
-  --modal-radius: 16px;
-}
 
-/* Dark mode override */
-html.dark {
-  --bg: #16161c;
-  --surface: #23232b;
-  --surface-subtle: #1f1f28;
-  --border: #2a2a36;
-  --accent: #f97316;
-  --accent-dim: rgba(249, 115, 22, 0.14);
-  --text-primary: #f0f1f5;
-  --text-secondary: #b0b4c8;
-  --text-muted: #8a8fa8;
-  --shadow-card: 0 2px 18px rgba(0, 0, 0, 0.35);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
-  --shadow-accordion-idle: 0 4px 16px rgba(0, 0, 0, 0.25);
-  --shadow-accordion-hover: 0 12px 30px rgba(0, 0, 0, 0.45);
+  /* Pure ascending scale; semantic names alias into it below. */
+  --text-xs: 0.95rem;
+  --text-sm: 1rem;
+  --text-md: 1.15rem;
+  --text-lg: 1.4rem;
+  --text-xl: 1.9rem;
+  --text-2xl: 2.4rem;
+  --text-3xl: clamp(2.25rem, 9vw, 3.75rem);
+
+  --font-card-title: var(--text-xl);
+  --font-modal-title: var(--text-2xl);
+  --font-hero-title: var(--text-3xl);
+
+  --leading-tight: 0.97;
+  --leading-snug: 1.3;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.5;
+
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 10px;
+  --space-6: 12px;
+  --space-7: 14px;
+  --space-8: 16px;
+  --space-9: 18px;
+  --space-10: 20px;
+  --space-12: 24px;
+  --space-14: 30px;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-pill: 999px;
+  --card-radius: var(--radius-xl);
+  --modal-radius: var(--radius-2xl);
+
+  --dur-fast: 0.2s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.45s;
+  --dur-flip: 0.58s;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────── */
@@ -49,24 +75,51 @@ html.dark {
 }
 
 @font-face {
-  font-family: 'Regular';
-  src: url('./assets/fonts/AppleGaramond.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond-Light.woff2') format('woff2');
+  font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'Bold';
-  src: url('./assets/fonts/AppleGaramond-Bold.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'Light';
-  src: url('./assets/fonts/AppleGaramond-Light.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Apple Garamond';
+  src: url('./assets/fonts/AppleGaramond-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 html,
@@ -74,16 +127,15 @@ body,
 #root {
   margin: 0;
   min-height: 100%;
-  font-family: 'Regular', serif;
+  font-family: 'Apple Garamond', serif;
 }
 
 body {
   background: var(--bg);
   color: var(--text-primary);
-  font-family: 'Regular', serif;
+  font-family: 'Apple Garamond', serif;
   -webkit-font-smoothing: antialiased;
-  line-height: 1.45;
-  transition: background 0.3s ease, color 0.3s ease;
+  line-height: var(--leading-normal);
 }
 
 button,
@@ -99,7 +151,7 @@ option {
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   height: 100vh;
-  padding: 10px;
+  padding: var(--space-5);
   background: var(--bg);
   display: flex;
   align-items: center;
@@ -110,7 +162,7 @@ option {
   margin: 0 auto;
   max-width: 1320px;
   width: 100%;
-  transition: opacity 0.45s ease, filter 0.45s ease, transform 0.35s ease;
+  transition: opacity var(--dur-slow) ease, filter var(--dur-slow) ease, transform 0.35s ease;
 }
 
 .portfolio-grid-surface.is-dimmed {
@@ -123,7 +175,7 @@ option {
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 6px;
+  gap: var(--space-3);
   align-items: stretch;
   transition: grid-template-columns 0.4s ease, gap 0.4s ease;
 }
@@ -135,6 +187,9 @@ option {
   Row 4:   certifications (col 1–5) │ projects (col 6–12, spans 2 rows)
   Row 5:   what-i-use (col 1–5)
   Row 6:   vision (col 1–12)
+
+  `place-*` classes are derived from card id (`place-${card.id}`) in App.tsx,
+  so this file is the single place layout is declared.
 */
 
 .place-hero {
@@ -185,26 +240,26 @@ option {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--space-5);
   width: 100%;
   min-height: 125px;
-  border: none !important;
+  border: none;
   border-radius: var(--card-radius);
   background: var(--surface);
-  padding: 14px;
+  box-shadow: var(--shadow-card);
+  padding: var(--space-7);
   cursor: pointer;
   text-align: left;
   transition:
-    border-color 0.22s ease,
-    background 0.22s ease,
-    box-shadow 0.22s ease,
+    background var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
     grid-column 0.4s ease,
     width 0.4s ease,
     min-height 0.4s ease;
 }
 
 .portfolio-card:hover {
-  background-color: color-mix(in srgb, var(--accent), transparent 85%);
+  background-color: var(--accent-dim);
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -216,7 +271,12 @@ option {
   background: var(--surface);
 }
 
-/* ─── Card invisible while flying card is live ──────────────────── */
+/* ─── Card invisible while flying card is live ────────────────────── */
+/* !important is required here: framer-motion leaves an inline opacity:1
+   style on the tile after its entrance animation finishes, and an inline
+   style always beats a class selector regardless of source order. This is
+   unrelated to the Bootstrap-import-order !importants removed elsewhere
+   (see DESIGN_SYSTEM.md F24) — do not remove it in a future cleanup pass. */
 .portfolio-card.card-hidden {
   opacity: 0 !important;
   pointer-events: none;
@@ -226,30 +286,25 @@ option {
 /* ─── Card Typography ────────────────────────────────────────────── */
 .card-label {
   margin: 0;
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   color: var(--text-muted);
-  font-family: 'Bold';
+  font-weight: 700;
 }
 
 .card-title {
   margin: 2px 0 0;
-  font-family: 'Light', serif;
+  font-weight: 300;
   font-size: var(--font-card-title);
-  line-height: 0.97;
-  color: var(--text-primary);
-}
-
-/* Guardrail: keep card titles token-driven in dark mode. */
-html.dark .card-title {
+  line-height: var(--leading-tight);
   color: var(--text-primary);
 }
 
 .card-preview-icon {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: var(--space-8);
+  right: var(--space-8);
   color: var(--accent);
-  font-size: var(--font-lg);
+  font-size: var(--text-lg);
   line-height: 1;
   pointer-events: none;
 }
@@ -307,8 +362,8 @@ html.dark .card-title {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: 10px;
-  padding: 14px;
+  gap: var(--space-5);
+  padding: var(--space-7);
 }
 
 /* Back face */
@@ -328,26 +383,26 @@ html.dark .card-title {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
-  padding: 14px 14px 6px 14px;
+  gap: var(--space-9);
+  padding: var(--space-7) var(--space-7) var(--space-3) var(--space-7);
   border-bottom: 1px solid var(--border);
   background: var(--surface);
-  transition: padding-right 0.2s ease;
+  transition: padding-right var(--dur-fast) ease;
 }
 
 .modal-close-cta {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 8px 14px;
+  padding: var(--space-4) var(--space-7);
   background: var(--surface-subtle);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-family: 'Regular';
-  font-size: var(--font-sm);
+  font-weight: 400;
+  font-size: var(--text-sm);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
 }
 
 .modal-close-cta:hover {
@@ -360,48 +415,36 @@ html.dark .card-title {
 }
 
 .modal-close-cta-text {
-  font-size: var(--font-sm);
+  font-size: var(--text-sm);
   letter-spacing: 0.02em;
-}
-
-@media (max-width: 560px) {
-  .portfolio-modal-header {
-    padding-right: 96px;
-    padding-left: 14px;
-  }
-
-  .modal-close-cta {
-    padding: 6px 10px;
-    top: 12px;
-    right: 12px;
-    gap: 6px;
-  }
 }
 
 .modal-label {
   margin: 0;
-  color: var(--accent);
-  font-size: var(--font-md);
-  font-family: 'Bold';
+  color: var(--accent-text);
+  font-size: var(--text-md);
+  font-weight: 700;
 }
 
 .modal-title {
-  font-family: 'Light', serif;
+  font-weight: 300;
   font-size: var(--font-modal-title);
   color: var(--text-primary);
 }
 
 .portfolio-modal-body {
-  padding: 1.5rem !important;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-7);
   flex: 1;
   overflow-y: auto;
   min-height: 0;
   position: relative;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+  container-type: inline-size;
+  container-name: portfolio-modal;
 }
 
 .portfolio-modal-body::-webkit-scrollbar {
@@ -414,7 +457,7 @@ html.dark .card-title {
 
 .portfolio-modal-body::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
 }
 
 .portfolio-modal-body::-webkit-scrollbar-thumb:hover {
@@ -422,7 +465,7 @@ html.dark .card-title {
 }
 
 .modal-section {
-  padding: 14px;
+  padding: var(--space-7);
   border-radius: var(--card-radius);
   background: var(--surface-subtle);
 }
@@ -437,96 +480,101 @@ html.dark .card-title {
 .modal-text {
   margin: 0;
   color: var(--text-secondary);
-  font-size: var(--font-base);
+  font-size: var(--text-xs);
+}
+
+/* ─── Recessed-row primitive ─────────────────────────────────────── */
+/* Shared box behind .social-row, .cert-row, .timeline-content and
+   .modal-section: --surface-subtle background + --radius-xl corners. */
+.panel {
+  background: var(--surface-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-7);
+}
+
+.panel--roomy {
+  padding: var(--space-8);
+}
+
+.panel--interactive {
+  transition: background var(--dur-fast) ease;
+}
+
+.panel--interactive:hover {
+  background: var(--accent-dim);
 }
 
 /* ─── Social Rows ────────────────────────────────────────────────── */
 .social-row {
   text-decoration: none;
   color: inherit;
-  border-radius: 12px;
-  background: var(--surface-subtle);
-  padding: 14px;
   display: flex;
-  gap: 14px;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.social-row:hover {
-  background: var(--accent-dim);
+  gap: var(--space-7);
 }
 
 .social-icon {
   width: 80px;
   height: 80px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   color: var(--accent);
-  font-family: 'Bold';
-  font-size: var(--font-base);
+  font-weight: 700;
+  font-size: var(--text-xs);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .social-icon-image {
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .modal-row-title {
   margin: 0;
   color: var(--text-primary);
-  font-size: var(--font-lg);
+  font-size: var(--text-lg);
 }
 
 .modal-row-subtitle {
   margin: 4px 0px;
-  font-size: var(--font-md);
-  color: var(--accent);
+  font-size: var(--text-md);
+  color: var(--accent-text);
 }
 
 /* ─── Certifications Modal ───────────────────────────────────────── */
 .cert-row {
   display: grid;
   grid-template-columns: 80px 1fr;
-  gap: 14px;
-  border-radius: 12px;
-  background: var(--surface-subtle);
-  padding: 14px;
+  gap: var(--space-7);
   align-items: flex-start;
-  transition: border-color 0.2s ease, background 0.2s ease;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
 }
 
-.cert-row:hover {
-  background: var(--accent-dim);
-}
-
 .cert-icon {
   width: 80px;
   height: 80px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   color: var(--accent);
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .cert-icon-image {
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .cert-date {
   margin: 4px 0 0;
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   color: var(--text-muted);
 }
 
 .cert-takeaway {
   margin: 0;
-  font-size: var(--font-base);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -535,7 +583,7 @@ html.dark .card-title {
 
 .about-layout {
   display: flex;
-  gap: 24px;
+  gap: var(--space-12);
   align-items: flex-start;
 }
 
@@ -556,23 +604,30 @@ html.dark .card-title {
 .about-text-col {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-7);
   flex: 2;
 }
 
-@media (max-width: 1024px) {
+/* Responds to the modal's own width, not the viewport — the about layout and
+   skills grid live at a fixed modal size regardless of window width, so a
+   container query is the correct query here (see DESIGN_SYSTEM.md F19). */
+@container portfolio-modal (max-width: 640px) {
   .about-layout {
     flex-direction: column;
     align-items: center;
   }
 
+  /* !important on flex/width/height: AboutSection.tsx sets these same
+     properties inline (measured from the side-by-side text column height),
+     and an inline style always beats a class selector. Without it the image
+     column keeps its side-by-side height once collapsed to a single column. */
   .about-image-col {
     position: static;
     flex: none !important;
     width: 100% !important;
-    max-width: 300px !important;
+    max-width: 300px;
     height: auto !important;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-12);
   }
 
   .about-image {
@@ -587,7 +642,7 @@ html.dark .card-title {
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
+  gap: var(--space-7);
 }
 
 .skills-grid .modal-section {
@@ -595,13 +650,13 @@ html.dark .card-title {
   flex-direction: column;
 }
 
-@media (max-width: 1024px) {
+@container portfolio-modal (max-width: 640px) {
   .skills-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 768px) {
+@container portfolio-modal (max-width: 420px) {
   .skills-grid {
     grid-template-columns: 1fr;
   }
@@ -609,10 +664,10 @@ html.dark .card-title {
 
 .skill-category {
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   background: var(--surface-subtle);
   height: 100%;
-  transition: background-color 0.22s ease;
+  transition: background-color var(--dur-fast) ease;
 }
 
 .skill-category:hover {
@@ -620,54 +675,54 @@ html.dark .card-title {
 }
 
 .skill-category-label {
-  font-size: var(--font-md);
-  color: var(--accent);
-  font-family: 'Bold';
-  margin-bottom: 8px;
+  font-size: var(--text-md);
+  color: var(--accent-text);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
 }
 
 /* ─── Beliefs ────────────────────────────────────────────────────── */
 .belief-list {
   list-style: none;
-  margin: 12px 0 0;
+  margin: var(--space-6) 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-4);
 }
 
 .belief-list li {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-5);
   color: var(--text-secondary);
 }
 
 .belief-dot {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   flex-shrink: 0;
 }
 
 .belief-text {
-  font-size: var(--font-base);
+  font-size: var(--text-xs);
 }
 
 /* ─── Timeline ───────────────────────────────────────────────────── */
 .timeline {
   margin: 0;
-  padding-left: 14px;
+  padding-left: var(--space-7);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-9);
 }
 
 .timeline-item {
   position: relative;
-  padding-left: 16px;
+  padding-left: var(--space-8);
 }
 
 .timeline-dot {
@@ -676,7 +731,7 @@ html.dark .card-title {
   top: 16px;
   width: 15px;
   height: 15px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--border);
 }
 
@@ -704,28 +759,25 @@ html.dark .card-title {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background: var(--surface-subtle);
-  padding: 16px;
-  border-radius: 12px;
 }
 
 /* ─── Interactive Sentence List ──────────────────────────────────── */
 .interactive-bullet-list {
   list-style: none;
   padding: 0;
-  margin: 8px 0;
+  margin: var(--space-4) 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-5);
 }
 
 .interactive-bullet-item {
   position: relative;
-  padding-left: 24px;
+  padding-left: var(--space-12);
   color: var(--text-secondary);
-  font-size: var(--font-base);
-  line-height: 1.5;
-  transition: color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  transition: color var(--dur-base) ease, transform var(--dur-fast) var(--ease-standard);
   cursor: default;
   display: block;
   transform: translate3d(0, 0, 0);
@@ -739,20 +791,20 @@ html.dark .card-title {
   top: 0;
   /* Pin to top to prevent vertical shifting */
   color: var(--accent);
-  font-weight: bold;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-weight: 700;
+  transition: opacity var(--dur-base) ease, transform var(--dur-base) ease;
 }
 
 .experience-logo-container {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: var(--space-8);
+  right: var(--space-8);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  padding: 6px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  transition: transform var(--dur-fast) ease;
 }
 
 .experience-logo {
@@ -761,20 +813,10 @@ html.dark .card-title {
   object-fit: contain;
 }
 
-@media (max-width: 1000px) {
-  .experience-logo-container {
-    display: none;
-  }
-
-  .timeline-title-row {
-    padding-right: 0;
-  }
-}
-
 .timeline-title-row,
 .cert-title-row {
   margin: 0;
-  line-height: 1.3;
+  line-height: var(--leading-snug);
   padding-right: 50px;
 }
 
@@ -782,7 +824,7 @@ html.dark .card-title {
 .cert-name {
   margin: 0;
   color: var(--text-primary);
-  font-size: var(--font-lg);
+  font-size: var(--text-lg);
 }
 
 .timeline-separator,
@@ -793,55 +835,59 @@ html.dark .card-title {
 .timeline-company,
 .cert-company {
   margin: 0;
-  color: var(--accent);
-  font-size: var(--font-lg);
+  color: var(--accent-text);
+  font-size: var(--text-lg);
 }
 
 .timeline-dates {
   margin: 0;
   color: var(--text-muted);
-  font-size: var(--font-md);
+  font-size: var(--text-md);
 }
 
 .education-modules-tags {
-  margin-top: 10px;
+  margin-top: var(--space-5);
+}
+
+.education-modules-section {
+  margin-top: var(--space-5);
 }
 
 .tag {
   background: var(--surface);
-  border-radius: 18.5px;
-  padding: 5px 10px;
-  font-size: var(--font-base);
+  border-radius: var(--radius-pill);
+  padding: 5px var(--space-5);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
 }
 
 .tag.is-primary {
-  color: var(--accent);
+  color: var(--accent-text);
   background: var(--accent-dim);
 }
 
 /* ─── Sub-timeline (Nested Roles) ────────────────────────────────── */
 .timeline-group-title-badge {
   font-size: 0.75rem;
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 3px var(--space-4);
+  border-radius: var(--radius-xs);
   background: var(--accent-dim);
-  border: 1px solid rgba(249, 115, 22, 0.2);
-  color: var(--accent);
-  font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--accent), transparent 80%);
+  color: var(--accent-text);
+  font-weight: 700;
   letter-spacing: 0.05em;
-  margin-left: 10px;
+  margin-left: var(--space-5);
   vertical-align: middle;
   display: inline-block;
 }
 
 .sub-timeline {
-  margin: 20px 0 10px 8px;
-  padding-left: 20px;
+  margin: var(--space-10) 0 var(--space-5) var(--space-4);
+  padding-left: var(--space-10);
   border-left: 1px dashed var(--border);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-12);
 }
 
 .sub-timeline-item {
@@ -854,7 +900,7 @@ html.dark .card-title {
   top: 6px;
   width: 15px;
   height: 15px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--border);
 }
 
@@ -868,31 +914,31 @@ html.dark .card-title {
 }
 
 .sub-timeline-role {
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   color: var(--text-primary);
 }
 
 .sub-timeline-separator {
   color: var(--text-muted);
-  font-size: var(--font-md);
+  font-size: var(--text-md);
 }
 
 .sub-timeline-division {
-  font-size: var(--font-md);
-  color: var(--accent);
+  font-size: var(--text-md);
+  color: var(--accent-text);
 }
 
 .sub-timeline-dates {
-  margin: 0 0 6px 0;
+  margin: 0 0 var(--space-3) 0;
   color: var(--text-muted);
-  font-size: var(--font-base);
+  font-size: var(--text-xs);
 }
 
 .sub-timeline-badge {
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
+  font-weight: 700;
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
   background: var(--surface-subtle);
   border: 1px solid var(--border);
   color: var(--text-secondary);
@@ -903,10 +949,10 @@ html.dark .card-title {
 /* ─── Projects Split View ────────────────────────────────────────── */
 .projects-split-view {
   display: flex;
-  gap: 24px;
+  gap: var(--space-12);
   height: 100%;
   min-height: 0;
-  padding: 12px 18px 18px 18px;
+  padding: var(--space-6) var(--space-9) var(--space-9) var(--space-9);
   position: relative;
 }
 
@@ -914,7 +960,7 @@ html.dark .card-title {
   flex: 0 0 300px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-8);
   min-height: 0;
 }
 
@@ -932,7 +978,7 @@ html.dark .card-title {
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-4);
 }
 
 .project-sidebar-btn {
@@ -942,11 +988,11 @@ html.dark .card-title {
   justify-content: space-between;
   text-align: left;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--radius-xl);
   background: var(--surface-subtle);
-  padding: 14px 16px;
+  padding: var(--space-7) var(--space-8);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
 }
 
 .project-sidebar-btn:hover {
@@ -965,9 +1011,9 @@ html.dark .card-title {
 
 .project-sidebar-title {
   margin: 0;
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   color: var(--text-primary);
-  transition: color 0.2s ease;
+  transition: color var(--dur-fast) ease;
 }
 
 .project-sidebar-btn.active .project-sidebar-title {
@@ -976,10 +1022,10 @@ html.dark .card-title {
 
 .project-sidebar-icon {
   color: var(--text-muted);
-  font-size: var(--font-base);
+  font-size: var(--text-xs);
   opacity: 1;
   transform: translateX(0);
-  transition: all 0.2s ease;
+  transition: color var(--dur-fast) ease, transform var(--dur-fast) ease;
 }
 
 .project-sidebar-btn.active .project-sidebar-icon {
@@ -989,8 +1035,8 @@ html.dark .card-title {
 .projects-detail-pane {
   flex: 1;
   background: var(--surface-subtle);
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-14);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1008,7 +1054,8 @@ html.dark .card-title {
 }
 
 .projects-detail-pane::-webkit-scrollbar-thumb {
-  border-radius: 10px;
+  background: var(--border);
+  border-radius: var(--radius-lg);
 }
 
 .projects-detail-pane::-webkit-scrollbar-thumb:hover {
@@ -1018,38 +1065,38 @@ html.dark .card-title {
 .projects-detail-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-12);
   flex: 1;
 }
 
 .project-detail-header-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-1);
   align-items: flex-start;
 }
 
 .project-detail-header {
   font-size: var(--font-modal-title);
-  font-family: 'Regular', serif;
+  font-weight: 400;
   color: var(--text-primary);
   margin: 0;
 }
 
 .project-detail-grade {
-  color: var(--accent);
-  font-family: 'Bold';
-  font-size: var(--font-lg);
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: var(--text-lg);
   line-height: 1.2;
   white-space: nowrap;
-  padding-bottom: 4px;
+  padding-bottom: var(--space-2);
 }
 
 .project-detail-accordion {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 24px;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
 }
 
 .accordion-item {
@@ -1064,16 +1111,16 @@ html.dark .card-title {
   align-items: center;
   background: transparent;
   border: none;
-  border-radius: 12px;
-  padding: 16px 20px;
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) 20px;
   cursor: pointer;
   box-shadow: var(--shadow-accordion-idle);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
   text-align: left;
 }
 
 .accordion-header .modal-row-title {
-  font-size: var(--font-md);
+  font-size: var(--text-md);
   color: var(--text-secondary);
   transition: color 0.25s ease;
 }
@@ -1100,7 +1147,7 @@ html.dark .card-title {
 .accordion-chevron {
   color: var(--text-muted);
   font-size: 0.9rem;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
+  transition: transform var(--dur-base) var(--ease-standard), color 0.25s ease;
 }
 
 .accordion-chevron.rotated {
@@ -1113,27 +1160,27 @@ html.dark .card-title {
 
 .accordion-content {
   overflow: hidden;
-  padding: 0 20px;
+  padding: 0 var(--space-10);
 }
 
 .project-detail-actions {
   display: flex;
-  gap: 16px;
+  gap: var(--space-8);
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: var(--space-12);
 }
 
 .project-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-family: 'Bold';
-  font-size: var(--font-base);
+  gap: var(--space-5);
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-xl);
+  font-weight: 700;
+  font-size: var(--text-xs);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease;
 }
 
 .project-action-btn-primary {
@@ -1142,7 +1189,7 @@ html.dark .card-title {
 }
 
 .project-action-btn-primary:hover {
-  background: color-mix(in srgb, var(--accent), transparent 70%);
+  background: var(--accent-dim);
   color: var(--text-primary);
 }
 
@@ -1162,14 +1209,9 @@ html.dark .card-title {
   object-fit: contain;
 }
 
-/* Invert the black SVG to white in light mode since primary button is dark */
+/* Invert the black SVG to white since the primary button is dark. */
 .project-action-btn-primary .project-action-icon-svg {
   filter: invert(1);
-}
-
-/* Keep the black SVG black in dark mode since primary button is light */
-html.dark .project-action-btn-primary .project-action-icon-svg {
-  filter: invert(0);
 }
 
 .project-action-btn-coming-soon {
@@ -1187,10 +1229,22 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   display: none;
 }
 
+/* ─── Reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── Responsive: tablet (≤ 900px) ───────────────────────────────── */
 @media (max-width: 900px) {
   .portfolio-page {
-    padding: 14px;
+    padding: var(--space-7);
     align-items: flex-start;
     height: auto;
     overflow: auto;
@@ -1198,10 +1252,8 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
 
   .portfolio-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--space-4);
   }
-
-
 
   .place-hero {
     grid-column: span 6;
@@ -1218,8 +1270,8 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   }
 
   .place-skills {
-    grid-column: 1 / span 3;
-    grid-row: 5;
+    grid-column: 4 / span 3;
+    grid-row: 4;
   }
 
   .place-social {
@@ -1235,18 +1287,26 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   }
 
   .place-education {
-    grid-column: span 2;
+    grid-column: span 3;
   }
 
   .place-experience {
-    grid-column: span 4;
+    grid-column: span 3;
   }
 
-
-
   .place-projects {
-    grid-column: 4 / -1;
-    grid-row: 4 / span 2;
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+
+  /* Was two orphan breakpoints (1000px, 1024px) for the same viewport band;
+     consolidated here (DESIGN_SYSTEM.md F19). */
+  .experience-logo-container {
+    display: none;
+  }
+
+  .timeline-title-row {
+    padding-right: 0;
   }
 
   .projects-split-view {
@@ -1265,10 +1325,10 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
     inset: 0;
     z-index: 50;
     background: var(--surface);
-    padding: 24px;
+    padding: var(--space-12);
     flex: 1;
     max-height: none;
-    border-radius: 16px;
+    border-radius: var(--radius-2xl);
   }
 
   .projects-sidebar.sidebar-open .projects-sidebar-list-container,
@@ -1304,37 +1364,37 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: var(--space-5);
     background: var(--text-primary);
     border: none;
-    border-radius: 12px;
-    padding: 10px 18px;
+    border-radius: var(--radius-xl);
+    padding: var(--space-5) var(--space-9);
     color: var(--bg);
-    font-family: 'Bold';
-    font-size: var(--font-base);
+    font-weight: 700;
+    font-size: var(--text-xs);
     cursor: pointer;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-8);
     width: fit-content;
-    transition: all 0.2s ease;
+    transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
   }
 
   .project-list-hamburger:hover {
-    background: color-mix(in srgb, var(--accent), transparent 70%);
+    background: var(--accent-dim);
     color: var(--text-primary);
   }
 
   .projects-detail-pane {
-    padding: 24px;
-    border-radius: 16px;
+    padding: var(--space-12);
+    border-radius: var(--radius-2xl);
     flex: 1;
-    margin: 10px;
+    margin: var(--space-5);
   }
 }
 
 /* ─── Responsive: mobile (≤ 560px) ───────────────────────────────── */
 @media (max-width: 560px) {
   .portfolio-page {
-    padding: 10px;
+    padding: var(--space-5);
     align-items: flex-start;
     height: auto;
     overflow: auto;
@@ -1342,10 +1402,8 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
 
   .portfolio-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: var(--space-4);
   }
-
-
 
   .place-hero {
     grid-column: 1 / -1;
@@ -1369,7 +1427,7 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   }
 
   .projects-detail-pane {
-    padding: 24px;
+    padding: var(--space-12);
   }
 
   .card-hero {
@@ -1379,7 +1437,18 @@ html.dark .project-action-btn-primary .project-action-icon-svg {
   .card-preview-icon {
     top: 14px;
     right: 14px;
-    font-size: var(--font-md);
+    font-size: var(--text-md);
+  }
+
+  /* Was a separate breakpoint at the top of the file (F19); merged here. */
+  .portfolio-modal-header {
+    padding-right: 96px;
+    padding-left: var(--space-7);
+  }
+
+  .modal-close-cta {
+    padding: var(--space-3) var(--space-5);
+    gap: var(--space-3);
   }
 }
 

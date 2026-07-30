@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { collapseTransition } from '../motion';
@@ -16,9 +16,17 @@ export function AccordionSection({
   onToggle: () => void;
   children: ReactNode;
 }) {
+  const contentId = useId();
+
   return (
     <div className="accordion-item">
-      <button className={`accordion-header ${isOpen ? 'active' : ''}`} onClick={onToggle}>
+      <button
+        className={`accordion-header ${isOpen ? 'active' : ''}`}
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+        type="button"
+      >
         <span className="modal-row-title">{title}</span>
         <FontAwesomeIcon
           icon={faChevronDown}
@@ -28,6 +36,7 @@ export function AccordionSection({
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={contentId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

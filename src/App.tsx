@@ -1,9 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { portfolioCards } from './content';
 import { CardInner } from './components/CardInner';
 import { FlipCard, type FromRect } from './components/FlipCard';
-import { useThemeClass } from './hooks/useThemeClass';
 import { trackTileClick } from './lib/tileAnalytics';
 import { gridContainerVariants, gridItemVariants } from './motion';
 
@@ -13,8 +12,6 @@ interface FlipState {
 }
 
 function App() {
-  useThemeClass();
-
   /**
    * `flipState` holds the card currently flying/open plus the grid rect it came
    * from. `closedCardId` keeps the origin tile invisible until the reverse flip
@@ -22,6 +19,7 @@ function App() {
    */
   const [flipState, setFlipState] = useState<FlipState | null>(null);
   const [closedCardId, setClosedCardId] = useState<string | null>(null);
+  const triggerElRef = useRef<HTMLButtonElement | null>(null);
 
   const activeCard = useMemo(
     () => (flipState ? portfolioCards.find((c) => c.id === flipState.cardId) ?? null : null),
@@ -31,6 +29,7 @@ function App() {
   const handleCardClick = useCallback((cardId: string, el: HTMLButtonElement) => {
     trackTileClick(cardId);
     const { left, top, width, height } = el.getBoundingClientRect();
+    triggerElRef.current = el;
     setFlipState({ cardId, fromRect: { left, top, width, height } });
   }, []);
 
@@ -39,7 +38,10 @@ function App() {
     setFlipState(null);
   }, [flipState]);
 
-  const handleExitComplete = useCallback(() => setClosedCardId(null), []);
+  const handleExitComplete = useCallback(() => {
+    setClosedCardId(null);
+    triggerElRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (!flipState) return undefined;
@@ -52,17 +54,6 @@ function App() {
 
   return (
     <div className="portfolio-page">
-      {/* Dark-mode toggle - hidden for now. useThemeClass() also returns [isDark, setIsDark]. */}
-      {/* <button
-        id="theme-toggle"
-        className="theme-toggle"
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        onClick={() => setIsDark((p) => !p)}
-        type="button"
-      >
-        {isDark ? <FontAwesomeIcon icon={faSun} /> : <FontAwesomeIcon icon={faMoon} />}
-      </button> */}
-
       {/* Bento grid */}
       <main className={`portfolio-grid-surface ${flipState ? 'is-dimmed' : ''}`}>
         <motion.section
@@ -74,17 +65,16 @@ function App() {
         >
           {portfolioCards.map((card) => {
             const isHidden = card.id === flipState?.cardId || card.id === closedCardId;
-            const baseClass = `portfolio-card card-${card.type} ${card.placementClass}`;
+            const baseClass = `portfolio-card card-${card.type} place-${card.id}`;
 
             if (card.nonClickable === true) {
               return (
                 <motion.div
                   className={`${baseClass} card-non-clickable${isHidden ? ' card-hidden' : ''}`}
                   key={card.id}
-                  aria-label={card.title}
                   variants={gridItemVariants}
                 >
-                  <CardInner card={card} />
+                  <CardInner card={card} titleTag="h1" />
                 </motion.div>
               );
             }

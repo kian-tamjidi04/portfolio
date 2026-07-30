@@ -1,5 +1,5 @@
 import { motion, type TargetAndTransition } from 'framer-motion';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark as faRegularCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import type { PortfolioCard } from '../content';
@@ -27,6 +27,9 @@ interface FlipCardProps {
   onClose: () => void;
 }
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
 /**
  * The card that flies from its grid position to the centre of the screen while
  * rotating 180° on Y. Front face is the grid card, back face is the modal.
@@ -37,12 +40,15 @@ interface FlipCardProps {
  */
 export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   const { fillsHeight } = getModalSizing(card.type);
+  const titleId = useId();
 
   const [modalRect, setModalRect] = useState(() => getModalRect(card.type));
   const [modalHeight, setModalHeight] = useState(modalRect.height);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   /** Shrink the modal to its content, unless this type always fills its bounds. */
   const computeHeight = useCallback(
@@ -113,10 +119,38 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     return () => window.clearTimeout(revealTimer);
   }, [card.id]);
 
+  // Move focus into the dialog once it lands, and trap Tab within it.
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [card.id]);
+
   return (
     <>
       <motion.div
         className="flip-scrim"
+        aria-hidden="true"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -145,11 +179,17 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <div className="flip-face flip-front" style={{ transition: 'background-color 0.6s ease' }}>
+          <div className="flip-face flip-front">
             <CardInner card={card} />
           </div>
 
-          <div className="flip-face flip-back">
+          <div
+            className="flip-face flip-back"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            ref={dialogRef}
+          >
             <div
               style={{
                 width: modalRect.width,
@@ -161,9 +201,17 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
               <header className="portfolio-modal-header" ref={headerRef}>
                 <div>
                   <p className="modal-label">{card.label}</p>
-                  <h2 className="modal-title">{card.title}</h2>
+                  <h2 className="modal-title" id={titleId}>
+                    {card.title}
+                  </h2>
                 </div>
-                <button className="modal-close-cta" onClick={onClose} aria-label="Close modal">
+                <button
+                  className="modal-close-cta"
+                  onClick={onClose}
+                  aria-label="Close modal"
+                  type="button"
+                  ref={closeButtonRef}
+                >
                   <span className="modal-close-cta-text">Close</span>
                   <FontAwesomeIcon icon={faRegularCircleXmark} />
                 </button>

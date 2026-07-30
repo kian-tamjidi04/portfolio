@@ -7,7 +7,7 @@ const DEFAULT_MODULES_LABEL = 'Key Modules';
 
 export function EducationSection({ card }: { card: EducationCard }) {
   return (
-    <div className="timeline" aria-label="Education timeline">
+    <div className="timeline">
       {card.entries.map((entry) => (
         <motion.article
           className="timeline-item"
@@ -18,14 +18,14 @@ export function EducationSection({ card }: { card: EducationCard }) {
             className={`timeline-dot ${entry.isRecent ? 'is-recent' : ''}`}
             aria-hidden="true"
           />
-          <div className="timeline-content">
+          <div className="timeline-content panel panel--roomy">
             <div className="timeline-title-row">
               <span className="timeline-role">{entry.degree}</span>
               <span className="timeline-separator"> • </span>
               <span className="timeline-company">{entry.institution}</span>
             </div>
             <p className="timeline-dates">{entry.dates}</p>
-            <InteractiveList text={entry.details} />
+            <InteractiveList items={entry.details} />
             <div className="education-modules-section">
               <div className="modal-row-title">{entry.modulesLabel ?? DEFAULT_MODULES_LABEL}</div>
               <div className="d-flex flex-wrap gap-2 education-modules-tags">
