@@ -11,6 +11,9 @@ node_modules
 dist-ssr
 *.local
 
+# Claude Code worktrees
+.claude/worktrees/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
