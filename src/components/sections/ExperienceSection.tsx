@@ -37,7 +37,7 @@ function GroupedRoles({ group }: { group: ExperienceGroup }) {
               {role.badge && <span className="sub-timeline-badge">{role.badge}</span>}
             </div>
             <p className="sub-timeline-dates">{role.dates}</p>
-            <InteractiveList text={role.impact} />
+            <InteractiveList items={role.impact} />
             <TagList items={role.skills} className="d-flex flex-wrap gap-2 mt-2" />
           </div>
         ))}
@@ -56,7 +56,7 @@ function SingleRole({ role }: { role: ExperienceRole }) {
         <span className="timeline-company">{role.company}</span>
       </div>
       <p className="timeline-dates">{role.dates}</p>
-      <InteractiveList text={role.impact} />
+      <InteractiveList items={role.impact} />
       <TagList items={role.skills} />
     </>
   );
@@ -66,7 +66,7 @@ export function ExperienceSection({ card }: { card: ExperienceCard }) {
   const groups = groupExperienceRoles(card.roles);
 
   return (
-    <div className="timeline" aria-label="Experience timeline">
+    <div className="timeline">
       {groups.map((group) => (
         <motion.article
           className="timeline-item"
@@ -77,7 +77,7 @@ export function ExperienceSection({ card }: { card: ExperienceCard }) {
             className={`timeline-dot ${group.isRecent ? 'is-recent' : ''}`}
             aria-hidden="true"
           />
-          <div className="timeline-content">
+          <div className="timeline-content panel panel--roomy">
             {group.logo && (
               <div className="experience-logo-container">
                 <img

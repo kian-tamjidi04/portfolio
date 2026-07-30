@@ -10,7 +10,7 @@ function SocialIcon({ link }: { link: SocialLink }) {
     return (
       <img
         src={link.icon}
-        alt={`${link.platform} icon`}
+        alt=""
         className="social-icon-image"
         height={64}
         width={64}
@@ -30,7 +30,12 @@ export function SocialSection({ card }: { card: SocialCard }) {
     <>
       {card.links.map((link) => (
         <motion.section key={link.platform} variants={modalItemVariants}>
-          <a className="social-row" href={link.href} target="_blank" rel="noreferrer">
+          <a
+            className="social-row panel panel--interactive"
+            href={link.href}
+            target="_blank"
+            rel="noreferrer"
+          >
             <div className="social-icon" aria-hidden="true">
               <SocialIcon link={link} />
             </div>

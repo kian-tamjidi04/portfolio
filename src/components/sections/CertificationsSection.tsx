@@ -18,15 +18,16 @@ export function CertificationsSection({ card }: { card: CertificationsCard }) {
           variants={modalItemVariants}
         >
           <motion.a
-            className="cert-row"
+            className="cert-row panel panel--interactive"
             href={cert.href}
             target="_blank"
             rel="noreferrer"
             initial="initial"
             whileHover="hovered"
+            whileFocus="hovered"
           >
             <div className="cert-icon" aria-hidden="true">
-              <img src={cert.icon} className="cert-icon-image" height={64} width={64} />
+              <img src={cert.icon} alt="" className="cert-icon-image" height={64} width={64} />
             </div>
             <div className="d-flex flex-column">
               <div className="cert-title-row">

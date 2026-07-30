@@ -15,7 +15,7 @@ import { TagList } from '../TagList';
 
 type AccordionId = 'tech' | 'challenges';
 
-const CHALLENGES_PLACEHOLDER = 'Information coming soon...';
+const CHALLENGES_PLACEHOLDER = ['Information coming soon...'];
 
 /** Source-code links get the GitHub mark and the primary treatment. */
 function isSourceLink(link: ExternalLink) {
@@ -62,6 +62,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
           className="modal-close-cta project-sidebar-close-mobile"
           onClick={() => setIsSidebarOpen(false)}
           aria-label="Close project list"
+          type="button"
         >
           <span className="modal-close-cta-text">Close</span>
           <FontAwesomeIcon icon={faRegularCircleXmark} />
@@ -72,6 +73,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
         <button
           className="project-list-hamburger"
           onClick={() => setIsSidebarOpen(true)}
+          aria-expanded={isSidebarOpen}
           type="button"
         >
           <FontAwesomeIcon icon={faListUl} />
@@ -92,7 +94,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
               )}
             </motion.div>
             <motion.div variants={projectItemVariants}>
-              <InteractiveList text={activeProject.summary} />
+              <InteractiveList items={activeProject.summary} />
             </motion.div>
 
             <motion.div variants={projectItemVariants} className="project-detail-accordion">
@@ -114,7 +116,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
               >
                 <div className="pt-2">
                   <InteractiveList
-                    text={activeProject.challenges || CHALLENGES_PLACEHOLDER}
+                    items={activeProject.challenges ?? CHALLENGES_PLACEHOLDER}
                   />
                 </div>
               </AccordionSection>
@@ -134,7 +136,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
                   }`}
                 >
                   {isSourceLink(link) ? (
-                    <img src="./github.svg" alt="GitHub" className="project-action-icon-svg" />
+                    <img src="./github.svg" alt="" className="project-action-icon-svg" />
                   ) : (
                     <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                   )}
@@ -143,7 +145,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
               ))}
               {activeProject.figmaComingSoon && (
                 <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
-                  <img src="./figma.svg" alt="Figma" className="project-action-icon-svg" />
+                  <img src="./figma.svg" alt="" className="project-action-icon-svg" />
                   Figma coming soon
                 </div>
               )}

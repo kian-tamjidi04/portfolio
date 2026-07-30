@@ -27,7 +27,14 @@ const cardPreviewIcons = {
  * Face of a grid tile. Rendered both in the grid and as the front face of the
  * flying flip card, so the two are guaranteed to match during the transition.
  */
-export function CardInner({ card }: { card: PortfolioCard }) {
+export function CardInner({
+  card,
+  titleTag: TitleTag = 'h2',
+}: {
+  card: PortfolioCard;
+  /** The hero tile is the page's only <h1>; every other card stays <h2>. */
+  titleTag?: 'h1' | 'h2';
+}) {
   const previewIcon = cardPreviewIcons[card.id as keyof typeof cardPreviewIcons];
 
   return (
@@ -38,7 +45,7 @@ export function CardInner({ card }: { card: PortfolioCard }) {
         </span>
       )}
       {card.type !== 'hero' && <p className="card-label">{card.label}</p>}
-      <h2 className="card-title">{card.title}</h2>
+      <TitleTag className="card-title">{card.title}</TitleTag>
     </>
   );
 }
