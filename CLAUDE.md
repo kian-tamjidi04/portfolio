@@ -38,6 +38,23 @@ skills automate this:
 
 Never delete or move the `v1.0.0` tag.
 
+### Per-card branches within a phase
+
+Within a phase branch (e.g. `bento-card-redesign`), individual cards/features get
+their own short-lived `card/<slug>` branch off the phase branch, PR'd back into the
+*phase branch* (not `main`), then deleted once merged. This keeps each card as its
+own reviewable, revertible unit instead of one giant phase-long diff. Two skills
+automate this, mirroring the phase-level pair above:
+
+- **`start-card-branch`** — branches `card/<slug>` off the active phase branch.
+- **`finish-card-branch`** — opens the PR into the phase branch, and later (once
+  the user confirms the merge — this workflow never merges automatically) deletes
+  the card branch locally and remotely.
+
+The active phase branch name is tracked in `.claude/redesign-phase-branch` so this
+survives across sessions without re-deriving it; `start-card-branch` keeps it
+current.
+
 ## Architecture
 
 A single-viewport React 19 + Vite bento grid. Every tile flips in 3D into a modal.
