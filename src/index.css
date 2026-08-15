@@ -1,6 +1,7 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
 @import '@fontsource/ibm-plex-sans/300.css';
 @import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
 
 :root {
   --bg: #eeeeee;
@@ -32,6 +33,16 @@
   /* Certifications card v2 (Figma node 30:293): the inner cert card's own
      surface, distinct from --surface and --surface-subtle. */
   --cert-card-surface: #fafafa;
+  /* Pill v2 (Figma nodes 48:405 / 48:388): shared by the general .tag pill
+     and the hero social pills. */
+  --pill-surface: #fafafa;
+  --pill-text: #000000;
+  --font-pill: 14px;
+  /* Hero social pills (Figma nodes 49:420 / 49:434 / 49:444 / 49:454): each
+     platform keeps its own brand-colored glow instead of the site's single
+     accent brown. Email's brand color happens to match --card-icon-color. */
+  --social-github: #000000;
+  --social-linkedin: #0a66c2;
 
   --shadow-card: 0 0 16px rgba(97, 54, 19, 0.2);
   --card-shadow-hover: 0 4px 24px 4px rgba(97, 54, 19, 0.75);
@@ -179,8 +190,7 @@ option {
 .project-sidebar-btn:focus-visible,
 .project-sidebar-close-mobile:focus-visible,
 .project-list-hamburger:focus-visible,
-.project-action-btn:focus-visible,
-.panel--interactive:focus-visible {
+.project-action-btn:focus-visible {
   outline: 2px solid var(--card-icon-color);
   outline-offset: 2px;
 }
@@ -219,7 +229,7 @@ option {
 
 /* ─── Grid Placement ─────────────────────────────────────────────── */
 /*
-  Row 1–2: hero (col 1–8, rows 1–2) │ about (col 9–12) │ social (col 9–12)
+  Row 1–2: hero (col 1–8, rows 1–2) │ location (col 9–12) │ about (col 9–12)
   Row 3:   experience (col 1–7) │ education (col 8–12)
   Row 4:   certifications (col 1–5) │ projects (col 6–12, spans 2 rows)
   Row 5:   what-i-use (col 1–5)
@@ -239,7 +249,7 @@ option {
   grid-row: 4;
 }
 
-.place-social {
+.place-location {
   grid-column: span 4;
 }
 
@@ -359,10 +369,64 @@ option {
 .card-hero {
   justify-content: flex-end;
   min-height: 260px;
+  /* Overrides .portfolio-card's --space-3 gap: the pill row sits --space-6
+     above the name (Figma nodes 49:420 / 43:143). */
+  gap: var(--space-6);
 }
 
 .card-hero .card-title {
   font-size: var(--font-hero-title);
+}
+
+/* ─── Hero social pills (Figma nodes 49:420 / 49:434 / 49:444 / 49:454) ── */
+.hero-socials {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.hero-social-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--pill-surface);
+  color: var(--pill-text);
+  font-family: var(--font-card);
+  font-size: var(--font-pill);
+  font-weight: 300;
+  line-height: var(--leading-label);
+  text-decoration: none;
+  transition: box-shadow var(--dur-fast) var(--ease-standard), font-weight var(--dur-fast) var(--ease-standard);
+}
+
+.hero-social-pill-github {
+  box-shadow: 0 0 16px 2px rgba(0, 0, 0, 0.4);
+}
+
+.hero-social-pill-linkedin {
+  box-shadow: 0 0 16px 2px rgba(10, 102, 194, 0.4);
+}
+
+.hero-social-pill-email {
+  box-shadow: 0 0 16px 2px rgba(97, 54, 19, 0.4);
+}
+
+.hero-social-pill-github:hover,
+.hero-social-pill-github:focus-visible {
+  font-weight: 500;
+  box-shadow: 0 4px 24px 4px rgba(0, 0, 0, 0.75);
+}
+
+.hero-social-pill-linkedin:hover,
+.hero-social-pill-linkedin:focus-visible {
+  font-weight: 500;
+  box-shadow: 0 4px 24px 4px rgba(10, 102, 194, 0.75);
+}
+
+.hero-social-pill-email:hover,
+.hero-social-pill-email:focus-visible {
+  font-weight: 500;
+  box-shadow: 0 4px 24px 4px rgba(97, 54, 19, 0.75);
 }
 
 /* ─── Flip card scrim ─────────────────────────────────────────────── */
@@ -527,8 +591,8 @@ option {
 }
 
 /* ─── Recessed-row primitive ─────────────────────────────────────── */
-/* Shared box behind .social-row, .timeline-content and
-   .modal-section: --surface-subtle background + --radius-xl corners. */
+/* Shared box behind .timeline-content and .modal-section:
+   --surface-subtle background + --radius-xl corners. */
 .panel {
   background: var(--surface-subtle);
   border-radius: var(--radius-xl);
@@ -539,48 +603,10 @@ option {
   padding: var(--space-8);
 }
 
-.panel--interactive {
-  transition: background var(--dur-fast) ease;
-}
-
-.panel--interactive:hover {
-  background: var(--accent-dim);
-}
-
-/* ─── Social Rows ────────────────────────────────────────────────── */
-.social-row {
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  gap: var(--space-7);
-}
-
-.social-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-lg);
-  color: var(--accent);
-  font-weight: 700;
-  font-size: var(--text-xs);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.social-icon-image {
-  border-radius: var(--radius-sm);
-}
-
 .modal-row-title {
   margin: 0;
   color: var(--text-primary);
   font-size: var(--text-lg);
-}
-
-.modal-row-subtitle {
-  margin: 4px 0px;
-  font-size: var(--text-md);
-  color: var(--accent-text);
 }
 
 /* ─── Certifications Modal (v2 — Figma nodes 30:293 / 30:251) ───────── */
@@ -936,11 +962,19 @@ option {
 }
 
 .tag {
-  background: var(--surface);
-  border-radius: var(--radius-pill);
-  padding: 5px var(--space-5);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
+  background: var(--pill-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  font-size: var(--font-pill);
+  font-weight: 300;
+  line-height: var(--leading-label);
+  color: var(--pill-text);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+
+.tag:hover {
+  box-shadow: var(--card-shadow-hover);
 }
 
 .tag.is-primary {
@@ -1356,7 +1390,7 @@ option {
     grid-row: 4;
   }
 
-  .place-social {
+  .place-location {
     grid-column: span 3;
   }
 
@@ -1510,7 +1544,7 @@ option {
   }
 
   .place-certifications,
-  .place-social,
+  .place-location,
   .place-about,
   .place-vision,
   .place-education,
@@ -1547,7 +1581,7 @@ option {
   /* Every card full-width — single column is trivially gap-free */
   .place-hero,
   .place-certifications,
-  .place-social,
+  .place-location,
   .place-about,
   .place-vision,
   .place-education,

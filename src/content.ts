@@ -1,7 +1,7 @@
 export type CardType =
   | 'hero'
   | 'certifications'
-  | 'social'
+  | 'location'
   | 'about'
   | 'experience'
   | 'projects'
@@ -18,12 +18,9 @@ export interface CardBase {
   nonClickable?: boolean;
 }
 
-export interface SocialLink {
+export interface HeroSocialLink {
   platform: string;
-  handle: string;
-  description: string;
   href: string;
-  icon?: string;
 }
 
 export interface ExperienceRole {
@@ -91,6 +88,7 @@ export interface HeroCard extends CardBase {
   type: 'hero';
   name: string;
   subtitle: string;
+  socials: HeroSocialLink[];
 }
 
 export interface CertificationsCard extends CardBase {
@@ -98,9 +96,8 @@ export interface CertificationsCard extends CardBase {
   certs: CertItem[];
 }
 
-export interface SocialCard extends CardBase {
-  type: 'social';
-  links: SocialLink[];
+export interface LocationCard extends CardBase {
+  type: 'location';
 }
 
 export interface AboutCard extends CardBase {
@@ -140,7 +137,7 @@ export interface SkillsCard extends CardBase {
 export type PortfolioCard =
   | HeroCard
   | CertificationsCard
-  | SocialCard
+  | LocationCard
   | AboutCard
   | ExperienceCard
   | ProjectsCard
@@ -158,6 +155,19 @@ export const portfolioCards: PortfolioCard[] = [
     nonClickable: true,
     name: 'Kian Tamjidi',
     subtitle: 'Developer & Product Designer',
+    socials: [
+      { platform: 'GitHub', href: 'https://github.com/kian-tamjidi04' },
+      { platform: 'LinkedIn', href: 'https://www.linkedin.com/in/kian-tamjidi' },
+      { platform: 'Email', href: 'mailto:kian.tamjidi2004@gmail.com' },
+    ],
+  },
+  {
+    id: 'location',
+    type: 'location',
+    label: 'Location',
+    title: 'London, UK',
+    summary: 'Based in London, open to hybrid and remote work.',
+    nonClickable: true,
   },
   {
     id: 'about',
@@ -168,7 +178,7 @@ export const portfolioCards: PortfolioCard[] = [
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',
       'I work at the intersection of engineering and design - I care as much about how software feels as how it works.',
-      'Take a look around to learn a little more about me; feel free to reach out via the social card below!',
+      'Take a look around to learn a little more about me; feel free to reach out via the links in the hero card above!',
     ],
     beliefs: [
       '"Fail early, fail often, but always fail forward" - John C. Maxwell',
@@ -180,35 +190,6 @@ export const portfolioCards: PortfolioCard[] = [
       'Listening to and/or playing jazz on my sax',
       'Exploring new food spots',
       'Enjoying (at least one) coffee in the sun',
-    ],
-  },
-  {
-    id: 'social',
-    type: 'social',
-    label: 'Social',
-    title: 'How to get in touch',
-    summary: 'Find me across the platforms where I build and share.',
-    links: [
-      {
-        platform: 'GitHub',
-        handle: '@kian-tamjidi04',
-        description: 'Code, experiments, and archived product prototypes.',
-        href: 'https://github.com/kian-tamjidi04',
-        icon: './github.svg',
-      },
-      {
-        platform: 'LinkedIn',
-        handle: '/in/kian-tamjidi',
-        description: 'Experience highlights and writing about shipping teams.',
-        href: 'https://www.linkedin.com/in/kian-tamjidi',
-        icon: './linkedin.svg',
-      },
-      {
-        platform: 'Email',
-        handle: 'kian.tamjidi2004@gmail.com',
-        description: 'A concise one-page resume with impact-focused metrics.',
-        href: 'mailto:kian.tamjidi2004@gmail.com',
-      },
     ],
   },
   {

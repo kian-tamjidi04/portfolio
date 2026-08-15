@@ -3,9 +3,9 @@ import {
   faAward,
   faBook,
   faBriefcase,
-  faBullhorn,
   faCircleUser,
   faHammer,
+  faLocationDot,
   faRocket,
   faScrewdriverWrench,
 } from '@fortawesome/free-solid-svg-icons';
@@ -15,13 +15,19 @@ import type { PortfolioCard } from '../content';
 const cardPreviewIcons = {
   certifications: faAward,
   about: faCircleUser,
-  social: faBullhorn,
+  location: faLocationDot,
   experience: faBriefcase,
   education: faBook,
   skills: faScrewdriverWrench,
   projects: faHammer,
   vision: faRocket,
 } as const;
+
+const HERO_SOCIAL_SLUGS: Record<string, string> = {
+  GitHub: 'github',
+  LinkedIn: 'linkedin',
+  Email: 'email',
+};
 
 /**
  * Face of a grid tile. Rendered both in the grid and as the front face of the
@@ -45,6 +51,21 @@ export function CardInner({
         </span>
       )}
       {card.type !== 'hero' && <p className="card-label">{card.label}</p>}
+      {card.type === 'hero' && (
+        <div className="hero-socials">
+          {card.socials.map((link) => (
+            <a
+              key={link.platform}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              className={`hero-social-pill hero-social-pill-${HERO_SOCIAL_SLUGS[link.platform] ?? 'default'}`}
+            >
+              {link.platform}
+            </a>
+          ))}
+        </div>
+      )}
       <TitleTag className="card-title">{card.title}</TitleTag>
     </>
   );
