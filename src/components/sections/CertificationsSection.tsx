@@ -20,7 +20,6 @@ export function CertificationsSection({ card }: { card: CertificationsCard }) {
             </span>
             <div className="cert-info">
               <p className="cert-title">{cert.name}</p>
-              <p className="cert-issuer">{cert.issuer}</p>
               <p className="cert-date">{cert.date}</p>
             </div>
           </div>

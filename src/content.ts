@@ -65,7 +65,6 @@ export interface ProjectPreviewItem {
 
 export interface CertItem {
   name: string;
-  issuer: string;
   date: string;
   icon: string;
   takeaway: string;
@@ -325,7 +324,6 @@ export const portfolioCards: PortfolioCard[] = [
     certs: [
       {
         name: 'UX Design Professional Certificate',
-        issuer: 'Google',
         date: 'July 2026',
         takeaway: 'Developed a strong understanding of the entire UX flow, from conducting user research and paper prototyping for quick feedback, to lo-fi and hi-fi digital prototypes using Figma. Applied those skills to create interactive prototypes for a mobile app whilst at UBS and case studies within the course.',
         icon: './google.svg',
@@ -333,7 +331,6 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         name: 'Building with the Claude API',
-        issuer: 'Anthropic',
         date: 'May 2026',
         takeaway: 'Developed skills in RAG, workflows and agentic system design patterns, coding directly with Anthropic and Python SDKs to apply streaming, prompt caching and MCP client/servers.',
         icon: './anthopic.svg',
@@ -341,7 +338,6 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         name: 'Introduction to Agent Skills',
-        issuer: 'Anthropic',
         date: 'March 2026',
         takeaway: 'Understood how to leverage skills when coding with agentic tools, alongside fundamentals of tools such as MCP servers, hooks and subagents.',
         icon: './anthopic.svg',
@@ -349,7 +345,6 @@ export const portfolioCards: PortfolioCard[] = [
       },
       {
         name: 'AI-900 Azure AI Fundamentals',
-        issuer: 'Microsoft',
         date: 'December 2025',
         takeaway: 'Gained a strong understanding of core AI concepts and how they relate to Microsoft Azure, including Generative AI, Natural Language Processing, Computer Vision and Responsible AI.',
         icon: './microsoft.svg',

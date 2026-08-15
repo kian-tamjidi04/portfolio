@@ -168,6 +168,23 @@ option {
   color: inherit;
 }
 
+/* ─── Focus ring ─────────────────────────────────────────────────── */
+/* One consistent keyboard-focus indicator across every interactive
+   element, using the same brown as the v2 bento card accent
+   (--card-icon-color) instead of the browser's default orange ring. */
+.portfolio-card:focus-visible,
+.cert-card:focus-visible,
+.modal-close-cta:focus-visible,
+.accordion-header:focus-visible,
+.project-sidebar-btn:focus-visible,
+.project-sidebar-close-mobile:focus-visible,
+.project-list-hamburger:focus-visible,
+.project-action-btn:focus-visible,
+.panel--interactive:focus-visible {
+  outline: 2px solid var(--card-icon-color);
+  outline-offset: 2px;
+}
+
 /* ─── Page & Grid ────────────────────────────────────────────────── */
 .portfolio-page {
   height: 100vh;
@@ -586,8 +603,7 @@ option {
   transition: box-shadow var(--dur-fast) var(--ease-standard);
 }
 
-.cert-card:hover,
-.cert-card:focus-visible {
+.cert-card:hover {
   box-shadow: var(--card-shadow-hover);
 }
 
@@ -615,21 +631,13 @@ option {
   min-width: 0;
 }
 
-.cert-title,
-.cert-issuer {
+.cert-title {
   margin: 0;
   font-family: var(--font-card);
   font-weight: 400;
   font-size: var(--text-lg);
   line-height: var(--leading-snug);
-}
-
-.cert-title {
   color: var(--text-primary);
-}
-
-.cert-issuer {
-  color: var(--accent-text);
 }
 
 .cert-date {
