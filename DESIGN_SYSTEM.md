@@ -359,9 +359,9 @@ Email links now embedded directly in the hero card (replacing the old modal-base
 §9.8). Each platform keeps its own brand-colored glow instead of the shared brown:
 
 ```
-.hero-social-pill-github    shadow 0 0 16px 2px rgba(0,0,0,.4)      → hover 0 4px 24px 4px rgba(0,0,0,.75)
-.hero-social-pill-linkedin  shadow 0 0 16px rgba(10,102,194,.4)     → hover 0 4px 24px 4px rgba(10,102,194,.75)
-.hero-social-pill-email     shadow 0 0 16px rgba(97,54,19,.4)       → hover 0 4px 24px 4px rgba(97,54,19,.75)
+.hero-social-pill-github    shadow 0 0 16px 2px rgba(0,0,0,.4)        → hover 0 4px 24px 4px rgba(0,0,0,.75)
+.hero-social-pill-linkedin  shadow 0 0 16px 2px rgba(10,102,194,.4)   → hover 0 4px 24px 4px rgba(10,102,194,.75)
+.hero-social-pill-email     shadow 0 0 16px 2px rgba(97,54,19,.4)     → hover 0 4px 24px 4px rgba(97,54,19,.75)
 ```
 
 Hover also flips the pill's font weight 300 → 500 (Medium) — the one property the generic `.tag`

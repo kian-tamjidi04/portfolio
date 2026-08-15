@@ -404,11 +404,11 @@ option {
 }
 
 .hero-social-pill-linkedin {
-  box-shadow: 0 0 16px rgba(10, 102, 194, 0.4);
+  box-shadow: 0 0 16px 2px rgba(10, 102, 194, 0.4);
 }
 
 .hero-social-pill-email {
-  box-shadow: 0 0 16px rgba(97, 54, 19, 0.4);
+  box-shadow: 0 0 16px 2px rgba(97, 54, 19, 0.4);
 }
 
 .hero-social-pill-github:hover,
