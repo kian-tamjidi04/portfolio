@@ -55,6 +55,18 @@ The active phase branch name is tracked in `.claude/redesign-phase-branch` so th
 survives across sessions without re-deriving it; `start-card-branch` keeps it
 current.
 
+## Working in the Figma design system
+
+The companion Figma file ("Portfolio Site v2", key `aUFrP6SiYVQbXUd8opII68`) has a
+"Design System 2" page that documents shipped components (Bento Card, Modal Header,
+Pill, …) as live clones of the actual shipped nodes, grouped under a "02 · Components"
+section.
+
+**Every frame created or cloned in this Figma file — in the design system or
+anywhere else — must have "Clip Content" turned off** (`clipsContent = false` in the
+Plugin API). Cloning an existing node carries over whatever that node had, so check
+and reset it explicitly rather than assuming a clone inherited the right value.
+
 ## Architecture
 
 A single-viewport React 19 + Vite bento grid. Every tile flips in 3D into a modal.
@@ -63,7 +75,7 @@ Content is fully separated from presentation:
 - **`src/content.ts`** — all site copy and data as typed exports. The single
   `portfolioCards: PortfolioCard[]` array is the source of truth for the page.
   `PortfolioCard` is a discriminated union on `type`
-  (`hero | about | social | experience | education | certifications | skills | projects | vision`),
+  (`hero | about | location | experience | education | certifications | skills | projects | vision`),
   each variant carrying its own payload (`ExperienceRole[]`, `CertItem[]`,
   `ProjectPreviewItem[]`, `EducationEntry[]`, `SkillCategory[]`, …). Content edits
   belong here, never in components. Prose fields (`impact`, `details`, `summary`,
