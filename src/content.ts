@@ -527,7 +527,7 @@ export const portfolioCards: PortfolioCard[] = [
     title: "Where I'm going",
     summary: 'What I want to build, and the kind of work that drives me forward.',
     body: [
-      "My favourite version of a project is one where go from the rough idea to a shipped product. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
+      "My favourite version of a project is one where I go from the rough idea to a shipped product. I care about the gap between 'technically works' and 'actually good to use' - and I want to keep closing it."
     ],
     goals: [
       'Expand my skills in UX and product design, connecting with professionals from various backgrounds.',
