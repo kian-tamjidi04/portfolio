@@ -5,7 +5,6 @@ import { EducationSection } from './sections/EducationSection';
 import { ExperienceSection } from './sections/ExperienceSection';
 import { ProjectsSection } from './sections/ProjectsSection';
 import { SkillsSection } from './sections/SkillsSection';
-import { SocialSection } from './sections/SocialSection';
 import { VisionSection } from './sections/VisionSection';
 
 /**
@@ -17,8 +16,6 @@ export function ModalBody({ card }: { card: PortfolioCard }) {
   switch (card.type) {
     case 'certifications':
       return <CertificationsSection card={card} />;
-    case 'social':
-      return <SocialSection card={card} />;
     case 'about':
       return <AboutSection card={card} />;
     case 'skills':
@@ -32,7 +29,8 @@ export function ModalBody({ card }: { card: PortfolioCard }) {
     case 'projects':
       return <ProjectsSection card={card} />;
     case 'hero':
-      // Hero is non-clickable, so it never reaches a modal.
+    case 'location':
+      // Both are non-clickable, so they never reach a modal.
       return null;
   }
 }

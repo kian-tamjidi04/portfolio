@@ -6,7 +6,6 @@ import { trackEvent } from '../utils/analytics';
  */
 const TILE_METADATA: Record<string, { tile_name: string; tile_category: string }> = {
   about: { tile_name: 'About Me', tile_category: 'cta' },
-  social: { tile_name: 'Social Links', tile_category: 'social' },
   experience: { tile_name: 'Experience', tile_category: 'cta' },
   education: { tile_name: 'Education', tile_category: 'cta' },
   certifications: { tile_name: 'Certifications', tile_category: 'cta' },

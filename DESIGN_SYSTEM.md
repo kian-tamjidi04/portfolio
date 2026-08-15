@@ -254,9 +254,9 @@ snapped onto the nearest token and silently changing timing.
 
 ```
 ┌─────────────────────────────────┬───────────┐
-│                                 │  about    │  rows 1–2
+│                                 │  location │  rows 1–2
 │  hero  (col 1–8, rows 1–2)      ├───────────┤
-│                                 │  social   │
+│                                 │  about    │
 ├──────────────────────┬──────────┴───────────┤
 │  experience (1–7)    │  education (8–12)    │  row 3
 ├────────────────┬─────┴──────────────────────┤
@@ -317,7 +317,8 @@ content, bottom-aligned:
   .card-label  --font-card-label (18px)  weight 300  --font-card  line-height --leading-label (0.75)  --text-muted
   .card-title  --font-card-title (34px)  weight 400  --font-card  --text-primary  line-height --leading-tight
   .card-preview-icon  absolute top/right var(--space-3), --card-icon-color, --text-lg
-hero variant: min-height 260px, title --font-hero-title (fluid), no label
+hero variant: min-height 260px, title --font-hero-title (fluid), no label, gap --space-6
+  (was --space-3) so the .hero-socials pill row (§9.3) sits 12px above the name
 ```
 
 The label/title spec above is the v2 one (`--font-card` = IBM Plex Sans) and now applies to every
@@ -329,22 +330,42 @@ per-card *content* (§9.8) migrates independently.
 ```css
 .panel { background: var(--surface-subtle); border-radius: var(--radius-xl); padding: var(--space-7); }
 .panel--roomy { padding: var(--space-8); }             /* .timeline-content's 16px */
-.panel--interactive { transition: background var(--dur-fast) ease; }
-.panel--interactive:hover { background: var(--accent-dim); }
 ```
 
-`.social-row`, `.timeline-content`, and `.modal-section` all compose `.panel` (plus modifiers)
-instead of repeating the same background/radius/padding block. Genuine differences stay on the
-individual classes: `.social-row`'s flex + gap, `.timeline-content`'s flex-column + tighter 5px
-internal gap. Certifications no longer composes `.panel` — see §9.8, its v2 recipe is its own.
+`.timeline-content` and `.modal-section` compose `.panel` (plus modifiers) instead of repeating
+the same background/radius/padding block. Genuine differences stay on the individual classes:
+`.timeline-content`'s flex-column + tighter 5px internal gap. Certifications no longer composes
+`.panel` — see §9.8, its v2 recipe is its own. (`.panel--interactive` and `.social-row`, formerly
+the Social card's link rows, were removed along with the Social card itself — see §9.3.)
 
-### 9.3 Tag / pill
+### 9.3 Tag / pill (v2 — Figma nodes 48:405 / 48:388)
 
 ```
-.tag           radius --radius-pill · padding 5px var(--space-5) · --text-xs
-               color --text-secondary · background --surface
+.tag             radius --radius-xl (12px) · padding var(--space-5) var(--space-6) (10px/12px)
+                 --font-pill (14px) weight 300 · color --pill-text (#000) · background --pill-surface (#fafafa)
+                 shadow --shadow-card · hover → shadow --card-shadow-hover
 .tag.is-primary  color --accent-text · background --accent-dim
 ```
+
+Was `radius --radius-pill` (999px) · `padding 5px var(--space-5)` · `--text-xs` · `color
+--text-secondary` · `background --surface`, with no hover state. The v2 redesign swaps the fully-
+rounded pill for a 12px rounded rect on an off-white surface, and gives it the same
+shadow-intensifies-on-hover treatment as the bento card itself (`--shadow-card` →
+`--card-shadow-hover`) instead of a flat, static look.
+
+**Hero social pills** (`.hero-social-pill`, Figma nodes 49:420 / 49:434 / 49:444 / 49:454) are a
+variant of the same base recipe — same surface/radius/padding/font — used for the GitHub/LinkedIn/
+Email links now embedded directly in the hero card (replacing the old modal-based Social card, see
+§9.8). Each platform keeps its own brand-colored glow instead of the shared brown:
+
+```
+.hero-social-pill-github    shadow 0 0 16px 2px rgba(0,0,0,.4)      → hover 0 4px 24px 4px rgba(0,0,0,.75)
+.hero-social-pill-linkedin  shadow 0 0 16px rgba(10,102,194,.4)     → hover 0 4px 24px 4px rgba(10,102,194,.75)
+.hero-social-pill-email     shadow 0 0 16px rgba(97,54,19,.4)       → hover 0 4px 24px 4px rgba(97,54,19,.75)
+```
+
+Hover also flips the pill's font weight 300 → 500 (Medium) — the one property the generic `.tag`
+hover doesn't touch.
 
 ### 9.4 Timeline
 
@@ -412,7 +433,6 @@ comes from `content.ts` (`CertItem[]`) — Figma supplied layout only, never cop
     .cert-icon-image  radius --radius-sm
     .cert-info        flex column
       .cert-title    --text-lg  weight 400  --font-card  --text-primary  line 1.3
-      .cert-issuer   --text-lg  weight 400  --font-card  --accent-text   line 1.3
       .cert-date     --font-card-label (18px)  weight 300  --font-card  --text-muted  line --leading-normal
   .cert-takeaway  --text-sm (16px)  --font-card  --text-secondary  line 1.4
                   always visible — v1's hover-to-reveal behavior was dropped, not carried over
@@ -434,8 +454,9 @@ still reaches each card individually — see `CONTENT_STAGGER` in `src/motion.ts
 
 - **UI icons** — Font Awesome React components (`faAward`, `faChevronDown`, `faListUl`, …).
 - **Brand logos** — SVGs in `public/`, referenced by relative URL (`./github.svg`, `./UBS.svg`).
-  Sizes: social icons `80×80` box, `height/width={64}` attributes; certification icons `64×64`
-  with no outer box (v2, §9.8); experience logo absolute top-right; action icons `18×18`.
+  Sizes: certification icons `64×64` with no outer box (v2, §9.8); experience logo absolute
+  top-right; action icons `18×18`. The hero social pills (§9.3) are text-only — no icon glyph,
+  per Figma.
   (`src/assets/icons/` — an unreferenced duplicate set — has been deleted; `public/` is the only
   live set.)
 - Dark-on-light SVGs are handled with `filter: invert(1)` on primary buttons (single theme now, so
@@ -523,8 +544,8 @@ For Claude Design / any generator. Single theme (light only).
     "v2": {
       "note": "in-progress design language (F25) — card faces, modal headers, and Certifications body copy already use this; the rest of the system is still 'family' above",
       "family": "IBM Plex Sans",
-      "weights": { "light": 300, "regular": 400 },
-      "cardLabel": "18px", "cardTitle": "34px", "leadingLabel": 0.75
+      "weights": { "light": 300, "regular": 400, "medium": 500 },
+      "cardLabel": "18px", "cardTitle": "34px", "pill": "14px", "leadingLabel": 0.75
     }
   },
   "space": { "1": "2px", "2": "4px", "3": "6px", "4": "8px", "5": "10px", "6": "12px",
@@ -540,6 +561,12 @@ For Claude Design / any generator. Single theme (light only).
     "accordionHover": "0 10px 24px rgba(0,0,0,0.12)"
   },
   "certCard": { "surface": "#fafafa", "iconColor": "#613613", "modalCloseIdleBg": "#e2e2e2" },
+  "pill": {
+    "surface": "#fafafa", "text": "#000000",
+    "heroSocialShadow": {
+      "github": "#000000", "linkedin": "#0a66c2", "email": "#613613"
+    }
+  },
   "motion": {
     "duration": { "fast": "0.2s", "base": "0.3s", "slow": "0.45s", "flip": "0.58s" },
     "ease": { "standard": "cubic-bezier(0.4,0,0.2,1)", "emphasized": "cubic-bezier(0.2,0,0,1)" }
