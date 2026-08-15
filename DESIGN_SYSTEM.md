@@ -86,11 +86,11 @@ Measured against WCAG 2.1 AA (4.5:1 normal text, 3:1 large text ≥18.66px bold 
 | `--accent-text` on `--surface` | 4.6:1 | ✅ |
 | `--text-muted` on `--surface-subtle` | 4.8:1 | ✅ |
 
-All four pass. `--accent-text` is used by `.timeline-company`, `.cert-issuer`,
-`.skill-category-label`, `.modal-row-subtitle`, `.project-detail-grade`,
-`.sub-timeline-division`, `.tag.is-primary`. (`.modal-label` moved to `--text-muted` under design
-language v2 — it's now merged with `.card-label`, see §9.1 and F25.) `--accent` (the fill color,
-unchanged) is not held to the same bar — it never carries text on its own.
+All four pass. `--accent-text` is used by `.timeline-company`, `.skill-category-label`,
+`.project-detail-grade`, `.sub-timeline-division`, `.tag.is-primary`. (`.card-label`/
+`.modal-label` — the small muted line above the heading — were removed entirely in the
+single-text-per-card pass, see §9.1.) `--accent` (the fill color, unchanged) is not held to
+the same bar — it never carries text on its own.
 
 ---
 
@@ -313,17 +313,22 @@ surface --surface · radius --card-radius (v2: 4px) · shadow --shadow-card · p
 min-height 125px · no border
 flex column, align-items flex-start, justify-content flex-end, gap var(--space-3)
 hover → box-shadow --card-shadow-hover (v2; was background --accent-dim)
-content, bottom-aligned:
-  .card-label  --font-card-label (18px)  weight 300  --font-card  line-height --leading-label (0.75)  --text-muted
+content, bottom-aligned — a single line of text, no separate label above it:
   .card-title  --font-card-title (34px)  weight 400  --font-card  --text-primary  line-height --leading-tight
   .card-preview-icon  absolute top/right var(--space-3), --card-icon-color, --text-lg
-hero variant: min-height 260px, title --font-hero-title (fluid), no label, gap --space-6
+hero variant: min-height 260px, title --font-hero-title (fluid), gap --space-6
   (was --space-3) so the .hero-socials pill row (§9.3) sits 12px above the name
 ```
 
-The label/title spec above is the v2 one (`--font-card` = IBM Plex Sans) and now applies to every
-card face, migrated or not, since `.card-label`/`.card-title` are shared rules — only the
-per-card *content* (§9.8) migrates independently.
+**One text per card** (Figma node 43:78): every clickable card shows only its `label` (the
+category name — "About", "Certifications", …) rendered in the `.card-title` heading style;
+`title` (the old descriptive line — "Who I am", "What I've earnt") is no longer displayed on
+the grid face *or* the modal header, which now renders the same single `.modal-title` (label
+text). The two non-clickable cards (`hero`, `location`) are the exception: they have no modal
+to reveal more, so they keep showing their `title` (the actual content — "Kian Tamjidi",
+"London, UK") instead of their `label` ("Intro", "Location"). `CardInner` picks the source via
+`card.nonClickable ? card.title : card.label`. `.card-label`/`.modal-label` (the old small
+muted line) were removed — `--font-card-label` (18px) survives only via `.cert-date` (§9.8).
 
 ### 9.2 Recessed-row primitive (`.panel`)
 

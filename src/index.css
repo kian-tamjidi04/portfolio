@@ -332,19 +332,8 @@ option {
 }
 
 /* ─── Card Typography ────────────────────────────────────────────── */
-/* The modal header's label/title are the same Figma type spec as the grid
-   card face, so the two surfaces share one set of rules. */
-.card-label,
-.modal-label {
-  margin: 0;
-  font-family: var(--font-card);
-  font-size: var(--font-card-label);
-  line-height: var(--leading-label);
-  font-weight: 300;
-  letter-spacing: normal;
-  color: var(--text-muted);
-}
-
+/* The modal header's title is the same Figma type spec as the grid card
+   face, so the two surfaces share one rule (Figma node 43:78). */
 .card-title,
 .modal-title {
   margin: 0;
@@ -492,7 +481,7 @@ option {
   top: 0;
   z-index: 2;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-9);
   padding: var(--space-10);
@@ -536,8 +525,6 @@ option {
 .modal-close-cta:active {
   transform: scale(0.96);
 }
-
-/* .modal-label / .modal-title are declared with the card typography above. */
 
 .portfolio-modal-body {
   padding: var(--space-10);

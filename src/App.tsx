@@ -81,7 +81,7 @@ function App() {
 
             return (
               <motion.button
-                aria-label={card.title}
+                aria-label={card.label}
                 className={`${baseClass}${isHidden ? ' card-hidden' : ''}`}
                 key={card.id}
                 onClick={(e) => handleCardClick(card.id, e.currentTarget)}

@@ -50,7 +50,6 @@ export function CardInner({
           <FontAwesomeIcon icon={previewIcon} />
         </span>
       )}
-      {card.type !== 'hero' && <p className="card-label">{card.label}</p>}
       {card.type === 'hero' && (
         <div className="hero-socials">
           {card.socials.map((link) => (
@@ -66,7 +65,9 @@ export function CardInner({
           ))}
         </div>
       )}
-      <TitleTag className="card-title">{card.title}</TitleTag>
+      <TitleTag className="card-title">
+        {card.nonClickable ? card.title : card.label}
+      </TitleTag>
     </>
   );
 }

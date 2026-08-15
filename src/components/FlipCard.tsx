@@ -200,9 +200,8 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
             >
               <header className="portfolio-modal-header" ref={headerRef}>
                 <div className="modal-heading-group">
-                  <p className="modal-label">{card.label}</p>
                   <h2 className="modal-title" id={titleId}>
-                    {card.title}
+                    {card.label}
                   </h2>
                 </div>
                 <button
