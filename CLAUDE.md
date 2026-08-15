@@ -23,6 +23,21 @@ GitHub Pages serves the site from the committed `docs/` directory, not from `dis
 build output into `docs/` and committing it — history shows these as "new build" commits.
 `dist/` alone is never deployed; if `docs/` isn't updated, the live site does not change.
 
+## Versioning the overhaul
+
+The site is mid a UX/UI overhaul, done as short-lived branches per redesign phase,
+PR'd into `main`, then deleted — GitHub should only ever hold `main` plus whatever
+branch is actively in flight. Each presentable phase that lands on `main` gets an
+annotated git tag (`v1.0.0` is the pre-overhaul baseline). Tags double as rollback
+points and as the chronological record for an eventual before/after case study. Two
+skills automate this:
+
+- **`tag-milestone`** — tags the current `main` after a redesign phase merges.
+- **`rollback-release`** — reverts `main` (and therefore the live site, since `docs/`
+  is committed) back to a previously tagged milestone.
+
+Never delete or move the `v1.0.0` tag.
+
 ## Architecture
 
 A single-viewport React 19 + Vite bento grid. Every tile flips in 3D into a modal.
