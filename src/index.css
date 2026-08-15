@@ -1,4 +1,7 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
+@import '@fontsource/ibm-plex-sans/300.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+
 :root {
   --bg: #eeeeee;
   --surface: #ffffff;
@@ -15,7 +18,23 @@
   /* 4.8:1 on --surface-subtle (was #8a8fa8 at 2.8:1, failing WCAG AA). */
   --text-muted: #64697f;
 
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+  /* Bento card v2 (Figma "Portfolio Site v2" nodes 14:86 / 13:138): the
+     card face is being overridden ahead of the rest of the design system,
+     so these live as their own tokens rather than reusing --accent. */
+  --card-icon-color: #613613;
+  --font-card: 'IBM Plex Sans', sans-serif;
+  --font-card-label: 18px;
+  --leading-label: 0.75;
+  /* Modal header v2 (Figma nodes 26:156 / 30:3): idle background for the
+     icon-only close button. Not reused elsewhere, so it isn't folded into
+     --surface-subtle. */
+  --modal-close-idle-bg: #e2e2e2;
+  /* Certifications card v2 (Figma node 30:293): the inner cert card's own
+     surface, distinct from --surface and --surface-subtle. */
+  --cert-card-surface: #fafafa;
+
+  --shadow-card: 0 0 16px rgba(97, 54, 19, 0.2);
+  --card-shadow-hover: 0 4px 24px 4px rgba(97, 54, 19, 0.75);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
   --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
   --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
@@ -27,9 +46,9 @@
   --text-lg: 1.4rem;
   --text-xl: 1.9rem;
   --text-2xl: 2.4rem;
-  --text-3xl: clamp(2.25rem, 9vw, 3.75rem);
+  --text-3xl: clamp(2.25rem, 9vw, 56px);
 
-  --font-card-title: var(--text-xl);
+  --font-card-title: 34px;
   --font-modal-title: var(--text-2xl);
   --font-hero-title: var(--text-3xl);
 
@@ -58,8 +77,9 @@
   --radius-xl: 12px;
   --radius-2xl: 16px;
   --radius-pill: 999px;
-  --card-radius: var(--radius-xl);
-  --modal-radius: var(--radius-2xl);
+  --card-radius: var(--radius-xs);
+  /* Open card now matches the bento card's own radius (Figma node 30:251). */
+  --modal-radius: var(--radius-xs);
 
   --dur-fast: 0.2s;
   --dur-base: 0.3s;
@@ -240,14 +260,14 @@ option {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: var(--space-5);
+  gap: var(--space-3);
   width: 100%;
   min-height: 125px;
   border: none;
   border-radius: var(--card-radius);
   background: var(--surface);
   box-shadow: var(--shadow-card);
-  padding: var(--space-7);
+  padding: var(--space-3) var(--space-3) var(--space-4) var(--space-5);
   cursor: pointer;
   text-align: left;
   transition:
@@ -259,7 +279,7 @@ option {
 }
 
 .portfolio-card:hover {
-  background-color: var(--accent-dim);
+  box-shadow: var(--card-shadow-hover);
 }
 
 /* Non-clickable card variant (e.g. hero) */
@@ -269,6 +289,7 @@ option {
 
 .card-non-clickable:hover {
   background: var(--surface);
+  box-shadow: var(--shadow-card);
 }
 
 /* ─── Card invisible while flying card is live ────────────────────── */
@@ -284,26 +305,35 @@ option {
 }
 
 /* ─── Card Typography ────────────────────────────────────────────── */
-.card-label {
+/* The modal header's label/title are the same Figma type spec as the grid
+   card face, so the two surfaces share one set of rules. */
+.card-label,
+.modal-label {
   margin: 0;
-  font-size: var(--text-md);
+  font-family: var(--font-card);
+  font-size: var(--font-card-label);
+  line-height: var(--leading-label);
+  font-weight: 300;
+  letter-spacing: normal;
   color: var(--text-muted);
-  font-weight: 700;
 }
 
-.card-title {
-  margin: 2px 0 0;
-  font-weight: 300;
+.card-title,
+.modal-title {
+  margin: 0;
+  font-family: var(--font-card);
+  font-weight: 400;
   font-size: var(--font-card-title);
   line-height: var(--leading-tight);
+  letter-spacing: normal;
   color: var(--text-primary);
 }
 
 .card-preview-icon {
   position: absolute;
-  top: var(--space-8);
-  right: var(--space-8);
-  color: var(--accent);
+  top: var(--space-3);
+  right: var(--space-3);
+  color: var(--card-icon-color);
   font-size: var(--text-lg);
   line-height: 1;
   pointer-events: none;
@@ -362,8 +392,8 @@ option {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  gap: var(--space-5);
-  padding: var(--space-7);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-4) var(--space-5);
 }
 
 /* Back face */
@@ -384,53 +414,49 @@ option {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-9);
-  padding: var(--space-7) var(--space-7) var(--space-3) var(--space-7);
+  padding: var(--space-10);
   border-bottom: 1px solid var(--border);
   background: var(--surface);
-  transition: padding-right var(--dur-fast) ease;
+}
+
+.modal-heading-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 0;
+  min-width: 0;
+  gap: var(--space-6);
+  padding: var(--space-2) 0;
 }
 
 .modal-close-cta {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: var(--space-4) var(--space-7);
-  background: var(--surface-subtle);
+  justify-content: center;
+  padding: var(--space-6);
+  background: var(--modal-close-idle-bg);
   border: none;
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-weight: 400;
-  font-size: var(--text-sm);
+  box-shadow: var(--shadow-card);
+  color: var(--card-icon-color);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+  transition: background var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
+}
+
+.modal-close-cta svg {
+  width: 24px;
+  height: 24px;
 }
 
 .modal-close-cta:hover {
-  background: var(--accent-dim);
-  color: var(--text-primary);
+  background: var(--surface);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .modal-close-cta:active {
   transform: scale(0.96);
 }
 
-.modal-close-cta-text {
-  font-size: var(--text-sm);
-  letter-spacing: 0.02em;
-}
-
-.modal-label {
-  margin: 0;
-  color: var(--accent-text);
-  font-size: var(--text-md);
-  font-weight: 700;
-}
-
-.modal-title {
-  font-weight: 300;
-  font-size: var(--font-modal-title);
-  color: var(--text-primary);
-}
+/* .modal-label / .modal-title are declared with the card typography above. */
 
 .portfolio-modal-body {
   padding: 1.5rem;
@@ -484,7 +510,7 @@ option {
 }
 
 /* ─── Recessed-row primitive ─────────────────────────────────────── */
-/* Shared box behind .social-row, .cert-row, .timeline-content and
+/* Shared box behind .social-row, .timeline-content and
    .modal-section: --surface-subtle background + --radius-xl corners. */
 .panel {
   background: var(--surface-subtle);
@@ -540,43 +566,95 @@ option {
   color: var(--accent-text);
 }
 
-/* ─── Certifications Modal ───────────────────────────────────────── */
-.cert-row {
+/* ─── Certifications Modal (v2 — Figma nodes 30:293 / 30:251) ───────── */
+.certs-grid {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-7);
-  align-items: flex-start;
+}
+
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-7);
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-card);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+
+.cert-card:hover,
+.cert-card:focus-visible {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.cert-card-header {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
 }
 
 .cert-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-lg);
-  color: var(--accent);
-  font-size: var(--text-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .cert-icon-image {
   border-radius: var(--radius-sm);
+  display: block;
+}
+
+.cert-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cert-title,
+.cert-issuer {
+  margin: 0;
+  font-family: var(--font-card);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+.cert-title {
+  color: var(--text-primary);
+}
+
+.cert-issuer {
+  color: var(--accent-text);
 }
 
 .cert-date {
-  margin: 4px 0 0;
-  font-size: var(--text-md);
+  margin: 0;
+  font-family: var(--font-card);
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
   color: var(--text-muted);
 }
 
 .cert-takeaway {
   margin: 0;
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
+  font-family: var(--font-card);
+  font-size: var(--text-sm);
   line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+/* Responds to the modal's own width, matching the .skills-grid pattern
+   (DESIGN_SYSTEM.md F19). */
+@container portfolio-modal (max-width: 640px) {
+  .certs-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── About Modal ────────────────────────────────────────────────── */
@@ -813,27 +891,23 @@ option {
   object-fit: contain;
 }
 
-.timeline-title-row,
-.cert-title-row {
+.timeline-title-row {
   margin: 0;
   line-height: var(--leading-snug);
   padding-right: 50px;
 }
 
-.timeline-role,
-.cert-name {
+.timeline-role {
   margin: 0;
   color: var(--text-primary);
   font-size: var(--text-lg);
 }
 
-.timeline-separator,
-.cert-separator {
+.timeline-separator {
   color: var(--text-muted);
 }
 
-.timeline-company,
-.cert-company {
+.timeline-company {
   margin: 0;
   color: var(--accent-text);
   font-size: var(--text-lg);
@@ -1343,12 +1417,29 @@ option {
     height: auto;
   }
 
+  /* Self-contained: this used to inherit the shared `.modal-close-cta` look,
+     which is now an icon-only button. */
   .project-sidebar-close-mobile {
-    display: inline-flex;
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: var(--space-8);
+    right: var(--space-8);
     z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: var(--space-4) var(--space-7);
+    background: var(--surface-subtle);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+  }
+
+  .project-sidebar-close-mobile-text {
+    letter-spacing: 0.02em;
   }
 
   .project-sidebar-close-mobile:hover {
@@ -1435,20 +1526,7 @@ option {
   }
 
   .card-preview-icon {
-    top: 14px;
-    right: 14px;
     font-size: var(--text-md);
-  }
-
-  /* Was a separate breakpoint at the top of the file (F19); merged here. */
-  .portfolio-modal-header {
-    padding-right: 96px;
-    padding-left: var(--space-7);
-  }
-
-  .modal-close-cta {
-    padding: var(--space-3) var(--space-5);
-    gap: var(--space-3);
   }
 }
 

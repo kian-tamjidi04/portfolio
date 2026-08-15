@@ -59,12 +59,12 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
 
         {/* Mobile-only: dismiss the overlaid project list */}
         <button
-          className="modal-close-cta project-sidebar-close-mobile"
+          className="project-sidebar-close-mobile"
           onClick={() => setIsSidebarOpen(false)}
           aria-label="Close project list"
           type="button"
         >
-          <span className="modal-close-cta-text">Close</span>
+          <span className="project-sidebar-close-mobile-text">Close</span>
           <FontAwesomeIcon icon={faRegularCircleXmark} />
         </button>
       </div>

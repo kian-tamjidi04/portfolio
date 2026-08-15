@@ -1,52 +1,32 @@
 import { motion } from 'framer-motion';
 import type { CertificationsCard } from '../../content';
-import { collapseTransition, modalItemVariants } from '../../motion';
-
-/** Takeaway copy stays collapsed until the row is hovered. */
-const takeawayVariants = {
-  initial: { height: 0, opacity: 0, marginTop: 0 },
-  hovered: { height: 'auto', opacity: 1, marginTop: 8 },
-};
+import { modalItemVariants } from '../../motion';
 
 export function CertificationsSection({ card }: { card: CertificationsCard }) {
   return (
-    <>
+    <div className="certs-grid">
       {card.certs.map((cert) => (
-        <motion.section
-          className="modal-section modal-section-plain"
+        <motion.a
+          className="cert-card"
           key={cert.name}
+          href={cert.href}
+          target="_blank"
+          rel="noreferrer"
           variants={modalItemVariants}
         >
-          <motion.a
-            className="cert-row panel panel--interactive"
-            href={cert.href}
-            target="_blank"
-            rel="noreferrer"
-            initial="initial"
-            whileHover="hovered"
-            whileFocus="hovered"
-          >
-            <div className="cert-icon" aria-hidden="true">
+          <div className="cert-card-header">
+            <span className="cert-icon" aria-hidden="true">
               <img src={cert.icon} alt="" className="cert-icon-image" height={64} width={64} />
+            </span>
+            <div className="cert-info">
+              <p className="cert-title">{cert.name}</p>
+              <p className="cert-issuer">{cert.issuer}</p>
+              <p className="cert-date">{cert.date}</p>
             </div>
-            <div className="d-flex flex-column">
-              <div className="cert-title-row">
-                <span className="cert-name">{cert.name}</span>
-                <span className="cert-separator"> • </span>
-                <span className="cert-company">{cert.issuer}</span>
-              </div>
-              <div className="cert-date">{cert.date}</div>
-              <motion.div
-                variants={takeawayVariants}
-                transition={collapseTransition}
-                style={{ overflow: 'hidden' }}
-              >
-                <p className="cert-takeaway">{cert.takeaway}</p>
-              </motion.div>
-            </div>
-          </motion.a>
-        </motion.section>
+          </div>
+          <p className="cert-takeaway">{cert.takeaway}</p>
+        </motion.a>
       ))}
-    </>
+    </div>
   );
 }

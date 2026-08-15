@@ -27,6 +27,16 @@ is achieved with surface elevation (`--surface` on `--bg`, plus `--shadow-card`)
 
 Light mode only — dark mode was removed (see F1 in the resolution log).
 
+**Design language v2 (in progress).** The portfolio is mid-migration to a second visual language
+sourced from Figma "Portfolio Site v2": IBM Plex Sans instead of Apple Garamond, a tighter
+spacing/radius scale, and warm brown (`#613613`-based) card shadows instead of the neutral-black
+ones below. Cards migrate one at a time rather than as a single cutover. **Certifications is the
+first card fully migrated** (§9.8) — its font, radius, shadows, and modal chrome all read as v2.
+Everything else in this document describes the v1 language still in effect for unmigrated cards,
+including the "serif everywhere" rule in §13. Do not assume a token name is unchanged just because
+it's documented here — `--card-radius` and `--modal-radius` in particular now point at v2 values
+(§5) because they're shared across every card, migrated or not.
+
 ---
 
 ## 2. Color
@@ -76,10 +86,11 @@ Measured against WCAG 2.1 AA (4.5:1 normal text, 3:1 large text ≥18.66px bold 
 | `--accent-text` on `--surface` | 4.6:1 | ✅ |
 | `--text-muted` on `--surface-subtle` | 4.8:1 | ✅ |
 
-All four pass. `--accent-text` is used by `.modal-label`, `.timeline-company`, `.cert-company`,
+All four pass. `--accent-text` is used by `.timeline-company`, `.cert-issuer`,
 `.skill-category-label`, `.modal-row-subtitle`, `.project-detail-grade`,
-`.sub-timeline-division`, `.tag.is-primary`. `--accent` (the fill color, unchanged) is not held to
-the same bar — it never carries text on its own.
+`.sub-timeline-division`, `.tag.is-primary`. (`.modal-label` moved to `--text-muted` under design
+language v2 — it's now merged with `.card-label`, see §9.1 and F25.) `--accent` (the fill color,
+unchanged) is not held to the same bar — it never carries text on its own.
 
 ---
 
@@ -131,7 +142,7 @@ oversized) — see the resolution log (F9) for why that's kept rather than "fixe
 | Token | Value | Used by |
 | --- | --- | --- |
 | `--leading-tight` | `0.97` | `.card-title` |
-| `--leading-snug` | `1.3` | `.timeline-title-row`, `.cert-title-row` |
+| `--leading-snug` | `1.3` | `.timeline-title-row` |
 | `--leading-normal` | `1.45` | `body` |
 | `--leading-relaxed` | `1.5` | `.interactive-bullet-item` |
 
@@ -163,12 +174,20 @@ see the resolution log (F12) for why.
 ```css
 --radius-xs: 4px;  --radius-sm: 6px;  --radius-md: 8px;   --radius-lg: 10px;
 --radius-xl: 12px; --radius-2xl: 16px; --radius-pill: 999px;
---card-radius: var(--radius-xl);   /* alias, pre-existing call sites */
---modal-radius: var(--radius-2xl); /* alias, pre-existing call sites */
+--card-radius: var(--radius-xs);  /* v2: was --radius-xl (12px) */
+--modal-radius: var(--radius-xs); /* v2: was --radius-2xl (16px) */
 ```
 
 Every `border-radius` in the file resolves to one of these seven values, including `.tag`, which
 now uses `--radius-pill` (was a stray `18.5px`).
+
+**v2 update:** both card-face aliases now point at `--radius-xs` (4px), sharper than the original
+scale. `--card-radius` moved first (Figma nodes 14:86 / 13:138). `--modal-radius` moved to match —
+"the open card now uses the same radius as the closed bento card" — so `.flip-back` (every open
+card, every type) and `.about-image` picked up the change in one edit, since both key off this one
+token. `--radius-2xl` (16px) is still used elsewhere (`.projects-detail-pane`, the mobile project
+sidebar overlay) — those are internal panels, not the open-card container itself, so they were left
+alone.
 
 ---
 
@@ -176,13 +195,19 @@ now uses `--radius-pill` (was a stray `18.5px`).
 
 | Token | Value | Applied to |
 | --- | --- | --- |
-| `--shadow-card` | `0 2px 12px rgba(0,0,0,.08)` | `.portfolio-card` |
+| `--shadow-card` | `0 0 16px rgba(97,54,19,.2)` | `.portfolio-card`, `.cert-card`, `.modal-close-cta` (idle) |
+| `--card-shadow-hover` | `0 4px 24px 4px rgba(97,54,19,.75)` | `.portfolio-card:hover`, `.cert-card:hover`, `.modal-close-cta:hover` |
 | `--shadow-modal` | `0 24px 64px rgba(0,0,0,.18)` | `.flip-back` |
 | `--shadow-accordion-idle` | `0 4px 14px rgba(0,0,0,.08)` | `.accordion-header` |
 | `--shadow-accordion-hover` | `0 10px 24px rgba(0,0,0,.12)` | `.accordion-header:hover` |
 
 `--shadow-card` is now applied to the grid tiles it's named for — they previously read as flat
 white rectangles against `#eeeeee` (a 1.07:1 luminance step) with the token declared but unused.
+
+**v2 update:** `--shadow-card` moved from a neutral black shadow to a warm brown one (Figma "Card /
+Default Shadow" effect style), and a matching `--card-shadow-hover` was added (Figma "Card / Hover
+Shadow"). Hover feedback on v2 surfaces is now a shadow raise instead of the v1 `--accent-dim`
+background wash — see §9.1.
 
 ---
 
@@ -284,16 +309,20 @@ Each recipe below is the current implementation, ready to reuse.
 ### 9.1 Card (grid tile)
 
 ```
-surface --surface · radius --card-radius · shadow --shadow-card · padding var(--space-7)
+surface --surface · radius --card-radius (v2: 4px) · shadow --shadow-card · padding var(--space-3) var(--space-3) var(--space-4) var(--space-5)
 min-height 125px · no border
-flex column, align-items flex-start, justify-content flex-end, gap var(--space-5)
-hover → background var(--accent-dim)
+flex column, align-items flex-start, justify-content flex-end, gap var(--space-3)
+hover → box-shadow --card-shadow-hover (v2; was background --accent-dim)
 content, bottom-aligned:
-  .card-label  --text-md   weight 700   --text-muted
-  .card-title  --font-card-title  weight 300  --text-primary  line-height --leading-tight
-  .card-preview-icon  absolute top/right var(--space-8), --accent, --text-lg
+  .card-label  --font-card-label (18px)  weight 300  --font-card  line-height --leading-label (0.75)  --text-muted
+  .card-title  --font-card-title (34px)  weight 400  --font-card  --text-primary  line-height --leading-tight
+  .card-preview-icon  absolute top/right var(--space-3), --card-icon-color, --text-lg
 hero variant: min-height 260px, title --font-hero-title (fluid), no label
 ```
+
+The label/title spec above is the v2 one (`--font-card` = IBM Plex Sans) and now applies to every
+card face, migrated or not, since `.card-label`/`.card-title` are shared rules — only the
+per-card *content* (§9.8) migrates independently.
 
 ### 9.2 Recessed-row primitive (`.panel`)
 
@@ -304,10 +333,10 @@ hero variant: min-height 260px, title --font-hero-title (fluid), no label
 .panel--interactive:hover { background: var(--accent-dim); }
 ```
 
-`.social-row`, `.cert-row`, `.timeline-content`, and `.modal-section` all compose `.panel` (plus
-modifiers) instead of repeating the same background/radius/padding block four times. Genuine
-differences stay on the individual classes: `.cert-row`'s `grid-template-columns: 80px 1fr`,
-`.social-row`'s flex + gap, `.timeline-content`'s flex-column + tighter 5px internal gap.
+`.social-row`, `.timeline-content`, and `.modal-section` all compose `.panel` (plus modifiers)
+instead of repeating the same background/radius/padding block. Genuine differences stay on the
+individual classes: `.social-row`'s flex + gap, `.timeline-content`'s flex-column + tighter 5px
+internal gap. Certifications no longer composes `.panel` — see §9.8, its v2 recipe is its own.
 
 ### 9.3 Tag / pill
 
@@ -330,7 +359,8 @@ differences stay on the individual classes: `.cert-row`'s `grid-template-columns
 ```
 
 The `role • company` title row with a muted middot separator is the system's signature text
-pattern — reused verbatim in `.cert-title-row` and `.sub-timeline-role-row`.
+pattern — reused verbatim in `.sub-timeline-role-row`. Certifications used to share it
+(`.cert-title-row`) but dropped the inline separator when it migrated to v2 — see §9.8.
 
 ### 9.5 Accordion
 
@@ -365,15 +395,49 @@ directly rather than split from a single string at render time. `InteractiveList
 array to `<li>`s. There is no sentence-splitting regex anymore, so no abbreviation or decimal can
 ever mis-bullet.
 
+### 9.8 Certifications card (design language v2)
+
+The first card fully migrated off the v1 language (Figma nodes 30:293 / 30:251). Content still
+comes from `content.ts` (`CertItem[]`) — Figma supplied layout only, never copy.
+
+```
+.certs-grid   display grid · grid-template-columns repeat(2, minmax(0,1fr)) · gap var(--space-7)
+              @container portfolio-modal (max-width: 640px) → 1 column
+.cert-card    flex column · gap var(--space-4) · padding var(--space-7)
+              background --cert-card-surface (#fafafa) · shadow --shadow-card
+              hover/focus-visible → shadow --card-shadow-hover
+              no border-radius (square corners, per Figma — deliberately not --card-radius)
+  .cert-card-header  flex row · gap var(--space-8) · align-items center
+    .cert-icon        64×64, no fixed wrapper size
+    .cert-icon-image  radius --radius-sm
+    .cert-info        flex column
+      .cert-title    --text-lg  weight 400  --font-card  --text-primary  line 1.3
+      .cert-issuer   --text-lg  weight 400  --font-card  --accent-text   line 1.3
+      .cert-date     --font-card-label (18px)  weight 300  --font-card  --text-muted  line --leading-normal
+  .cert-takeaway  --text-sm (16px)  --font-card  --text-secondary  line 1.4
+                  always visible — v1's hover-to-reveal behavior was dropped, not carried over
+```
+
+Grid order is DOM order (`card.certs` as authored), most-recent-first, filling left-to-right then
+top-to-bottom — so the array's existing chronological order (newest first) is what puts the most
+recent certification top-left and the oldest bottom-right with no extra sort step. Each `.cert-card`
+is a direct child of `.portfolio-modal-body` (via the plain `.certs-grid` wrapper, same pattern as
+`.skills-grid` in §9.3 above it structurally), so the existing `staggerChildren` entrance animation
+still reaches each card individually — see `CONTENT_STAGGER` in `src/motion.ts`.
+
+`--cert-card-surface` (`#fafafa`) is a new token, distinct from both `--surface` (#fff) and
+`--surface-subtle` (#eef0f5) — see §12.
+
 ---
 
 ## 10. Iconography
 
 - **UI icons** — Font Awesome React components (`faAward`, `faChevronDown`, `faListUl`, …).
 - **Brand logos** — SVGs in `public/`, referenced by relative URL (`./github.svg`, `./UBS.svg`).
-  Sizes: cert/social icons `80×80` box, `height/width={64}` attributes; experience logo absolute
-  top-right; action icons `18×18`. (`src/assets/icons/` — an unreferenced duplicate set — has been
-  deleted; `public/` is the only live set.)
+  Sizes: social icons `80×80` box, `height/width={64}` attributes; certification icons `64×64`
+  with no outer box (v2, §9.8); experience logo absolute top-right; action icons `18×18`.
+  (`src/assets/icons/` — an unreferenced duplicate set — has been deleted; `public/` is the only
+  live set.)
 - Dark-on-light SVGs are handled with `filter: invert(1)` on primary buttons (single theme now, so
   no conditional dark-mode counter-rule is needed).
 
@@ -413,6 +477,7 @@ so the reasoning behind each decision survives past the fix itself.
 | **F22** | **Fixed.** Added a `.panel`/`.panel--roomy`/`.panel--interactive` primitive; `.social-row`, `.cert-row`, `.timeline-content`, `.modal-section` all compose it. `.timeline-content` keeps its 16px padding via `--roomy` rather than being normalized to 14px — that would be a visible change beyond the scope of a de-duplication pass. |
 | **F23** | **Fixed.** Prose fields (`impact`, `details`, `summary`, `challenges`) are now authored as `string[]` in `content.ts` directly; `InteractiveList` renders the array with no runtime splitting. The sentence-boundary regex is gone, so no abbreviation or decimal can ever mis-bullet. |
 | **F24** | See below — each sub-item resolved individually. |
+| **F25** | **In progress.** Design language v2 (Figma "Portfolio Site v2") is being rolled out card by card rather than as one cutover — IBM Plex Sans, a warm-brown shadow pair, and a 4px card/modal radius replace the v1 serif/neutral-shadow/12–16px-radius language. Certifications (§9.8) is the first card fully migrated, including dropping its old hover-to-reveal takeaway in favor of an always-visible one. `--card-radius` and `--modal-radius` moved to v2 values immediately for every card (open or closed) since those two tokens are shared; per-card *content* migrates independently. §13's "serif everywhere" rule is stale until the migration finishes — treat it as describing v1 only. |
 
 **F24 sub-items:**
 
@@ -454,18 +519,27 @@ For Claude Design / any generator. Single theme (light only).
       "xs": "0.95rem", "sm": "1rem", "md": "1.15rem", "lg": "1.4rem",
       "xl": "1.9rem", "2xl": "2.4rem", "3xl": "clamp(2.25rem, 9vw, 3.75rem)"
     },
-    "leading": { "tight": 0.97, "snug": 1.3, "normal": 1.45, "relaxed": 1.5 }
+    "leading": { "tight": 0.97, "snug": 1.3, "normal": 1.45, "relaxed": 1.5 },
+    "v2": {
+      "note": "in-progress design language (F25) — card faces, modal headers, and Certifications body copy already use this; the rest of the system is still 'family' above",
+      "family": "IBM Plex Sans",
+      "weights": { "light": 300, "regular": 400 },
+      "cardLabel": "18px", "cardTitle": "34px", "leadingLabel": 0.75
+    }
   },
   "space": { "1": "2px", "2": "4px", "3": "6px", "4": "8px", "5": "10px", "6": "12px",
              "7": "14px", "8": "16px", "9": "18px", "10": "20px", "12": "24px", "14": "30px" },
   "radius": { "xs": "4px", "sm": "6px", "md": "8px", "lg": "10px", "xl": "12px",
               "2xl": "16px", "pill": "999px" },
+  "cardRadius": "4px", "modalRadius": "4px",
   "shadow": {
-    "card": "0 2px 12px rgba(0,0,0,0.08)",
+    "card": "0 0 16px rgba(97,54,19,0.2)",
+    "cardHover": "0 4px 24px 4px rgba(97,54,19,0.75)",
     "modal": "0 24px 64px rgba(0,0,0,0.18)",
     "accordionIdle": "0 4px 14px rgba(0,0,0,0.08)",
     "accordionHover": "0 10px 24px rgba(0,0,0,0.12)"
   },
+  "certCard": { "surface": "#fafafa", "iconColor": "#613613", "modalCloseIdleBg": "#e2e2e2" },
   "motion": {
     "duration": { "fast": "0.2s", "base": "0.3s", "slow": "0.45s", "flip": "0.58s" },
     "ease": { "standard": "cubic-bezier(0.4,0,0.2,1)", "emphasized": "cubic-bezier(0.2,0,0,1)" }
@@ -483,8 +557,11 @@ For Claude Design / any generator. Single theme (light only).
 
 Rules to follow when generating new surfaces so they read as part of this portfolio:
 
-1. **Serif everything.** Never introduce a sans-serif. Large text → weight 300, small labels →
-   weight 700, body → weight 400 — all `'Apple Garamond'`.
+1. **Serif everything — v1 only.** Unmigrated cards: never introduce a sans-serif; large text →
+   weight 300, small labels → weight 700, body → weight 400, all `'Apple Garamond'`. A card being
+   migrated to design language v2 (F25) instead uses `'IBM Plex Sans'` (`--font-card`) throughout,
+   weight 300 for labels/small text and weight 400 for titles/body — see §9.8 for the reference
+   implementation. Don't mix the two families within one card.
 2. **No borders for separation.** Use `--surface` on `--bg`, or `--surface-subtle` inside
    `--surface` (reach for `.panel`). Reserve `--border` for hairlines, rails, and inactive dots.
 3. **Accent is a spice.** Labels, one word in a title row, bullets, dots, active fills. Never a

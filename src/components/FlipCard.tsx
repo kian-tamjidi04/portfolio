@@ -1,7 +1,7 @@
 import { motion, type TargetAndTransition } from 'framer-motion';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark as faRegularCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import type { PortfolioCard } from '../content';
 import { getModalRect, getModalSizing, type ModalRect } from '../lib/modalRect';
 import {
@@ -199,7 +199,7 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
               }}
             >
               <header className="portfolio-modal-header" ref={headerRef}>
-                <div>
+                <div className="modal-heading-group">
                   <p className="modal-label">{card.label}</p>
                   <h2 className="modal-title" id={titleId}>
                     {card.title}
@@ -212,8 +212,7 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                   type="button"
                   ref={closeButtonRef}
                 >
-                  <span className="modal-close-cta-text">Close</span>
-                  <FontAwesomeIcon icon={faRegularCircleXmark} />
+                  <FontAwesomeIcon icon={faCircleXmark} />
                 </button>
               </header>
               <motion.div
