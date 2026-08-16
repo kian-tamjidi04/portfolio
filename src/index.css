@@ -574,9 +574,10 @@ option {
   background: transparent;
 }
 
-/* Vision modal (Figma node 61:591): body + Goals get a raised surface +
-   panel shadow, 16px padding, and a wider title/list gap — all literal
-   (unbound) values in Figma, not the shared --space-7 / --shadow-card. */
+/* Vision modal (Figma node 61:591) and About modal (Figma node 76:53): body
+   + Goals/beliefs/hobbies get a raised surface + panel shadow, 16px padding,
+   and a wider title/list gap — all literal (unbound) values in Figma, not
+   the shared --space-7 / --shadow-card. */
 .modal-section.modal-section--elevated {
   padding: var(--space-8);
   border-radius: 0;
@@ -588,12 +589,12 @@ option {
   margin-top: var(--space-8);
 }
 
-/* Vision's panel text binds to the IBM Plex Sans family/weight variables in
+/* Elevated panel text binds to the IBM Plex Sans family/weight variables in
    Figma (font/family, font/style/light|regular) — the v2 card language, not
    the site-wide Apple Garamond serif .modal-text/.modal-row-title/.belief-text
    otherwise inherit from body. Sizes/line-heights are literal px per node
-   (68:13, 68:49, 68:50), same "unbound in Figma → literal here" treatment as
-   the panel shadow above. */
+   (Vision: 68:13, 68:49, 68:50; About: 76:150, 76:156, 76:157), same
+   "unbound in Figma → literal here" treatment as the panel shadow above. */
 .modal-section.modal-section--elevated .modal-text {
   font-family: var(--font-card);
   font-weight: 300;

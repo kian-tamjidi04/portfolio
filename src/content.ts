@@ -172,8 +172,8 @@ export const portfolioCards: PortfolioCard[] = [
   {
     id: 'about',
     type: 'about',
-    label: 'About',
-    title: 'Who I am',
+    label: 'About me',
+    title: 'About me',
     summary: 'Product-minded engineer focused on useful, durable interfaces.',
     bio: [
       'Hi! I\'m Kian, a Computer Science student excited about building things people actually want to use.',

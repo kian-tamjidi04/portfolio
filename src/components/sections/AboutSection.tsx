@@ -45,12 +45,16 @@ export function AboutSection({ card }: { card: AboutCard }) {
       </motion.div>
       <div className="about-text-col" ref={textColRef}>
         {card.bio.map((paragraph) => (
-          <motion.section className="modal-section" key={paragraph} variants={modalItemVariants}>
+          <motion.section
+            className="modal-section modal-section--elevated"
+            key={paragraph}
+            variants={modalItemVariants}
+          >
             <p className="modal-text">{paragraph}</p>
           </motion.section>
         ))}
-        <DotListSection title="Things I believe" items={card.beliefs} />
-        <DotListSection title="Hobbies" items={card.hobbies} />
+        <DotListSection title="Things I believe" items={card.beliefs} elevated />
+        <DotListSection title="Hobbies" items={card.hobbies} elevated />
       </div>
     </div>
   );
