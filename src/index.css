@@ -46,6 +46,9 @@
 
   --shadow-card: 0 0 16px rgba(97, 54, 19, 0.2);
   --card-shadow-hover: 0 4px 24px 4px rgba(97, 54, 19, 0.75);
+  /* Vision modal's elevated panels (Figma nodes 68:12 / 68:48) — a raw, unbound
+     effect distinct from --shadow-card (2px spread, 0.5 alpha vs 0/0.2). */
+  --shadow-panel-elevated: 0 0 16px 2px rgba(97, 54, 19, 0.5);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
   --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
   --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
@@ -569,6 +572,48 @@ option {
   border-radius: 0;
   padding: 0;
   background: transparent;
+}
+
+/* Vision modal (Figma node 61:591): body + Goals get a raised surface +
+   panel shadow, 16px padding, and a wider title/list gap — all literal
+   (unbound) values in Figma, not the shared --space-7 / --shadow-card. */
+.modal-section.modal-section--elevated {
+  padding: var(--space-8);
+  border-radius: 0;
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-panel-elevated);
+}
+
+.modal-section.modal-section--elevated .belief-list {
+  margin-top: var(--space-8);
+}
+
+/* Vision's panel text binds to the IBM Plex Sans family/weight variables in
+   Figma (font/family, font/style/light|regular) — the v2 card language, not
+   the site-wide Apple Garamond serif .modal-text/.modal-row-title/.belief-text
+   otherwise inherit from body. Sizes/line-heights are literal px per node
+   (68:13, 68:49, 68:50), same "unbound in Figma → literal here" treatment as
+   the panel shadow above. */
+.modal-section.modal-section--elevated .modal-text {
+  font-family: var(--font-card);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.modal-section.modal-section--elevated .modal-row-title {
+  font-family: var(--font-card);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 20px;
+  color: #000000;
+}
+
+.modal-section.modal-section--elevated .belief-text {
+  font-family: var(--font-card);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 .modal-text {
