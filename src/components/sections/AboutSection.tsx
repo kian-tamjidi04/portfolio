@@ -53,8 +53,8 @@ export function AboutSection({ card }: { card: AboutCard }) {
             <p className="modal-text">{paragraph}</p>
           </motion.section>
         ))}
-        <DotListSection title="Things I believe" items={card.beliefs} elevated />
-        <DotListSection title="Hobbies" items={card.hobbies} elevated />
+        <DotListSection title="Things I believe" items={card.beliefs} elevated plainBullets />
+        <DotListSection title="Hobbies" items={card.hobbies} elevated plainBullets />
       </div>
     </div>
   );

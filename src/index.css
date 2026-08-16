@@ -589,11 +589,11 @@ option {
   margin-top: var(--space-8);
 }
 
-/* Figma (68:45/68:46) specs Vision's Goals list as plain native disc bullets
-   in --text-secondary, not the accent-colored dot — About's beliefs/hobbies
-   lists (same shared DotListSection component) keep the accent dot, so this
-   is opt-in via .belief-list--plain rather than keyed off .modal-section--
-   elevated, which both Vision and About now use. */
+/* Figma specs both Vision's Goals list (68:45/68:46) and About's beliefs/
+   hobbies lists (76:157/76:160) as plain native disc bullets in
+   --text-secondary, not the accent-colored dot — opt-in via
+   .belief-list--plain rather than keyed off .modal-section--elevated, in
+   case a future elevated section wants the accent dot instead. */
 .belief-list.belief-list--plain {
   display: block;
   list-style: disc;
@@ -764,6 +764,7 @@ option {
   object-fit: cover;
   border-radius: var(--modal-radius);
   display: block;
+  box-shadow: var(--shadow-panel-elevated);
 }
 
 .about-text-col {
