@@ -9,11 +9,14 @@ export function DotListSection({
   title,
   items,
   elevated = false,
+  plainBullets = false,
 }: {
   title: string;
   items: string[];
-  /** Vision's Goals block (Figma node 68:48) uses the cert-card surface + shadow. */
+  /** Vision's Goals block (Figma node 68:48) and About's beliefs/hobbies (76:53) use the cert-card surface + shadow. */
   elevated?: boolean;
+  /** Vision's Goals list (Figma 68:45/68:46) uses plain native disc bullets instead of the accent dot. */
+  plainBullets?: boolean;
 }) {
   return (
     <motion.section
@@ -21,7 +24,7 @@ export function DotListSection({
       variants={modalItemVariants}
     >
       <div className="modal-row-title">{title}</div>
-      <ul className="belief-list">
+      <ul className={plainBullets ? 'belief-list belief-list--plain' : 'belief-list'}>
         {items.map((item) => (
           <li key={item}>
             <span className="belief-dot" aria-hidden="true" />
