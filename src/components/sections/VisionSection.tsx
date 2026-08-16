@@ -15,7 +15,7 @@ export function VisionSection({ card }: { card: VisionCard }) {
           <p className="modal-text">{paragraph}</p>
         </motion.section>
       ))}
-      <DotListSection title="Goals" items={card.goals} elevated />
+      <DotListSection title="Goals" items={card.goals} elevated plainBullets />
     </>
   );
 }
