@@ -13,11 +13,12 @@ import { InteractiveList } from '../InteractiveList';
 const DEFAULT_MODULES_LABEL = 'Key Modules';
 
 /**
- * Vertical timeline: the track runs down the left-hand side, with one entry
- * on screen at a time, stepped through with the arrows overlaid at the top and
- * bottom of the entry panel or by picking a stop on the track. The track
- * always shows every stop so the disabled arrow at either end reads as "you
- * are at the start/end", not as a broken control.
+ * Vertical timeline: track, entry, nav column left to right, with one entry
+ * on screen at a time — stepped through with the up/down arrows or by picking
+ * a stop on the track. The track always shows every stop so the disabled
+ * arrow at either end reads as "you are at the start/end", not as a broken
+ * control. Each entry's title/subtitle/body follows the Certifications
+ * card's type scale (.cert-title/.cert-date/.cert-takeaway).
  */
 export function EducationSection({ card }: { card: EducationCard }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -102,11 +103,8 @@ export function EducationSection({ card }: { card: EducationCard }) {
               animate="visible"
               exit="exit"
             >
-              <p className="edu-entry-title-row">
-                <span className="timeline-role">{entry.degree}</span>
-                <span className="timeline-separator"> • </span>
-                <span className="timeline-company">{entry.institution}</span>
-              </p>
+              <p className="edu-entry-title-row">{entry.degree}</p>
+              <p className="edu-entry-institution">{entry.institution}</p>
               <InteractiveList items={entry.details} />
               <div className="edu-entry-modules">
                 <div className="modal-row-title">

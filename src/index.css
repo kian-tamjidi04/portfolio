@@ -1114,9 +1114,44 @@ option {
   box-shadow: var(--shadow-panel-elevated);
 }
 
+/* Title/subtitle/body hierarchy matches the Certifications card exactly
+   (.cert-title/.cert-date/.cert-takeaway, DESIGN_SYSTEM.md §9.8) rather than
+   inventing a parallel scale — same three tiers, same tokens, reused here
+   instead of Education drifting to its own sizes. */
 .edu-entry-title-row {
   margin: 0;
+  font-weight: 400;
+  font-size: var(--text-lg);
   line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+/* Institution takes the subtitle tier — same size/weight as .cert-date, but
+   keeps the accent color the house "role • company" pattern uses for company
+   names elsewhere (DESIGN_SYSTEM.md §13.6), rather than cert's muted date. */
+.edu-entry-institution {
+  margin: 0;
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--accent-text);
+}
+
+/* Reads as a second, smaller subtitle introducing the tag list — the cert
+   card has no equivalent, so this borrows .cert-date's weight/size/color
+   rather than the heavier heading/row style modal-row-title carries
+   elsewhere, keeping Education to the same three type tiers as the cert card
+   instead of a fourth in-between size. */
+.edu-entry .modal-row-title {
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--text-muted);
+}
+
+.edu-entry .interactive-bullet-item {
+  font-size: var(--text-sm);
+  line-height: 1.4;
 }
 
 /* v2 ships IBM Plex Sans at 300/400/500 only, so the shared bullet's
