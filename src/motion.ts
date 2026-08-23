@@ -49,6 +49,34 @@ export const modalItemVariants: Variants = {
   },
 };
 
+/** How long one education timeline step takes, shared by the entry slide and
+ *  the stage's height change so they land together. Matches `--dur-slow`. */
+export const EDUCATION_STEP_DURATION = 0.45;
+
+export const educationStepTransition = {
+  duration: EDUCATION_STEP_DURATION,
+  ease: EASE_STANDARD,
+} as const;
+
+/**
+ * Education entries sliding as a filmstrip: the outgoing entry is pushed out
+ * of frame in the direction of travel while the incoming one arrives from the
+ * opposite edge. `custom` carries the step direction: +1 moving forward
+ * through the timeline, -1 moving back.
+ *
+ * Offsets are percentages of the entry's own width, so the push always clears
+ * the frame regardless of how wide the modal is.
+ */
+export const educationEntryVariants: Variants = {
+  hidden: (direction: number) => ({ opacity: 0, x: direction >= 0 ? '100%' : '-100%' }),
+  visible: { opacity: 1, x: '0%', transition: educationStepTransition },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction >= 0 ? '-100%' : '100%',
+    transition: educationStepTransition,
+  }),
+};
+
 /** Project detail pane, re-running on every project switch. */
 export const projectContainerVariants: Variants = {
   hidden: {},

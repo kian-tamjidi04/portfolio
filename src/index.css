@@ -1007,12 +1007,176 @@ option {
   font-size: var(--text-md);
 }
 
-.education-modules-tags {
+/* ── Education: horizontal timeline (Figma 118:6) ─────────────────────────
+   One entry visible at a time. The track shows every stop so the disabled
+   arrow at either end reads as a position, not a dead control. The entry
+   panel uses the elevated Content Panel recipe (DESIGN_SYSTEM.md §9.2), and
+   its wide left/right padding is the gutter the nav arrows sit in — 10px
+   inset + 36px arrow + 10px breathing room = 56px. */
+.edu-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-9);
+  /* Education is a design-language-v2 card (F25): IBM Plex Sans throughout,
+     not the site-wide Apple Garamond. Set once here so every descendant —
+     including .tag and .modal-row-title, which carry no family of their own —
+     inherits it. */
+  font-family: var(--font-card);
+}
+
+.edu-track {
+  position: relative;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail behind the dots. Sits at the dots' vertical centre (15px dot). */
+.edu-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7px;
+  height: 1px;
+  background: var(--border);
+}
+
+.edu-track-stop {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.edu-track-dot {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+
+.edu-track-dot:hover {
+  background: var(--text-muted);
+}
+
+.edu-track-dot.is-active {
+  background: var(--accent);
+}
+
+.edu-track-dot.is-active:hover {
+  background: var(--accent);
+}
+
+.edu-track-year {
+  font-size: 12px;
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+}
+
+.edu-stage {
+  position: relative;
+}
+
+/* Clips the entries as they slide past each other. `content-box` so the
+   animated pixel height set by EducationSection refers to the entry alone;
+   the 20px padding (cancelled by the matching negative margin, so the stage
+   still occupies exactly the entry's height) is headroom for the panel's
+   elevated shadow, which would otherwise be clipped along with the slide. */
+.edu-viewport {
+  position: relative;
+  overflow: hidden;
+  box-sizing: content-box;
+  padding: 20px;
+  margin: -20px;
+}
+
+.edu-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-10) 56px;
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-panel-elevated);
+}
+
+.edu-entry-title-row {
+  margin: 0;
+  line-height: var(--leading-snug);
+}
+
+/* v2 ships IBM Plex Sans at 300/400/500 only, so the shared bullet's
+   weight 700 would render as a synthetic faux-bold here. */
+.edu-entry .interactive-bullet-item::before {
+  font-weight: 500;
+}
+
+.edu-entry-tags {
   margin-top: var(--space-5);
 }
 
-.education-modules-section {
-  margin-top: var(--space-5);
+/* Overlaid on the entry panel rather than flanking it, so the panel keeps the
+   full body width. */
+.edu-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--modal-close-idle-bg);
+  color: var(--card-icon-color);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+
+.edu-nav:hover:not(:disabled) {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.edu-nav:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  box-shadow: none;
+  opacity: 0.45;
+  cursor: default;
+}
+
+.edu-nav-prev {
+  left: var(--space-5);
+}
+
+.edu-nav-next {
+  right: var(--space-5);
+}
+
+/* Narrow modals can't afford the 56px arrow gutters: drop the arrows below
+   the panel content instead of overlapping it. Container query, not viewport
+   — this responds to the modal's width (DESIGN_SYSTEM.md §8.2). */
+@container portfolio-modal (max-width: 560px) {
+  /* Extra bottom padding is the arrows' new home, so they stay inside the
+     panel instead of overlapping the body copy. */
+  .edu-entry {
+    padding: var(--space-8) var(--space-8) 62px;
+  }
+
+  .edu-nav {
+    top: auto;
+    bottom: var(--space-6);
+    transform: none;
+  }
 }
 
 .tag {

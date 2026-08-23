@@ -45,6 +45,9 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   const [modalRect, setModalRect] = useState(() => getModalRect(card.type));
   const [modalHeight, setModalHeight] = useState(modalRect.height);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
+  /** True once the opening flip has finished, so later height changes track
+   *  their content instead of re-animating. */
+  const [hasLanded, setHasLanded] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -100,14 +103,23 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     return () => window.removeEventListener('resize', measureModal);
   }, [measureModal]);
 
-  // Re-measure when the content itself changes size (accordions, hovers).
+  // Re-measure when the content itself changes size (accordions, hovers, the
+  // education timeline stepping between entries).
+  //
+  // The body element itself is `flex: 1` inside a fixed-height modal, so its
+  // own border box never changes when its contents grow or shrink — observing
+  // only the body misses every pure content-height change. Observe its
+  // children too, since `computeHeight` measures to the bottom of the last one.
   useEffect(() => {
     if (!bodyRef.current && !headerRef.current) return undefined;
     const observer = new ResizeObserver(() => measureModal());
-    if (bodyRef.current) observer.observe(bodyRef.current);
+    if (bodyRef.current) {
+      observer.observe(bodyRef.current);
+      for (const child of Array.from(bodyRef.current.children)) observer.observe(child);
+    }
     if (headerRef.current) observer.observe(headerRef.current);
     return () => observer.disconnect();
-  }, [measureModal]);
+  }, [measureModal, card.id]);
 
   // Hold the body hidden until the flip is partway through.
   useEffect(() => {
@@ -166,9 +178,24 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           top: (window.innerHeight - modalHeight) / 2,
           width: modalRect.width,
           height: modalHeight,
+          // Once the opening flip has landed, height/top stop easing of their
+          // own accord and instead track the measured content exactly, frame
+          // by frame. Sections that animate their own height (the education
+          // timeline) are already easing; re-easing that here made the modal
+          // trail its contents, showing whitespace on shrink and clipping on
+          // growth. Declared inside `animate` so `exit` still uses the
+          // component-level flip transition to close.
+          transition: hasLanded
+            ? {
+                default: { duration: FLIP_DURATION, ease: FLIP_EASE },
+                height: { duration: 0 },
+                top: { duration: 0 },
+              }
+            : { duration: FLIP_DURATION, ease: FLIP_EASE },
         }}
         exit={fromRect as TargetAndTransition}
         transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}
+        onAnimationComplete={() => setHasLanded(true)}
       >
         {/* preserve-3d container: front and back are stacked back-to-back */}
         <motion.div
