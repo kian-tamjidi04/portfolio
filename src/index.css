@@ -1007,15 +1007,17 @@ option {
   font-size: var(--text-md);
 }
 
-/* ── Education: horizontal timeline (Figma 118:6) ─────────────────────────
-   One entry visible at a time. The track shows every stop so the disabled
-   arrow at either end reads as a position, not a dead control. The entry
-   panel uses the elevated Content Panel recipe (DESIGN_SYSTEM.md §9.2), and
-   its wide left/right padding is the gutter the nav arrows sit in — 10px
-   inset + 36px arrow + 10px breathing room = 56px. */
+/* ── Education: vertical timeline (Figma 118:6, vertical variant) ─────────
+   One entry visible at a time. The track runs down the left-hand side and
+   shows every stop, so the disabled arrow at either end reads as a position,
+   not a dead control. The nav arrows sit in their own column to the left of
+   the entry, vertically centred, so the entry keeps even padding on all sides
+   and its content is never sandwiched between the two controls. The entry
+   panel uses the elevated Content Panel recipe (DESIGN_SYSTEM.md §9.2). */
 .edu-timeline {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
   gap: var(--space-9);
   /* Education is a design-language-v2 card (F25): IBM Plex Sans throughout,
      not the site-wide Apple Garamond. Set once here so every descendant —
@@ -1027,29 +1029,32 @@ option {
 .edu-track {
   position: relative;
   display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 0 0 auto;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* The rail behind the dots. Sits at the dots' vertical centre (15px dot). */
+/* The rail behind the dots. Sits at the dots' horizontal centre (15px dot),
+   and spans the full track height, which stretches with the stage. */
 .edu-track::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 7px;
-  height: 1px;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 1px;
   background: var(--border);
 }
 
 .edu-track-stop {
   position: relative;
-  flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-5);
 }
 
 .edu-track-dot {
@@ -1079,10 +1084,12 @@ option {
   font-size: 12px;
   line-height: var(--leading-relaxed);
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .edu-stage {
-  position: relative;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Clips the entries as they slide past each other. `content-box` so the
@@ -1102,7 +1109,7 @@ option {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  padding: var(--space-10) 56px;
+  padding: var(--space-10);
   background: var(--cert-card-surface);
   box-shadow: var(--shadow-panel-elevated);
 }
@@ -1122,12 +1129,17 @@ option {
   margin-top: var(--space-5);
 }
 
-/* Overlaid on the entry panel rather than flanking it, so the panel keeps the
-   full body width. */
+/* Its own column between the track and the entry, centred on the stage's
+   height so the pair reads as one control cluster. */
+.edu-nav-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  flex: 0 0 auto;
+}
+
 .edu-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1154,28 +1166,17 @@ option {
   cursor: default;
 }
 
-.edu-nav-prev {
-  left: var(--space-5);
-}
-
-.edu-nav-next {
-  right: var(--space-5);
-}
-
-/* Narrow modals can't afford the 56px arrow gutters: drop the arrows below
-   the panel content instead of overlapping it. Container query, not viewport
-   — this responds to the modal's width (DESIGN_SYSTEM.md §8.2). */
+/* Narrow modals: the track's year labels are dropped so the left rail and the
+   nav column stop eating width the entry needs. The dots stay, so position in
+   the timeline is still legible. Container query, not viewport — this responds
+   to the modal's width (DESIGN_SYSTEM.md §8.2). */
 @container portfolio-modal (max-width: 560px) {
-  /* Extra bottom padding is the arrows' new home, so they stay inside the
-     panel instead of overlapping the body copy. */
   .edu-entry {
-    padding: var(--space-8) var(--space-8) 62px;
+    padding: var(--space-8);
   }
 
-  .edu-nav {
-    top: auto;
-    bottom: var(--space-6);
-    transform: none;
+  .edu-track-year {
+    display: none;
   }
 }
 

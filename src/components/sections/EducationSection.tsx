@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import type { EducationCard } from '../../content';
 import {
   educationEntryVariants,
@@ -13,8 +13,9 @@ import { InteractiveList } from '../InteractiveList';
 const DEFAULT_MODULES_LABEL = 'Key Modules';
 
 /**
- * Horizontal timeline: one entry on screen at a time, stepped through with
- * the overlaid prev/next arrows or by picking a stop on the track. The track
+ * Vertical timeline: the track runs down the left-hand side, with one entry
+ * on screen at a time, stepped through with the arrows overlaid at the top and
+ * bottom of the entry panel or by picking a stop on the track. The track
  * always shows every stop so the disabled arrow at either end reads as "you
  * are at the start/end", not as a broken control.
  */
@@ -122,7 +123,18 @@ export function EducationSection({ card }: { card: EducationCard }) {
             </motion.article>
           </AnimatePresence>
         </motion.div>
+      </motion.div>
 
+      {/* Sits between the entry and the modal edge rather than overlaying the
+          panel, so the entry keeps even padding and its content is never
+          sandwiched between the two controls. Outside the live region above,
+          which should announce the entry, not the buttons. */}
+      <motion.div
+        className="edu-nav-column"
+        variants={modalItemVariants}
+        role="group"
+        aria-label="Timeline navigation"
+      >
         <button
           type="button"
           className="edu-nav edu-nav-prev"
@@ -130,7 +142,7 @@ export function EducationSection({ card }: { card: EducationCard }) {
           disabled={atStart}
           aria-label="Previous education entry"
         >
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <FontAwesomeIcon icon={faArrowUp} />
         </button>
         <button
           type="button"
@@ -139,7 +151,7 @@ export function EducationSection({ card }: { card: EducationCard }) {
           disabled={atEnd}
           aria-label="Next education entry"
         >
-          <FontAwesomeIcon icon={faArrowRight} />
+          <FontAwesomeIcon icon={faArrowDown} />
         </button>
       </motion.div>
     </div>

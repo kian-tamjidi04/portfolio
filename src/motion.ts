@@ -64,15 +64,18 @@ export const educationStepTransition = {
  * opposite edge. `custom` carries the step direction: +1 moving forward
  * through the timeline, -1 moving back.
  *
- * Offsets are percentages of the entry's own width, so the push always clears
- * the frame regardless of how wide the modal is.
+ * The vertical variant pushes along the y axis to match the timeline running
+ * down the left-hand side — stepping forward sends the outgoing entry up and
+ * brings the incoming one in from below. Offsets are percentages of the
+ * entry's own height, so the push always clears the frame however tall the
+ * entry is.
  */
 export const educationEntryVariants: Variants = {
-  hidden: (direction: number) => ({ opacity: 0, x: direction >= 0 ? '100%' : '-100%' }),
-  visible: { opacity: 1, x: '0%', transition: educationStepTransition },
+  hidden: (direction: number) => ({ opacity: 0, y: direction >= 0 ? '100%' : '-100%' }),
+  visible: { opacity: 1, y: '0%', transition: educationStepTransition },
   exit: (direction: number) => ({
     opacity: 0,
-    x: direction >= 0 ? '-100%' : '100%',
+    y: direction >= 0 ? '-100%' : '100%',
     transition: educationStepTransition,
   }),
 };
