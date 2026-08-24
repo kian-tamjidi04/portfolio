@@ -109,18 +109,14 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
                       className="interactive-bullet-list--plain"
                     />
 
-                    <div className="project-card-row">
-                      <div className="modal-row-title">Technologies and Skills</div>
-                      <TagList items={project.stack} className="d-flex flex-wrap gap-2" />
-                    </div>
+                    <div className="modal-row-title">Technologies and Skills</div>
+                    <TagList items={project.stack} className="d-flex flex-wrap gap-2" />
 
-                    <div className="project-card-row">
-                      <div className="modal-row-title">Challenges Faced</div>
-                      <InteractiveList
-                        items={project.challenges ?? CHALLENGES_PLACEHOLDER}
-                        className="interactive-bullet-list--plain"
-                      />
-                    </div>
+                    <div className="modal-row-title">Challenges Faced</div>
+                    <InteractiveList
+                      items={project.challenges ?? CHALLENGES_PLACEHOLDER}
+                      className="interactive-bullet-list--plain"
+                    />
 
                     {(project.links?.length || project.figmaComingSoon) && (
                       <div className="project-card-actions">

@@ -226,7 +226,7 @@ snapped onto the nearest token and silently changing timing.
 The projects deck (`deckCardVariants`) steps at `TIMELINE_STEP_DURATION`, so it moves at the
 same pace as the education/experience timelines. Forward and back are exact mirrors — forward
 swipes the front card off to the right (`x: 115%`, `rotate: 6`) while the next is pushed forward
-out of the stack (`y: -18`, `scale: 0.94`); back plays the same two positions the other way
+out of the stack (`y: -18`, `scale: 0.95`); back plays the same two positions the other way
 round, which is what makes it read as an undo rather than as a second animation.
 
 `transition: all` has been replaced with explicit property lists everywhere it appeared
@@ -406,8 +406,9 @@ project to the front of a deck.
 .htimeline-dot       shares .vtimeline-track-dot's recipe (15px, --border, --accent when active)
 .deck-nav            shares .vtimeline-nav's recipe (36px pill, --modal-close-idle-bg)
 .project-deck-stack  position:relative; front card and ghosts are absolute inset:0
-.project-deck-ghost  translateY(--deck-depth × -10px) scale(1 − --deck-depth × 0.03)
-.project-deck-card   --cert-card-surface · --shadow-panel-elevated · padding var(--space-10)
+.project-deck-ghost  translateY(--deck-depth × -18px) scale(1 − --deck-depth × 0.05)
+.project-deck-card   --cert-card-surface · --shadow-panel-elevated
+                     padding var(--space-10) var(--space-9) · flat gap var(--space-6)
 ```
 
 The stack is deliberately a fixed footprint: the front card is out of flow, so dealing the next

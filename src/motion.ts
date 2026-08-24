@@ -117,7 +117,7 @@ export const deckStepTransition = {
  * a small negative y at a reduced scale; "off the deck" is a full-width
  * translate with a little rotation, the way a dealt card kicks as it leaves.
  */
-const IN_DECK = { x: 0, y: -18, scale: 0.94, rotate: 0 } as const;
+const IN_DECK = { x: 0, y: -18, scale: 0.95, rotate: 0 } as const;
 const OFF_DECK = { x: '115%', y: 0, scale: 1, rotate: 6 } as const;
 
 export const deckCardVariants: Variants = {
