@@ -1,101 +1,58 @@
-import { motion } from 'framer-motion';
-import type { ExperienceCard, ExperienceRole } from '../../content';
-import { groupExperienceRoles, type ExperienceGroup } from '../../lib/groupExperienceRoles';
-import { modalItemVariants } from '../../motion';
+import type { ExperienceCard } from '../../content';
 import { InteractiveList } from '../InteractiveList';
 import { TagList } from '../TagList';
+import { VerticalTimeline } from '../VerticalTimeline';
 
-/** A rotation programme: one company header with each rotation nested beneath. */
-function GroupedRoles({ group }: { group: ExperienceGroup }) {
-  return (
-    <>
-      <div className="timeline-title-row">
-        <span className="timeline-role">{group.groupSubtitle}</span>
-        <span className="timeline-separator"> • </span>
-        <span className="timeline-company">{group.company}</span>
-        {group.groupTitle && (
-          <span className="timeline-group-title-badge">{group.groupTitle}</span>
-        )}
-      </div>
-      {group.groupDates && <p className="timeline-dates">{group.groupDates}</p>}
+const SKILLS_LABEL = 'Skills';
 
-      <div className="sub-timeline">
-        {group.roles.map((role) => (
-          <div className="sub-timeline-item" key={role.role}>
-            <span
-              className={`sub-timeline-dot ${role.isRecent ? 'is-recent' : ''}`}
-              aria-hidden="true"
-            />
-            <div className="sub-timeline-role-row">
-              <span className="sub-timeline-role">{role.role}</span>
-              {role.division && (
-                <>
-                  <span className="sub-timeline-separator"> • </span>
-                  <span className="sub-timeline-division">{role.division}</span>
-                </>
-              )}
-              {role.badge && <span className="sub-timeline-badge">{role.badge}</span>}
-            </div>
-            <p className="sub-timeline-dates">{role.dates}</p>
-            <InteractiveList items={role.impact} />
-            <TagList items={role.skills} className="d-flex flex-wrap gap-2 mt-2" />
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/** A single stint at a company. */
-function SingleRole({ role }: { role: ExperienceRole }) {
-  return (
-    <>
-      <div className="timeline-title-row">
-        <span className="timeline-role">{role.role}</span>
-        <span className="timeline-separator"> • </span>
-        <span className="timeline-company">{role.company}</span>
-      </div>
-      <p className="timeline-dates">{role.dates}</p>
-      <InteractiveList items={role.impact} />
-      <TagList items={role.skills} />
-    </>
-  );
-}
-
+/**
+ * One role at a time on the shared vertical timeline (Figma 118:9), mirroring
+ * the Education modal. Roles are listed flat rather than grouped by company:
+ * each rotation is its own stop, with the company and division carried in the
+ * subtitle, so the track reads as a single chronology.
+ */
 export function ExperienceSection({ card }: { card: ExperienceCard }) {
-  const groups = groupExperienceRoles(card.roles);
+  const { roles } = card;
+
+  const stops = roles.map((role) => ({
+    id: `${role.company}-${role.role}`,
+    year: role.dates,
+    label: `${role.role}, ${role.company}, ${role.dates}`,
+  }));
 
   return (
-    <div className="timeline">
-      {groups.map((group) => (
-        <motion.article
-          className="timeline-item"
-          key={`group-${group.company}-${group.roles.map((r) => r.role).join('-')}`}
-          variants={modalItemVariants}
-        >
-          <span
-            className={`timeline-dot ${group.isRecent ? 'is-recent' : ''}`}
-            aria-hidden="true"
-          />
-          <div className="timeline-content panel panel--roomy">
-            {group.logo && (
-              <div className="experience-logo-container">
-                <img
-                  src={group.logo}
-                  alt={`${group.company} logo`}
-                  className="experience-logo"
-                />
-              </div>
-            )}
+    <VerticalTimeline
+      stops={stops}
+      navLabel="Timeline navigation"
+      prevLabel="Previous role"
+      nextLabel="Next role"
+    >
+      {(activeIndex) => {
+        const role = roles[activeIndex];
+        // Division is the team within the company, so it reads as a
+        // continuation of the company name rather than a separate tier.
+        const subtitle = role.division
+          ? `${role.company} · ${role.division}`
+          : role.company;
 
-            {group.roles.length > 1 ? (
-              <GroupedRoles group={group} />
-            ) : (
-              <SingleRole role={group.roles[0]} />
-            )}
-          </div>
-        </motion.article>
-      ))}
-    </div>
+        return (
+          <>
+            <p className="vtimeline-entry-title-row">{role.role}</p>
+            <p className="vtimeline-entry-institution">{subtitle}</p>
+            <InteractiveList
+              items={role.impact}
+              className="interactive-bullet-list--plain"
+            />
+            <div className="vtimeline-entry-modules">
+              <div className="modal-row-title">{SKILLS_LABEL}</div>
+              <TagList
+                items={role.skills}
+                className="d-flex flex-wrap gap-2 vtimeline-entry-tags"
+              />
+            </div>
+          </>
+        );
+      }}
+    </VerticalTimeline>
   );
 }

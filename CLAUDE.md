@@ -105,10 +105,14 @@ src/components/
   DotListSection.tsx      | shared building blocks used by several sections
   InteractiveList.tsx     | renders a string[] as bullets — no runtime splitting
   TagList.tsx            /
+  VerticalTimeline.tsx   track + stepped entry + nav column, one entry on screen at
+                         a time; shared by the Education and Experience modals, which
+                         supply their own entry body via a render prop
   sections/              one file per card type (About, Certifications, Education,
                          Experience, Projects, Skills, Social, Vision)
 src/lib/modalRect.ts             per-type modal sizing/centring
-src/lib/groupExperienceRoles.ts  collapses consecutive roles at one company
+src/lib/groupExperienceRoles.ts  collapses consecutive roles at one company —
+                                 unused since Experience moved to VerticalTimeline
 src/lib/tileAnalytics.ts         GA4 labels per tile
 src/utils/analytics.ts           trackEvent() wrapper (no-ops when gtag is blocked)
 ```
