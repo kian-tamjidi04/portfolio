@@ -105,8 +105,8 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     return () => window.removeEventListener('resize', measureModal);
   }, [measureModal]);
 
-  // Re-measure when the content itself changes size (accordions, hovers, the
-  // education timeline stepping between entries).
+  // Re-measure when the content itself changes size (hovers, the education
+  // and experience timelines stepping between entries).
   //
   // The body element itself is `flex: 1` inside a fixed-height modal, so its
   // own border box never changes when its contents grow or shrink — observing

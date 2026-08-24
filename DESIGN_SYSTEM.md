@@ -68,12 +68,12 @@ A recurring and effective trick: **active/primary states fill with `--text-prima
 own text to `--bg`.** This works because there's only one theme now — no second token needed.
 
 ```css
-.project-sidebar-btn.active { background: var(--text-primary); }
-.project-sidebar-btn.active .project-sidebar-title { color: var(--bg); }
+.project-action-btn-primary { background: var(--text-primary); color: var(--bg); }
 ```
 
-Used by `.project-sidebar-btn.active`, `.accordion-header.active`,
-`.project-action-btn-primary`, `.project-list-hamburger`. **Keep doing this.**
+Used by `.project-action-btn-primary`. Its reach narrowed when the projects split view and the
+accordions were removed (see §11) — the pattern is unchanged, it simply has fewer consumers now.
+**Keep doing this.**
 
 ### 2.3 Contrast
 
@@ -127,7 +127,7 @@ A pure ascending scale; semantic aliases point into it for the three display siz
 | --- | --- | --- | --- |
 | `--text-xs` | `0.95rem` | 15.2 | Body copy, tags, bullets, takeaways |
 | `--text-sm` | `1rem` | 16 | `.modal-close-cta` only |
-| `--text-md` | `1.15rem` | 18.4 | Labels, dates, sub-roles, sidebar titles |
+| `--text-md` | `1.15rem` | 18.4 | Labels, dates, sub-roles, project index titles |
 | `--text-lg` | `1.4rem` | 22.4 | Row titles, role names, company names |
 | `--text-xl` (`--font-card-title`) | `1.9rem` | 30.4 | Grid card title |
 | `--text-2xl` (`--font-modal-title`) | `2.4rem` | 38.4 | Modal title, project detail header |
@@ -185,9 +185,9 @@ now uses `--radius-pill` (was a stray `18.5px`).
 scale. `--card-radius` moved first (Figma nodes 14:86 / 13:138). `--modal-radius` moved to match —
 "the open card now uses the same radius as the closed bento card" — so `.flip-back` (every open
 card, every type) and `.about-image` picked up the change in one edit, since both key off this one
-token. `--radius-2xl` (16px) is still used elsewhere (`.projects-detail-pane`, the mobile project
-sidebar overlay) — those are internal panels, not the open-card container itself, so they were left
-alone.
+token. `--radius-2xl` (16px) survives the removal of the projects split view that used to be its main
+consumer; it is kept as a scale step rather than deleted, since the reasoning above was about the
+open-card container, not about this token.
 
 ---
 
@@ -198,8 +198,6 @@ alone.
 | `--shadow-card` | `0 0 16px rgba(97,54,19,.2)` | `.portfolio-card`, `.cert-card`, `.modal-close-cta` (idle) |
 | `--card-shadow-hover` | `0 4px 24px 4px rgba(97,54,19,.75)` | `.portfolio-card:hover`, `.cert-card:hover`, `.modal-close-cta:hover` |
 | `--shadow-modal` | `0 24px 64px rgba(0,0,0,.18)` | `.flip-back` |
-| `--shadow-accordion-idle` | `0 4px 14px rgba(0,0,0,.08)` | `.accordion-header` |
-| `--shadow-accordion-hover` | `0 10px 24px rgba(0,0,0,.12)` | `.accordion-header:hover` |
 
 `--shadow-card` is now applied to the grid tiles it's named for — they previously read as flat
 white rectangles against `#eeeeee` (a 1.07:1 luminance step) with the token declared but unused.
@@ -224,6 +222,12 @@ including in `src/motion.ts` (`EASE_STANDARD = cubicBezier(0.4, 0, 0.2, 1)`) for
 side — one curve, one spelling, both layers. Near-miss durations that don't exactly match the four
 tokens above (`0.22s`, `0.25s`, `0.34s`, `0.35s`, `0.4s`, `0.42s`) stay literal rather than being
 snapped onto the nearest token and silently changing timing.
+
+The projects deck (`deckCardVariants`) steps at `TIMELINE_STEP_DURATION`, so it moves at the
+same pace as the education/experience timelines. Forward and back are exact mirrors — forward
+swipes the front card off to the right (`x: 115%`, `rotate: 6`) while the next is pushed forward
+out of the stack (`y: -18`, `scale: 0.94`); back plays the same two positions the other way
+round, which is what makes it read as an undo rather than as a second animation.
 
 `transition: all` has been replaced with explicit property lists everywhere it appeared
 (`.modal-close-cta`, `.project-sidebar-btn`, `.project-sidebar-icon`, `.accordion-header`,
@@ -388,16 +392,33 @@ The `role • company` title row with a muted middot separator is the system's s
 pattern — reused verbatim in `.sub-timeline-role-row`. Certifications used to share it
 (`.cert-title-row`) but dropped the inline separator when it migrated to v2 — see §9.8.
 
-### 9.5 Accordion
+### 9.5 Projects deck (`ProjectDeck`)
+
+The Projects modal holds two views. It opens on `.project-index`, a 3-column grid of every
+project (title + first summary bullet, CSS line-clamped to 2 lines); picking one deals that
+project to the front of a deck.
 
 ```
-.accordion-header   transparent bg · radius --radius-xl · padding var(--space-8) 20px
-                    box-shadow --shadow-accordion-idle
-                    aria-expanded + aria-controls wired to the content panel's id
-  hover             background --accent-dim · box-shadow --shadow-accordion-hover
-  .active           background --text-primary · label + chevron → --bg  (inversion pattern)
-.accordion-chevron  --text-muted · rotate(180deg) when .rotated
+.project-deck-bar    back button + track, one row
+.project-deck-back   ghost: 1px --border outline, transparent fill, --text-secondary
+                     hover → --surface-subtle fill, --text-primary
+.htimeline-track     dots spread space-between over a 1px --border rail at top 7px
+.htimeline-dot       shares .vtimeline-track-dot's recipe (15px, --border, --accent when active)
+.deck-nav            shares .vtimeline-nav's recipe (36px pill, --modal-close-idle-bg)
+.project-deck-stack  position:relative; front card and ghosts are absolute inset:0
+.project-deck-ghost  translateY(--deck-depth × -10px) scale(1 − --deck-depth × 0.03)
+.project-deck-card   --cert-card-surface · --shadow-panel-elevated · padding var(--space-10)
 ```
+
+The stack is deliberately a fixed footprint: the front card is out of flow, so dealing the next
+card cannot resize the stage. A height that moved mid-deal would fight the swipe it is carrying.
+`projects` keeps `fillsHeight` in `modalRect.ts` for the same reason — this is the one modal
+whose height is pinned rather than measured. Card body type follows the Certifications tiers
+(§9.8), not a fourth scale.
+
+Both arrows **wrap** rather than disabling at the ends — a deck has no start or end. This is the
+one deliberate divergence from `.vtimeline-nav`, where a disabled arrow is precisely the signal
+that you are at the first or last entry.
 
 ### 9.6 Button set
 
@@ -406,7 +427,6 @@ pattern — reused verbatim in `.sub-timeline-role-row`. Certifications used to 
 | `.project-action-btn-primary` | `--text-primary` | `--bg` |
 | `.project-action-btn-secondary` | transparent | `--text-primary` |
 | `.modal-close-cta` | `--surface-subtle` | `--text-secondary` |
-| `.project-list-hamburger` | `--text-primary` | `--bg` |
 
 All `radius --radius-xl`, weight 700, `--text-xs`, `padding var(--space-6) var(--space-12)`
 (close CTA: `var(--space-4) var(--space-7)`). Primary-button hover lightens to `--accent-dim` and
@@ -523,6 +543,14 @@ so the reasoning behind each decision survives past the fix itself.
   a focus trap, and focus restoration to the originating tile on close. Accordion headers have
   `aria-expanded`/`aria-controls`. `.cert-icon-image` has `alt=""`. The hero card is now the
   page's one `<h1>`; every other card title stays `<h2>`.
+- Accordions — **removed**: the Projects modal was their only consumer, and it hid the two things
+  that most distinguish one project from another (technologies, challenges) behind a click. The
+  redesign shows both outright, so `AccordionSection.tsx`, the `.accordion-*` rules, the
+  `--shadow-accordion-*` tokens and `motion.ts`'s now-orphaned `collapseTransition` /
+  `COLLAPSE_DURATION` all went with it. §9.5 is now the deck that replaced it.
+- Projects split view — **replaced**: the sidebar + internally-scrolling detail pane (and its
+  mobile hamburger/overlay overrides) gave way to the index grid + deck above. Projects was the
+  last modal still on the pre-overhaul layout.
 
 ---
 
@@ -561,9 +589,7 @@ For Claude Design / any generator. Single theme (light only).
   "shadow": {
     "card": "0 0 16px rgba(97,54,19,0.2)",
     "cardHover": "0 4px 24px 4px rgba(97,54,19,0.75)",
-    "modal": "0 24px 64px rgba(0,0,0,0.18)",
-    "accordionIdle": "0 4px 14px rgba(0,0,0,0.08)",
-    "accordionHover": "0 10px 24px rgba(0,0,0,0.12)"
+    "modal": "0 24px 64px rgba(0,0,0,0.18)"
   },
   "certCard": { "surface": "#fafafa", "iconColor": "#613613", "modalCloseIdleBg": "#e2e2e2" },
   "pill": {

@@ -84,6 +84,8 @@ Content is fully separated from presentation:
   owns the two pieces of flip state. All rendering lives in `src/components/`.
 - **`src/motion.ts`** — the whole motion system: easings, durations, and the
   framer-motion `variants` objects. Don't inline transitions in components; add them here.
+  Direction-aware variants (`timelineEntryVariants`, `deckCardVariants`) read the step
+  direction off framer-motion's `custom` prop: `+1` forward, `-1` back.
 - **`src/index.css`** — all styling (~1300 lines), single light theme, fully tokenized
   (`--space-*`, `--radius-*`, `--text-*`, `--dur-*`, `--ease-*`). No CSS modules or
   utility framework beyond Bootstrap's stylesheet, imported in `main.tsx` *before*
@@ -101,10 +103,12 @@ src/components/
   FlipCard.tsx           the flying/rotating wrapper + modal chrome (dialog semantics,
                          focus trap, focus restore)
   ModalBody.tsx          switch on card.type → one section component
-  AccordionSection.tsx   \
-  DotListSection.tsx      | shared building blocks used by several sections
+  DotListSection.tsx     \  shared building blocks used by several sections
   InteractiveList.tsx     | renders a string[] as bullets — no runtime splitting
   TagList.tsx            /
+  ProjectDeck.tsx        the Projects deck: back button, horizontal dot track, wrapping
+                         nav arrows, and a fixed-footprint stack that deals one card at a
+                         time; the Projects modal supplies the card body via a render prop
   VerticalTimeline.tsx   track + stepped entry + nav column, one entry on screen at
                          a time; shared by the Education and Experience modals, which
                          supply their own entry body via a render prop
@@ -136,9 +140,9 @@ Worth knowing before changing `FlipCard`:
 
 - Modal height is **measured**, not fixed — it hugs its content via the last child's
   `offsetTop + offsetHeight + paddingBottom` (`scrollHeight` ignores the body's bottom
-  padding). A `ResizeObserver` on header and body re-measures when accordions or hover
-  reveals change size, and `getModalSizing().fillsHeight` opts a type out (only
-  `projects`, whose split view scrolls internally).
+  padding). A `ResizeObserver` on header and body re-measures when hover reveals or a
+  timeline step change size, and `getModalSizing().fillsHeight` opts a type out (only
+  `projects`, whose deck needs a footprint that does not move as cards are dealt).
 - `closedCardId` + `AnimatePresence.onExitComplete` keep the origin tile hidden until
   the reverse flip finishes, so the card never appears in two places at once.
 - Escape closes; so does clicking the scrim.

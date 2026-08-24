@@ -19,7 +19,6 @@ export const FLIP_EASE = EASE_STANDARD;
 export const CONTENT_REVEAL_DELAY = 0.24; // starts during card expansion
 export const CONTENT_STAGGER = 0.08;
 export const SCRIM_DURATION = 0.22;
-export const COLLAPSE_DURATION = 0.3; // accordions, cert takeaway reveal
 
 export const flipTransition = { duration: FLIP_DURATION, ease: FLIP_EASE } as const;
 
@@ -94,19 +93,46 @@ export const timelineEntryVariants: Variants = {
   }),
 };
 
-/** Project detail pane, re-running on every project switch. */
-export const projectContainerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+/* ─── Projects deck ──────────────────────────────────────────────── */
 
-export const projectItemVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_STANDARD } },
-};
+/** One deck step. Matched to the timeline so both modals move at one pace. */
+export const DECK_STEP_DURATION = TIMELINE_STEP_DURATION;
 
-/** Height-collapse used by the accordions and the cert hover reveal. */
-export const collapseTransition = {
-  duration: COLLAPSE_DURATION,
+export const deckStepTransition = {
+  duration: DECK_STEP_DURATION,
   ease: EASE_STANDARD,
 } as const;
+
+/**
+ * The projects deck, stepped one card at a time. `custom` carries the step
+ * direction: +1 dealing forward, -1 dealing back.
+ *
+ * Forward, the front card is swiped off to the right and the next card is
+ * pushed forward out of the stack behind it. Back is the exact mirror — the
+ * front card recedes into the stack while the card from the back of the deck
+ * flies in from the right — which is what makes it read as an undo of forward
+ * rather than as a second, different animation.
+ *
+ * The stack is behind and slightly above the front card, so "in the deck" is
+ * a small negative y at a reduced scale; "off the deck" is a full-width
+ * translate with a little rotation, the way a dealt card kicks as it leaves.
+ */
+const IN_DECK = { x: 0, y: -18, scale: 0.94, rotate: 0 } as const;
+const OFF_DECK = { x: '115%', y: 0, scale: 1, rotate: 6 } as const;
+
+export const deckCardVariants: Variants = {
+  hidden: (direction: number) =>
+    direction >= 0 ? { ...IN_DECK, opacity: 0 } : { ...OFF_DECK, opacity: 0 },
+  visible: {
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotate: 0,
+    opacity: 1,
+    transition: deckStepTransition,
+  },
+  exit: (direction: number) =>
+    direction >= 0
+      ? { ...OFF_DECK, opacity: 0, transition: deckStepTransition }
+      : { ...IN_DECK, opacity: 0, transition: deckStepTransition },
+};
