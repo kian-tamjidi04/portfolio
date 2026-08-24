@@ -296,13 +296,17 @@ duplicates of the same viewport band.
 
 | Type | Max width | Max height |
 | --- | --- | --- |
-| `projects` | 1320px | 900px |
+| `projects` | 1023px | 640px |
 | `about` | 1300px | `Infinity` |
 | everything else | 900px | 760px |
 
-`projects`' max width now matches `GRID_MAX_WIDTH` (1320px, the same constant `.portfolio-grid-
-surface` uses) rather than exceeding the grid it flew out of (previously 1400px). `Infinity` (not
-a numeric sentinel) marks "no cap" for `about`.
+`projects` sizes to its Figma frames (168:4442 / 168:269, both 1023px wide) rather than filling
+the grid's full 1320px — that width existed for the old split view's sidebar and stretched the
+index cards to ~408px against a designed 309px. Its 640px height is deliberately above Figma's
+~480–514px frames: those were drawn against placeholder copy, and the real cards carry more tags
+and an action row the frames omit. Every width stays under `.portfolio-grid-surface`'s 1320px, so
+a modal is still never wider than the grid it flew out of (F20). `Infinity` (not a numeric
+sentinel) marks "no cap" for `about`.
 
 ---
 

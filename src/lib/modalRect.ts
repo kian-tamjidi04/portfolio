@@ -3,10 +3,6 @@ import type { CardType } from '../content';
 /** Gap left between the modal and the viewport edge, per side. */
 const VIEWPORT_PADDING = 42;
 
-/** Matches `.portfolio-grid-surface`'s max-width in index.css — a modal should
- * never be wider than the grid it flew out of (DESIGN_SYSTEM.md F20). */
-const GRID_MAX_WIDTH = 1320;
-
 interface ModalSizing {
   maxWidth: number;
   maxHeight: number;
@@ -25,7 +21,14 @@ const DEFAULT_SIZING: ModalSizing = { maxWidth: 900, maxHeight: 760, fillsHeight
  * separate `card.type === 'projects'` check in three other places.
  */
 const MODAL_SIZING: Partial<Record<CardType, ModalSizing>> = {
-  projects: { maxWidth: GRID_MAX_WIDTH, maxHeight: 900, fillsHeight: true },
+  // Figma nodes 168:4442 and 168:269 both draw the projects modal at 1023px.
+  // It used to take the grid's full 1320px because the old split view needed
+  // the width for a sidebar beside the detail pane; with the deck that reason
+  // is gone, and 1320 stretched the index cards to ~408px against a designed
+  // 309px. Every width here stays under `.portfolio-grid-surface`'s own
+  // 1320px, so a modal is still never wider than the grid it flew out of
+  // (DESIGN_SYSTEM.md F20).
+  projects: { maxWidth: 1023, maxHeight: 640, fillsHeight: true },
   about: { maxWidth: 1300, maxHeight: Infinity, fillsHeight: false },
 };
 
