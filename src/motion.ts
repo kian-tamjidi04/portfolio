@@ -63,17 +63,17 @@ export const modalItemVariants: Variants = {
   },
 };
 
-/** How long one education timeline step takes, shared by the entry slide and
+/** How long one timeline step takes, shared by the entry slide and
  *  the stage's height change so they land together. Matches `--dur-slow`. */
-export const EDUCATION_STEP_DURATION = 0.45;
+export const TIMELINE_STEP_DURATION = 0.45;
 
-export const educationStepTransition = {
-  duration: EDUCATION_STEP_DURATION,
+export const timelineStepTransition = {
+  duration: TIMELINE_STEP_DURATION,
   ease: EASE_STANDARD,
 } as const;
 
 /**
- * Education entries sliding as a filmstrip: the outgoing entry is pushed out
+ * Timeline entries sliding as a filmstrip: the outgoing entry is pushed out
  * of frame in the direction of travel while the incoming one arrives from the
  * opposite edge. `custom` carries the step direction: +1 moving forward
  * through the timeline, -1 moving back.
@@ -84,13 +84,13 @@ export const educationStepTransition = {
  * entry's own height, so the push always clears the frame however tall the
  * entry is.
  */
-export const educationEntryVariants: Variants = {
+export const timelineEntryVariants: Variants = {
   hidden: (direction: number) => ({ opacity: 0, y: direction >= 0 ? '100%' : '-100%' }),
-  visible: { opacity: 1, y: '0%', transition: educationStepTransition },
+  visible: { opacity: 1, y: '0%', transition: timelineStepTransition },
   exit: (direction: number) => ({
     opacity: 0,
     y: direction >= 0 ? '-100%' : '100%',
-    transition: educationStepTransition,
+    transition: timelineStepTransition,
   }),
 };
 

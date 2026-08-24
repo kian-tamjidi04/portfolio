@@ -961,6 +961,33 @@ option {
   transition: opacity var(--dur-base) ease, transform var(--dur-base) ease;
 }
 
+/* Figma specs the Education and Experience modals' bullets (118:6, 118:9) the
+   same way as Vision's Goals and About's beliefs/hobbies lists: plain native
+   disc bullets in --text-secondary at the v2 card's Light 16/22, not the
+   accent-colored dot. Same opt-in shape as .belief-list--plain rather than
+   keying off the timeline entry, so any list can ask for the plain treatment. */
+.interactive-bullet-list--plain {
+  display: block;
+  padding-left: 24px;
+  list-style: disc;
+}
+
+.interactive-bullet-list--plain .interactive-bullet-item {
+  display: list-item;
+  padding-left: 0;
+  font-family: var(--font-card);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--text-secondary);
+}
+
+/* The native marker replaces the ::before dot, which would otherwise sit on
+   top of it at the item's left edge. */
+.interactive-bullet-list--plain .interactive-bullet-item::before {
+  content: none;
+}
+
 .experience-logo-container {
   position: absolute;
   top: var(--space-8);
@@ -1007,14 +1034,14 @@ option {
   font-size: var(--text-md);
 }
 
-/* ── Education: vertical timeline (Figma 118:6, vertical variant) ─────────
+/* ── Vertical timeline — Education (Figma 118:6) + Experience (118:9) ─────
    One entry visible at a time. The track runs down the left-hand side and
    shows every stop, so the disabled arrow at either end reads as a position,
    not a dead control. The nav arrows sit in their own column to the left of
    the entry, vertically centred, so the entry keeps even padding on all sides
    and its content is never sandwiched between the two controls. The entry
    panel uses the elevated Content Panel recipe (DESIGN_SYSTEM.md §9.2). */
-.edu-timeline {
+.vtimeline {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -1026,7 +1053,7 @@ option {
   font-family: var(--font-card);
 }
 
-.edu-track {
+.vtimeline-track {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1039,7 +1066,7 @@ option {
 
 /* The rail behind the dots. Sits at the dots' horizontal centre (15px dot),
    and spans the full track height, which stretches with the stage. */
-.edu-track::before {
+.vtimeline-track::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1049,7 +1076,7 @@ option {
   background: var(--border);
 }
 
-.edu-track-stop {
+.vtimeline-track-stop {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -1057,7 +1084,7 @@ option {
   gap: var(--space-5);
 }
 
-.edu-track-dot {
+.vtimeline-track-dot {
   width: 15px;
   height: 15px;
   padding: 0;
@@ -1068,26 +1095,26 @@ option {
   transition: background var(--dur-fast) var(--ease-standard);
 }
 
-.edu-track-dot:hover {
+.vtimeline-track-dot:hover {
   background: var(--text-muted);
 }
 
-.edu-track-dot.is-active {
+.vtimeline-track-dot.is-active {
   background: var(--accent);
 }
 
-.edu-track-dot.is-active:hover {
+.vtimeline-track-dot.is-active:hover {
   background: var(--accent);
 }
 
-.edu-track-year {
+.vtimeline-track-year {
   font-size: 12px;
   line-height: var(--leading-relaxed);
   color: var(--text-muted);
   white-space: nowrap;
 }
 
-.edu-stage {
+.vtimeline-stage {
   flex: 1;
   min-width: 0;
 }
@@ -1097,7 +1124,7 @@ option {
    the 20px padding (cancelled by the matching negative margin, so the stage
    still occupies exactly the entry's height) is headroom for the panel's
    elevated shadow, which would otherwise be clipped along with the slide. */
-.edu-viewport {
+.vtimeline-viewport {
   position: relative;
   overflow: hidden;
   box-sizing: content-box;
@@ -1105,7 +1132,7 @@ option {
   margin: -20px;
 }
 
-.edu-entry {
+.vtimeline-entry {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -1118,7 +1145,7 @@ option {
    (.cert-title/.cert-date/.cert-takeaway, DESIGN_SYSTEM.md §9.8) rather than
    inventing a parallel scale — same three tiers, same tokens, reused here
    instead of Education drifting to its own sizes. */
-.edu-entry-title-row {
+.vtimeline-entry-title-row {
   margin: 0;
   font-weight: 400;
   font-size: var(--text-lg);
@@ -1129,7 +1156,7 @@ option {
 /* Institution takes the subtitle tier — same size/weight as .cert-date, but
    keeps the accent color the house "role • company" pattern uses for company
    names elsewhere (DESIGN_SYSTEM.md §13.6), rather than cert's muted date. */
-.edu-entry-institution {
+.vtimeline-entry-institution {
   margin: 0;
   font-weight: 300;
   font-size: var(--font-card-label);
@@ -1142,31 +1169,20 @@ option {
    rather than the heavier heading/row style modal-row-title carries
    elsewhere, keeping Education to the same three type tiers as the cert card
    instead of a fourth in-between size. */
-.edu-entry .modal-row-title {
+.vtimeline-entry .modal-row-title {
   font-weight: 300;
   font-size: var(--font-card-label);
   line-height: var(--leading-normal);
   color: var(--text-muted);
 }
 
-.edu-entry .interactive-bullet-item {
-  font-size: var(--text-sm);
-  line-height: 1.4;
-}
-
-/* v2 ships IBM Plex Sans at 300/400/500 only, so the shared bullet's
-   weight 700 would render as a synthetic faux-bold here. */
-.edu-entry .interactive-bullet-item::before {
-  font-weight: 500;
-}
-
-.edu-entry-tags {
+.vtimeline-entry-tags {
   margin-top: var(--space-5);
 }
 
 /* Its own column between the track and the entry, centred on the stage's
    height so the pair reads as one control cluster. */
-.edu-nav-column {
+.vtimeline-nav-column {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1174,7 +1190,7 @@ option {
   flex: 0 0 auto;
 }
 
-.edu-nav {
+.vtimeline-nav {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1189,11 +1205,11 @@ option {
   transition: box-shadow var(--dur-fast) var(--ease-standard);
 }
 
-.edu-nav:hover:not(:disabled) {
+.vtimeline-nav:hover:not(:disabled) {
   box-shadow: var(--card-shadow-hover);
 }
 
-.edu-nav:disabled {
+.vtimeline-nav:disabled {
   background: var(--border);
   color: var(--text-muted);
   box-shadow: none;
@@ -1206,11 +1222,11 @@ option {
    the timeline is still legible. Container query, not viewport — this responds
    to the modal's width (DESIGN_SYSTEM.md §8.2). */
 @container portfolio-modal (max-width: 560px) {
-  .edu-entry {
+  .vtimeline-entry {
     padding: var(--space-8);
   }
 
-  .edu-track-year {
+  .vtimeline-track-year {
     display: none;
   }
 }
