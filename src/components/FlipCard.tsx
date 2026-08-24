@@ -9,6 +9,8 @@ import {
   FLIP_DURATION,
   FLIP_EASE,
   SCRIM_DURATION,
+  flipLandedTransition,
+  flipTransition,
   modalBodyVariants,
 } from '../motion';
 import { CardInner } from './CardInner';
@@ -110,6 +112,11 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   // own border box never changes when its contents grow or shrink — observing
   // only the body misses every pure content-height change. Observe its
   // children too, since `computeHeight` measures to the bottom of the last one.
+  //
+  // Depends on `card.id` too, not just `measureModal`: which children exist
+  // under bodyRef is different for every card type, so switching cards must
+  // re-run this to observe the new card's children instead of the previous
+  // card's (now-detached) ones.
   useEffect(() => {
     if (!bodyRef.current && !headerRef.current) return undefined;
     const observer = new ResizeObserver(() => measureModal());
@@ -178,20 +185,10 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
           top: (window.innerHeight - modalHeight) / 2,
           width: modalRect.width,
           height: modalHeight,
-          // Once the opening flip has landed, height/top stop easing of their
-          // own accord and instead track the measured content exactly, frame
-          // by frame. Sections that animate their own height (the education
-          // timeline) are already easing; re-easing that here made the modal
-          // trail its contents, showing whitespace on shrink and clipping on
-          // growth. Declared inside `animate` so `exit` still uses the
-          // component-level flip transition to close.
-          transition: hasLanded
-            ? {
-                default: { duration: FLIP_DURATION, ease: FLIP_EASE },
-                height: { duration: 0 },
-                top: { duration: 0 },
-              }
-            : { duration: FLIP_DURATION, ease: FLIP_EASE },
+          // See flipLandedTransition (motion.ts) for why this only kicks in
+          // once the opening flip has landed. Declared inside `animate` so
+          // `exit` still uses the component-level flip transition to close.
+          transition: hasLanded ? flipLandedTransition : flipTransition,
         }}
         exit={fromRect as TargetAndTransition}
         transition={{ duration: FLIP_DURATION, ease: FLIP_EASE }}

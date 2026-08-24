@@ -21,6 +21,20 @@ export const CONTENT_STAGGER = 0.08;
 export const SCRIM_DURATION = 0.22;
 export const COLLAPSE_DURATION = 0.3; // accordions, cert takeaway reveal
 
+export const flipTransition = { duration: FLIP_DURATION, ease: FLIP_EASE } as const;
+
+/**
+ * Once the opening flip has landed, height/top stop easing on their own and
+ * instead track the measured content exactly, frame by frame — a section
+ * that animates its own height (the education timeline) is already easing,
+ * and re-easing that a second time here made the modal trail its contents.
+ */
+export const flipLandedTransition = {
+  default: flipTransition,
+  height: { duration: 0 },
+  top: { duration: 0 },
+} as const;
+
 /* ─── Variants ───────────────────────────────────────────────────── */
 
 /** Grid tiles fading up on first paint. */
