@@ -1007,12 +1007,212 @@ option {
   font-size: var(--text-md);
 }
 
-.education-modules-tags {
+/* ── Education: vertical timeline (Figma 118:6, vertical variant) ─────────
+   One entry visible at a time. The track runs down the left-hand side and
+   shows every stop, so the disabled arrow at either end reads as a position,
+   not a dead control. The nav arrows sit in their own column to the left of
+   the entry, vertically centred, so the entry keeps even padding on all sides
+   and its content is never sandwiched between the two controls. The entry
+   panel uses the elevated Content Panel recipe (DESIGN_SYSTEM.md §9.2). */
+.edu-timeline {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--space-9);
+  /* Education is a design-language-v2 card (F25): IBM Plex Sans throughout,
+     not the site-wide Apple Garamond. Set once here so every descendant —
+     including .tag and .modal-row-title, which carry no family of their own —
+     inherits it. */
+  font-family: var(--font-card);
+}
+
+.edu-track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail behind the dots. Sits at the dots' horizontal centre (15px dot),
+   and spans the full track height, which stretches with the stage. */
+.edu-track::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 1px;
+  background: var(--border);
+}
+
+.edu-track-stop {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.edu-track-dot {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+
+.edu-track-dot:hover {
+  background: var(--text-muted);
+}
+
+.edu-track-dot.is-active {
+  background: var(--accent);
+}
+
+.edu-track-dot.is-active:hover {
+  background: var(--accent);
+}
+
+.edu-track-year {
+  font-size: 12px;
+  line-height: var(--leading-relaxed);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.edu-stage {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Clips the entries as they slide past each other. `content-box` so the
+   animated pixel height set by EducationSection refers to the entry alone;
+   the 20px padding (cancelled by the matching negative margin, so the stage
+   still occupies exactly the entry's height) is headroom for the panel's
+   elevated shadow, which would otherwise be clipped along with the slide. */
+.edu-viewport {
+  position: relative;
+  overflow: hidden;
+  box-sizing: content-box;
+  padding: 20px;
+  margin: -20px;
+}
+
+.edu-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-10);
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-panel-elevated);
+}
+
+/* Title/subtitle/body hierarchy matches the Certifications card exactly
+   (.cert-title/.cert-date/.cert-takeaway, DESIGN_SYSTEM.md §9.8) rather than
+   inventing a parallel scale — same three tiers, same tokens, reused here
+   instead of Education drifting to its own sizes. */
+.edu-entry-title-row {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+/* Institution takes the subtitle tier — same size/weight as .cert-date, but
+   keeps the accent color the house "role • company" pattern uses for company
+   names elsewhere (DESIGN_SYSTEM.md §13.6), rather than cert's muted date. */
+.edu-entry-institution {
+  margin: 0;
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--accent-text);
+}
+
+/* Reads as a second, smaller subtitle introducing the tag list — the cert
+   card has no equivalent, so this borrows .cert-date's weight/size/color
+   rather than the heavier heading/row style modal-row-title carries
+   elsewhere, keeping Education to the same three type tiers as the cert card
+   instead of a fourth in-between size. */
+.edu-entry .modal-row-title {
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--text-muted);
+}
+
+.edu-entry .interactive-bullet-item {
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+/* v2 ships IBM Plex Sans at 300/400/500 only, so the shared bullet's
+   weight 700 would render as a synthetic faux-bold here. */
+.edu-entry .interactive-bullet-item::before {
+  font-weight: 500;
+}
+
+.edu-entry-tags {
   margin-top: var(--space-5);
 }
 
-.education-modules-section {
-  margin-top: var(--space-5);
+/* Its own column between the track and the entry, centred on the stage's
+   height so the pair reads as one control cluster. */
+.edu-nav-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  flex: 0 0 auto;
+}
+
+.edu-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--modal-close-idle-bg);
+  color: var(--card-icon-color);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+
+.edu-nav:hover:not(:disabled) {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.edu-nav:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  box-shadow: none;
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Narrow modals: the track's year labels are dropped so the left rail and the
+   nav column stop eating width the entry needs. The dots stay, so position in
+   the timeline is still legible. Container query, not viewport — this responds
+   to the modal's width (DESIGN_SYSTEM.md §8.2). */
+@container portfolio-modal (max-width: 560px) {
+  .edu-entry {
+    padding: var(--space-8);
+  }
+
+  .edu-track-year {
+    display: none;
+  }
 }
 
 .tag {

@@ -21,6 +21,20 @@ export const CONTENT_STAGGER = 0.08;
 export const SCRIM_DURATION = 0.22;
 export const COLLAPSE_DURATION = 0.3; // accordions, cert takeaway reveal
 
+export const flipTransition = { duration: FLIP_DURATION, ease: FLIP_EASE } as const;
+
+/**
+ * Once the opening flip has landed, height/top stop easing on their own and
+ * instead track the measured content exactly, frame by frame — a section
+ * that animates its own height (the education timeline) is already easing,
+ * and re-easing that a second time here made the modal trail its contents.
+ */
+export const flipLandedTransition = {
+  default: flipTransition,
+  height: { duration: 0 },
+  top: { duration: 0 },
+} as const;
+
 /* ─── Variants ───────────────────────────────────────────────────── */
 
 /** Grid tiles fading up on first paint. */
@@ -47,6 +61,37 @@ export const modalItemVariants: Variants = {
     y: 0,
     transition: { duration: 0.22, ease: EASE_EMPHASIZED },
   },
+};
+
+/** How long one education timeline step takes, shared by the entry slide and
+ *  the stage's height change so they land together. Matches `--dur-slow`. */
+export const EDUCATION_STEP_DURATION = 0.45;
+
+export const educationStepTransition = {
+  duration: EDUCATION_STEP_DURATION,
+  ease: EASE_STANDARD,
+} as const;
+
+/**
+ * Education entries sliding as a filmstrip: the outgoing entry is pushed out
+ * of frame in the direction of travel while the incoming one arrives from the
+ * opposite edge. `custom` carries the step direction: +1 moving forward
+ * through the timeline, -1 moving back.
+ *
+ * The vertical variant pushes along the y axis to match the timeline running
+ * down the left-hand side — stepping forward sends the outgoing entry up and
+ * brings the incoming one in from below. Offsets are percentages of the
+ * entry's own height, so the push always clears the frame however tall the
+ * entry is.
+ */
+export const educationEntryVariants: Variants = {
+  hidden: (direction: number) => ({ opacity: 0, y: direction >= 0 ? '100%' : '-100%' }),
+  visible: { opacity: 1, y: '0%', transition: educationStepTransition },
+  exit: (direction: number) => ({
+    opacity: 0,
+    y: direction >= 0 ? '-100%' : '100%',
+    transition: educationStepTransition,
+  }),
 };
 
 /** Project detail pane, re-running on every project switch. */
