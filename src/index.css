@@ -1379,6 +1379,11 @@ option {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  /* `fillsHeight` types get `padding: 0` inlined onto `.portfolio-modal-body`
+     (FlipCard.tsx) instead of the shared --space-10 every other modal gets,
+     so it's this element's job to supply it — 24px per both Figma frames'
+     literal (unbound) `p-[24px]`, not the usual 20px token. */
+  padding: var(--space-12);
   /* Projects is a design-language-v2 card (F25): IBM Plex Sans throughout,
      not the site-wide Apple Garamond. Set once here so every descendant —
      including .tag and .modal-row-title, which carry no family of their own —
