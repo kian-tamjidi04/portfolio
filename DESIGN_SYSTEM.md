@@ -409,17 +409,29 @@ project to the front of a deck.
 .htimeline-track     dots spread space-between over a 1px --border rail at top 7px
 .htimeline-dot       shares .vtimeline-track-dot's recipe (15px, --border, --accent when active)
 .deck-nav            shares .vtimeline-nav's recipe (36px pill, --modal-close-idle-bg)
-.project-deck-stack  position:relative; front card and ghosts are absolute inset:0
-.project-deck-ghost  translateY(--deck-depth × -18px) scale(1 − --deck-depth × 0.05)
+.project-deck-stack  position:relative, perspective:1000px; every card absolute inset:0
+.project-deck-ghost  --surface-subtle fill · shadow thinning with --deck-depth
 .project-deck-card   --cert-card-surface · --shadow-panel-elevated
                      padding var(--space-10) var(--space-9) · flat gap var(--space-6)
 ```
 
-The stack is deliberately a fixed footprint: the front card is out of flow, so dealing the next
-card cannot resize the stage. A height that moved mid-deal would fight the swipe it is carrying.
-`projects` keeps `fillsHeight` in `modalRect.ts` for the same reason — this is the one modal
-whose height is pinned rather than measured. Card body type follows the Certifications tiers
-(§9.8), not a fourth scale.
+Depth is a real `translateZ` (−90px per step) read through the stack's own `perspective`, with a
+−14px `y` lift so each card behind still peeks out and an opacity step washing it back — see
+`deckDepthState` in `motion.ts`. The foreshortening is therefore the browser's projection, not a
+scale chosen to look about right; the y/z/opacity steps themselves are designed values, not
+measured off Figma.
+
+Every card in the visible window is a real element keyed by its project id, not an anonymous
+depth slot, so a step retargets the whole stack's depths at once and the ghosts advance with the
+deal instead of sitting frozen behind it.
+
+The stack is deliberately a fixed footprint: the cards are out of flow, so dealing the next one
+cannot resize the stage. A height that moved mid-deal would fight the swipe it is carrying. This
+is why `projects` sets `fillsBody` in `modalRect.ts` — the body is an unpadded flex shell and the
+deck has no readable height of its own. The modal's height is still measured, not pinned: the
+index grid carries `data-modal-measure`, FlipCard hugs that (capped at three rows), and the deck
+holds whatever the index last measured. Card body type follows the Certifications tiers (§9.8),
+not a fourth scale.
 
 Both arrows **wrap** rather than disabling at the ends — a deck has no start or end. This is the
 one deliberate divergence from `.vtimeline-nav`, where a disabled arrow is precisely the signal

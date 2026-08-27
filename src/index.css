@@ -1370,10 +1370,17 @@ option {
 }
 
 /* ─── Projects: index grid + card deck ────────────────────── */
-/* Two views in one modal — the index grid, and the deck you land in when you
-   pick a project off it. Both fill the modal, whose height is pinned for this
-   type (`fillsHeight` in modalRect.ts), so neither switching view nor dealing
-   the next card ever resizes the modal underneath you. */
+/* Two views in one modal. The deck's cards are absolutely positioned so
+   dealing the next one can't resize the stage mid-swipe (.project-deck-stack
+   above) — which means the deck has no intrinsic height of its own and needs
+   this wrapper pinned to the modal's full height (`fillsHeight` in
+   modalRect.ts) to have anything to stretch into. The index grid has no such
+   need: it opts back out of that stretch below (.project-index) and hugs its
+   own content instead, capped at three rows (ProjectsSection). FlipCard's
+   computeHeight measures the grid directly for that reason, and simply
+   leaves the modal at its last-known height when the grid isn't mounted
+   (i.e. the deck is showing) — so switching views, or dealing through the
+   deck, never resizes the modal underneath you. */
 .projects-view {
   display: flex;
   flex-direction: column;
@@ -1402,7 +1409,29 @@ option {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-content: start;
   gap: var(--space-12);
-  overflow-y: auto;
+  /* Opts out of .projects-view > *'s flex:1 stretch (the deck, above, needs
+     that stretch to give its absolutely-positioned stack something to fill)
+     so the grid hugs its own content instead of always filling the modal —
+     FlipCard measures this element to size the modal, for exactly that reason.
+     Nothing here may constrain the grid to its parent's height — not
+     flex-shrink, not a percentage max-height. The modal's height is derived
+     from this box, so any rule sizing this box from the modal is circular,
+     and the flip resolves that circle at its smallest point: mid-flight the
+     parent is still tile-sized, the grid clamps to it, and the modal locks in
+     at whatever fraction of a row it measured there. It stays at its natural
+     three-row height instead, and the modal follows it. */
+  flex: 0 0 auto;
+  /* Own padding on top of .projects-view's 24px gutter, giving the cards'
+     --shadow-card (16px blur) room to render clear of the modal's edge. No
+     overflow of its own: the grid is sized to its content and the modal is
+     sized to the grid, so there is nothing here to scroll, and any overflow
+     value other than visible would clip the very shadows this padding is
+     making room for. */
+  padding: var(--space-8);
+  /* Capped at three rows — ProjectsSection sets max-height from the rendered
+     cards' own positions (row height is content-driven, and the column
+     count is itself responsive, see the container queries below), clearing
+     it entirely when the grid is three rows or shorter so it just hugs. */
 }
 
 .project-index-card {
@@ -1538,20 +1567,24 @@ option {
 
 /* Holds the deck's footprint steady. The front card is taken out of flow, so
    dealing the next one cannot change the stage's size — a height that moved
-   mid-deal would fight the swipe it is supposed to be carrying. */
+   mid-deal would fight the swipe it is supposed to be carrying. `perspective`
+   gives the stack its own 3D viewing context, separate from the modal flip's
+   (FlipCard.tsx uses `preserve-3d` further up the tree, but that's a finished,
+   flattened rotation by the time the deck is visible) — it's what turns the
+   `z` framer-motion sets on each card (`deckCardVariants`, motion.ts) into a
+   real size and position change instead of a flat, hand-tuned scale. */
 .project-deck-stack {
   position: relative;
   flex: 1;
   min-width: 0;
   align-self: stretch;
+  perspective: 1000px;
 }
 
 .project-deck-card,
 .project-deck-ghost {
   position: absolute;
   inset: 0;
-  background: var(--cert-card-surface);
-  box-shadow: var(--shadow-panel-elevated);
 }
 
 .project-deck-card {
@@ -1565,17 +1598,23 @@ option {
   /* The one thing that scrolls: a long project scrolls inside its card rather
      than resizing the deck around it. */
   overflow-y: auto;
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-panel-elevated);
 }
 
-/* Card edges peeking out from behind the front card, measured off Figma
-   168:88: against a 732x376 front card, the first back card renders 695.4x357.2
-   and the second 658.8x338.4 — a uniform 0.05 scale step — each centred and
-   lifted (-20.9px, then -36px from the front card's centre). `--deck-depth` is
-   set per ghost in ProjectDeck. */
+/* Ghosts recede behind the face-up card via a real `translateZ` (set inline
+   per depth by ProjectDeck; `.project-deck-stack`'s `perspective` above is
+   what projects that into a smaller, lifted silhouette) rather than a scale
+   chosen to look roughly right. Framer-motion owns that transform and the
+   opacity fade (`deckCardVariants`); this rule supplies what perspective
+   can't on its own — a duller, cooler surface than the warm near-white front
+   card, and a shadow that thins with depth instead of glowing at full
+   strength, so a ghost reads as further away rather than merely smaller.
+   `--deck-depth` is set per ghost in ProjectDeck (1 = the first one back, 2 =
+   the second) — this is a designed falloff, not a Figma measurement. */
 .project-deck-ghost {
-  transform: translateY(calc(var(--deck-depth) * -18px))
-    scale(calc(1 - var(--deck-depth) * 0.05));
-  opacity: calc(1 - var(--deck-depth) * 0.15);
+  background: var(--surface-subtle);
+  box-shadow: 0 0 calc(16px / var(--deck-depth)) rgba(97, 54, 19, 0.18);
 }
 
 /* Title/grade/body follow the Certifications card's three tiers

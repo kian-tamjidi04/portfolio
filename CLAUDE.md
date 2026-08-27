@@ -84,8 +84,9 @@ Content is fully separated from presentation:
   owns the two pieces of flip state. All rendering lives in `src/components/`.
 - **`src/motion.ts`** — the whole motion system: easings, durations, and the
   framer-motion `variants` objects. Don't inline transitions in components; add them here.
-  Direction-aware variants (`timelineEntryVariants`, `deckCardVariants`) read the step
-  direction off framer-motion's `custom` prop: `+1` forward, `-1` back.
+  `timelineEntryVariants` reads the step direction off framer-motion's `custom` prop
+  (`+1` forward, `-1` back); `deckCardVariants` carries each card's own depth there
+  instead, so it needs no direction at all.
 - **`src/index.css`** — all styling (~1300 lines), single light theme, fully tokenized
   (`--space-*`, `--radius-*`, `--text-*`, `--dur-*`, `--ease-*`). No CSS modules or
   utility framework beyond Bootstrap's stylesheet, imported in `main.tsx` *before*

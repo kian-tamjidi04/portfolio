@@ -103,36 +103,74 @@ export const deckStepTransition = {
   ease: EASE_STANDARD,
 } as const;
 
+/** What a card in the deck needs to animate itself: how many places back from
+ *  face-up it sits (0 = face-up). */
+export type DeckCardCustom = { depth: number };
+
 /**
- * The projects deck, stepped one card at a time. `custom` carries the step
- * direction: +1 dealing forward, -1 dealing back.
- *
- * Forward, the front card is swiped off to the right and the next card is
- * pushed forward out of the stack behind it. Back is the exact mirror — the
- * front card recedes into the stack while the card from the back of the deck
- * flies in from the right — which is what makes it read as an undo of forward
- * rather than as a second, different animation.
- *
- * The stack is behind and slightly above the front card, so "in the deck" is
- * a small negative y at a reduced scale; "off the deck" is a full-width
- * translate with a little rotation, the way a dealt card kicks as it leaves.
+ * Per-depth resting geometry for a card sitting `depth` places behind the
+ * face-up one (0 = face-up). `z` is a real push away from the viewer rather
+ * than a hand-tuned `scale` — `.project-deck-stack`'s `perspective: 1000px`
+ * (index.css) is what turns that into the size and edge-position change, so
+ * the foreshortening is the browser's own projection instead of a number
+ * chosen to look roughly right. `y` is a small lift on top of that: pure
+ * perspective shrinks every depth toward the same centre point as the
+ * face-up card and would hide each one completely behind it, so `y` is what
+ * actually leaves a sliver of the card behind peeking out above. Opacity
+ * fades on top of both as a cheap aerial-perspective cue (distant things
+ * wash out); index.css dulls the ghost's surface and shadow the same way.
  */
-const IN_DECK = { x: 0, y: -18, scale: 0.95, rotate: 0 } as const;
-const OFF_DECK = { x: '115%', y: 0, scale: 1, rotate: 6 } as const;
+const DECK_DEPTH_Y_STEP = -14;
+const DECK_DEPTH_Z_STEP = -90;
+const DECK_DEPTH_OPACITY_STEP = 0.18;
+
+function deckDepthState(depth: number) {
+  return {
+    x: 0,
+    y: depth * DECK_DEPTH_Y_STEP,
+    z: depth * DECK_DEPTH_Z_STEP,
+    rotate: 0,
+    opacity: Math.max(0, 1 - depth * DECK_DEPTH_OPACITY_STEP),
+  };
+}
+
+/** Off the deck entirely — the position a card is dealt to and from: full
+ *  width, no depth, with a little rotation for the kick of a card leaving. */
+const DECK_OFF_DECK = { x: '115%', y: 0, z: 0, rotate: 6 } as const;
+
+/**
+ * The projects deck, stepped one card at a time. Every card in the visible
+ * window — the face-up one plus the ghosts behind it — is a real, persistent
+ * element keyed by its project id (`ProjectDeck.tsx`), not an anonymous depth
+ * slot. Stepping doesn't swap one card's content for another's; it re-targets
+ * every element's `animate` to its new depth, so framer-motion tweens the
+ * whole stack advancing together, and the same continuous retarget ages a
+ * ghost into the face-up card.
+ *
+ * A card's own depth is the whole story, which is why `custom` carries only
+ * that and no step direction. The face-up card is the one that gets dealt, so
+ * depth 0 arrives and leaves off the deck to the right; every card behind it
+ * arrives and leaves one depth further in, surfacing out of the stack or
+ * sinking back into it. Stepping back is then the exact mirror of stepping
+ * forward for free — each card runs the same rule in reverse — and a jump
+ * that removes several cards at once animates each of them correctly, since
+ * every card reads its own depth rather than sharing one value describing
+ * a single step.
+ */
+function deckEdgeState(depth: number) {
+  return depth === 0
+    ? { ...DECK_OFF_DECK, opacity: 0 }
+    : { ...deckDepthState(depth + 1), opacity: 0 };
+}
 
 export const deckCardVariants: Variants = {
-  hidden: (direction: number) =>
-    direction >= 0 ? { ...IN_DECK, opacity: 0 } : { ...OFF_DECK, opacity: 0 },
-  visible: {
-    x: 0,
-    y: 0,
-    scale: 1,
-    rotate: 0,
-    opacity: 1,
+  hidden: (custom: DeckCardCustom) => deckEdgeState(custom.depth),
+  visible: (custom: DeckCardCustom) => ({
+    ...deckDepthState(custom.depth),
     transition: deckStepTransition,
-  },
-  exit: (direction: number) =>
-    direction >= 0
-      ? { ...OFF_DECK, opacity: 0, transition: deckStepTransition }
-      : { ...IN_DECK, opacity: 0, transition: deckStepTransition },
+  }),
+  exit: (custom: DeckCardCustom) => ({
+    ...deckEdgeState(custom.depth),
+    transition: deckStepTransition,
+  }),
 };

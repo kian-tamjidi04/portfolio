@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { deckCardVariants, modalItemVariants } from '../motion';
+import { deckCardVariants, modalItemVariants, type DeckCardCustom } from '../motion';
 
 /** One card in the deck: enough to label its dot on the track. */
 export interface DeckStop {
@@ -19,15 +19,18 @@ const VISIBLE_STACK_DEPTH = 2;
  * The projects deck: a back button and a horizontal track of dots above a
  * stack of cards, with one card face-up at a time and an arrow either side.
  *
- * Stepping forward swipes the front card off to the right and sends it to the
- * back of the deck, pushing the next card forward into its place; stepping
- * back mirrors that exactly (see `deckCardVariants`). A deck has no ends, so
- * both arrows wrap rather than disabling — unlike the vertical timeline, where
- * a disabled arrow is what tells you you're at the start or end.
+ * Every card visible in the stack — the face-up one and the ghosts behind it
+ * — is a real element keyed by its project id, not a painted backdrop. A step
+ * re-targets each one's `animate` to a new depth (see `deckCardVariants`), so
+ * stepping forward swipes the face-up card off to the right while every ghost
+ * advances one depth toward the front and a new one fades in at the back;
+ * stepping back mirrors that exactly. A deck has no ends, so both arrows wrap
+ * rather than disabling — unlike the vertical timeline, where a disabled
+ * arrow is what tells you you're at the start or end.
  *
- * The caller owns what a card looks like and passes it through `children`,
- * keyed by index — the same arrangement `VerticalTimeline` has with the
- * Education and Experience modals.
+ * The caller owns what the face-up card looks like and passes it through
+ * `children`, keyed by index — the same arrangement `VerticalTimeline` has
+ * with the Education and Experience modals.
  */
 export function ProjectDeck({
   stops,
@@ -49,10 +52,6 @@ export function ProjectDeck({
   children: (activeIndex: number) => ReactNode;
 }) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-  // Which way the last step went, so the outgoing card leaves the way the
-  // incoming one arrives from. Starts at 0 (first paint, no deal).
-  const [direction, setDirection] = useState(0);
-
   const total = stops.length;
 
   // The grid card that opened the deck has just unmounted, so pick focus up
@@ -62,15 +61,22 @@ export function ProjectDeck({
     backRef.current?.focus();
   }, []);
 
-  const goTo = (nextIndex: number, stepDirection: number) => {
-    if (nextIndex === activeIndex) return;
-    setDirection(stepDirection);
-    setActiveIndex(nextIndex);
-  };
-
   // Modulo both ways round — the deck loops, so the card after the last is the
   // first, and the card before the first is the one at the back.
-  const step = (delta: number) => goTo((activeIndex + delta + total) % total, delta);
+  const step = (delta: number) => setActiveIndex((current) => (current + delta + total) % total);
+
+  // How many ghosts fit behind the face-up card without repeating a project:
+  // a two-project deck shows one ghost, not VISIBLE_STACK_DEPTH's usual two.
+  const stackDepth = Math.min(VISIBLE_STACK_DEPTH, total - 1);
+
+  // The visible window: the face-up card (depth 0) plus every ghost behind
+  // it, each carrying the real project index it currently shows rather than
+  // an anonymous slot. Built back-to-front so depth 0 is last in the array
+  // and therefore last in the DOM, painting on top of its own ghosts.
+  const stackSlots = Array.from({ length: stackDepth + 1 }, (_, i) => {
+    const depth = stackDepth - i;
+    return { depth, projectIndex: (activeIndex + depth) % total };
+  });
 
   return (
     <div className="project-deck">
@@ -86,7 +92,7 @@ export function ProjectDeck({
               <button
                 type="button"
                 className={`htimeline-dot ${index === activeIndex ? 'is-active' : ''}`}
-                onClick={() => goTo(index, index > activeIndex ? 1 : -1)}
+                onClick={() => setActiveIndex(index)}
                 aria-current={index === activeIndex ? 'step' : undefined}
                 aria-label={stop.label}
               />
@@ -108,36 +114,46 @@ export function ProjectDeck({
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
 
-        {/* The live region has to be this stable wrapper, not the card itself —
-            the card remounts on every step, and a region that appears at the
-            same time as its content is not reliably announced. */}
+        {/* The live region has to be this stable wrapper, not any one card —
+            every card in the stack moves or remounts on a step, and a region
+            that appears at the same time as its own content is not reliably
+            announced. */}
         <div className="project-deck-stack" aria-live="polite">
-          {/* The rest of the deck, showing as card edges behind the front one.
-              Inert scenery: no content, no tab stop, hidden from the reader,
-              which already gets the deck's size and position from the track. */}
-          {Array.from({ length: Math.min(VISIBLE_STACK_DEPTH, total - 1) }, (_, depth) => (
-            <div
-              className="project-deck-ghost"
-              key={depth}
-              style={{ '--deck-depth': depth + 1 } as CSSProperties}
-              aria-hidden="true"
-            />
-          ))}
+          {/*
+            `mode="sync"` — the default, kept explicit here — rather than
+            `popLayout`: every card is already `position: absolute` in CSS, so
+            there's no sibling layout for popLayout to protect, and sync is
+            what lets the persisting, entering, and exiting cards all animate
+            together, which is what a shuffle needs. `initial={false}` skips
+            this animation for whatever's on screen at first mount, so opening
+            the deck from the index grid doesn't play a spurious deal.
 
-          {/* popLayout pulls the outgoing card out of flow so the two move
-              past each other instead of the stack laying them out in a row. */}
-          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-            <motion.article
-              className="project-deck-card"
-              key={activeIndex}
-              custom={direction}
-              variants={deckCardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              {children(activeIndex)}
-            </motion.article>
+            No `custom` on the AnimatePresence itself: React freezes an exiting
+            element's props at the render before it left, so anything describing
+            the *step* rather than the card would be stale by the time it's
+            read, and one value at this level would be applied to every card
+            leaving in the same step. Each card's own `custom` carries only its
+            depth, which is exactly the position it is leaving from — correct
+            frozen, and correct for however many cards a jump removes at once. */}
+          <AnimatePresence mode="sync" initial={false}>
+            {stackSlots.map(({ depth, projectIndex }) => (
+              <motion.article
+                className={depth === 0 ? 'project-deck-card' : 'project-deck-ghost'}
+                key={stops[projectIndex].id}
+                style={depth === 0 ? undefined : ({ '--deck-depth': depth } as CSSProperties)}
+                custom={{ depth } satisfies DeckCardCustom}
+                variants={deckCardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                aria-hidden={depth === 0 ? undefined : 'true'}
+              >
+                {/* Ghosts are inert scenery: no content, no tab stop, hidden
+                    from the reader, which already gets the deck's size and
+                    position from the track. */}
+                {depth === 0 ? children(projectIndex) : null}
+              </motion.article>
+            ))}
           </AnimatePresence>
         </div>
 
