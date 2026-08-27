@@ -223,7 +223,7 @@ side — one curve, one spelling, both layers. Near-miss durations that don't ex
 tokens above (`0.22s`, `0.25s`, `0.34s`, `0.35s`, `0.4s`, `0.42s`) stay literal rather than being
 snapped onto the nearest token and silently changing timing.
 
-The projects deck (`deckCardVariants`) steps at `TIMELINE_STEP_DURATION`, so it moves at the
+The projects deck (`deckCardResting`) steps at `TIMELINE_STEP_DURATION`, so it moves at the
 same pace as the education/experience timelines. Forward and back are exact mirrors — forward
 swipes the front card off to the right (`x: 115%`, `rotate: 6`) while the next is pushed forward
 out of the stack (`y: -18`, `scale: 0.95`); back plays the same two positions the other way
@@ -417,7 +417,7 @@ project to the front of a deck.
 
 Depth is a real `translateZ` (−90px per step) read through the stack's own `perspective`, with a
 −14px `y` lift so each card behind still peeks out and an opacity step washing it back — see
-`deckDepthState` in `motion.ts`. The foreshortening is therefore the browser's projection, not a
+`deckCardResting` in `motion.ts`. The foreshortening is therefore the browser's projection, not a
 scale chosen to look about right; the y/z/opacity steps themselves are designed values, not
 measured off Figma.
 

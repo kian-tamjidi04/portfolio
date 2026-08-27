@@ -103,10 +103,6 @@ export const deckStepTransition = {
   ease: EASE_STANDARD,
 } as const;
 
-/** What a card in the deck needs to animate itself: how many places back from
- *  face-up it sits (0 = face-up). */
-export type DeckCardCustom = { depth: number };
-
 /**
  * Per-depth resting geometry for a card sitting `depth` places behind the
  * face-up one (0 = face-up). `z` is a real push away from the viewer rather
@@ -124,53 +120,42 @@ const DECK_DEPTH_Y_STEP = -14;
 const DECK_DEPTH_Z_STEP = -90;
 const DECK_DEPTH_OPACITY_STEP = 0.18;
 
-function deckDepthState(depth: number) {
+/** Off the deck entirely — the position a card is dealt to and from: full
+ *  width, no depth, with a little rotation for the kick of a card leaving. */
+const DECK_OFF_DECK = { x: '115%', y: 0, z: 0, rotate: 6 } as const;
+
+/**
+ * Where a card rests at `depth`, and where it enters from and leaves to.
+ *
+ * These are plain targets rather than a `variants` set read through `custom`,
+ * which matters here: a card advancing up the stack keeps the same variant
+ * name and changes only its depth, so anything keyed on a variant label has
+ * to notice a prop that isn't part of the target to re-resolve. Handing
+ * framer-motion the values themselves means a depth change is a target change
+ * — the cards mounted when the deck opens animate on exactly the same terms
+ * as ones that arrive later, instead of holding their first resting state
+ * until they cycle out.
+ *
+ * A card's own depth is the whole story, so neither takes a step direction.
+ * The face-up card is the one that gets dealt, so depth 0 arrives and leaves
+ * off the deck to the right; every card behind it arrives and leaves one
+ * depth further in, surfacing out of the stack or sinking back into it.
+ * Stepping back is then the exact mirror of stepping forward for free, and a
+ * jump that removes several cards at once animates each of them correctly.
+ */
+export function deckCardResting(depth: number) {
   return {
     x: 0,
     y: depth * DECK_DEPTH_Y_STEP,
     z: depth * DECK_DEPTH_Z_STEP,
     rotate: 0,
     opacity: Math.max(0, 1 - depth * DECK_DEPTH_OPACITY_STEP),
+    transition: deckStepTransition,
   };
 }
 
-/** Off the deck entirely — the position a card is dealt to and from: full
- *  width, no depth, with a little rotation for the kick of a card leaving. */
-const DECK_OFF_DECK = { x: '115%', y: 0, z: 0, rotate: 6 } as const;
-
-/**
- * The projects deck, stepped one card at a time. Every card in the visible
- * window — the face-up one plus the ghosts behind it — is a real, persistent
- * element keyed by its project id (`ProjectDeck.tsx`), not an anonymous depth
- * slot. Stepping doesn't swap one card's content for another's; it re-targets
- * every element's `animate` to its new depth, so framer-motion tweens the
- * whole stack advancing together, and the same continuous retarget ages a
- * ghost into the face-up card.
- *
- * A card's own depth is the whole story, which is why `custom` carries only
- * that and no step direction. The face-up card is the one that gets dealt, so
- * depth 0 arrives and leaves off the deck to the right; every card behind it
- * arrives and leaves one depth further in, surfacing out of the stack or
- * sinking back into it. Stepping back is then the exact mirror of stepping
- * forward for free — each card runs the same rule in reverse — and a jump
- * that removes several cards at once animates each of them correctly, since
- * every card reads its own depth rather than sharing one value describing
- * a single step.
- */
-function deckEdgeState(depth: number) {
+export function deckCardEdge(depth: number) {
   return depth === 0
-    ? { ...DECK_OFF_DECK, opacity: 0 }
-    : { ...deckDepthState(depth + 1), opacity: 0 };
+    ? { ...DECK_OFF_DECK, opacity: 0, transition: deckStepTransition }
+    : { ...deckCardResting(depth + 1), opacity: 0, transition: deckStepTransition };
 }
-
-export const deckCardVariants: Variants = {
-  hidden: (custom: DeckCardCustom) => deckEdgeState(custom.depth),
-  visible: (custom: DeckCardCustom) => ({
-    ...deckDepthState(custom.depth),
-    transition: deckStepTransition,
-  }),
-  exit: (custom: DeckCardCustom) => ({
-    ...deckEdgeState(custom.depth),
-    transition: deckStepTransition,
-  }),
-};

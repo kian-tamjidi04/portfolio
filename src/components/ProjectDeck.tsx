@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { deckCardVariants, modalItemVariants, type DeckCardCustom } from '../motion';
+import { deckCardEdge, deckCardResting, modalItemVariants } from '../motion';
 
 /** One card in the deck: enough to label its dot on the track. */
 export interface DeckStop {
@@ -21,7 +21,7 @@ const VISIBLE_STACK_DEPTH = 2;
  *
  * Every card visible in the stack — the face-up one and the ghosts behind it
  * — is a real element keyed by its project id, not a painted backdrop. A step
- * re-targets each one's `animate` to a new depth (see `deckCardVariants`), so
+ * re-targets each one's `animate` to a new depth (see `deckCardResting`), so
  * stepping forward swipes the face-up card off to the right while every ghost
  * advances one depth toward the front and a new one fades in at the back;
  * stepping back mirrors that exactly. A deck has no ends, so both arrows wrap
@@ -128,24 +128,30 @@ export function ProjectDeck({
             this animation for whatever's on screen at first mount, so opening
             the deck from the index grid doesn't play a spurious deal.
 
-            No `custom` on the AnimatePresence itself: React freezes an exiting
-            element's props at the render before it left, so anything describing
-            the *step* rather than the card would be stale by the time it's
-            read, and one value at this level would be applied to every card
-            leaving in the same step. Each card's own `custom` carries only its
-            depth, which is exactly the position it is leaving from — correct
-            frozen, and correct for however many cards a jump removes at once. */}
+            No `custom` anywhere: React freezes an exiting element's props at
+            the render before it left, so anything describing the *step* rather
+            than the card would be stale by the time it's read, and a single
+            value on the AnimatePresence would be applied to every card leaving
+            in the same step. Each card animates from its own depth instead,
+            which is exactly the position it is leaving from — correct frozen,
+            and correct for however many cards a jump removes at once. */}
           <AnimatePresence mode="sync" initial={false}>
             {stackSlots.map(({ depth, projectIndex }) => (
               <motion.article
                 className={depth === 0 ? 'project-deck-card' : 'project-deck-ghost'}
                 key={stops[projectIndex].id}
-                style={depth === 0 ? undefined : ({ '--deck-depth': depth } as CSSProperties)}
-                custom={{ depth } satisfies DeckCardCustom}
-                variants={deckCardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+                // Paint order stated rather than left to DOM order, so a card
+                // on its way off the deck keeps the depth it left from while
+                // the stack reshuffles underneath it.
+                style={
+                  {
+                    zIndex: stackDepth - depth,
+                    ...(depth === 0 ? null : { '--deck-depth': depth }),
+                  } as CSSProperties
+                }
+                initial={deckCardEdge(depth)}
+                animate={deckCardResting(depth)}
+                exit={deckCardEdge(depth)}
                 aria-hidden={depth === 0 ? undefined : 'true'}
               >
                 {/* Ghosts are inert scenery: no content, no tab stop, hidden
