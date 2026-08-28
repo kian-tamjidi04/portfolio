@@ -222,11 +222,11 @@ export const portfolioCards: PortfolioCard[] = [
       {
         role: 'UX Designer and Creative Technologist',
         company: 'UBS',
-        dates: 'Jun 2026 - Present',
+        dates: 'Jun 2026 - Aug 2026',
         impact: [
-          'Designing production-ready components within the ampliFi and NEMO design systems in Figma.',
-          'Executing the design-to-production lifecycle by translating Figma components directly into optimised Astro and React code, ready to be used by components in ampliFi, the bank’s personalised, financial tech platform.',
-          'Creating custom agentic skills to validate UI component compliancy, reducing design QA bottlenecks and accelerating the design - to - development handoff.',
+          'Designed production-ready components within the ampliFi and NEMO design systems in Figma.',
+          'Developed high-fidelity, data-driven interacRve prototypes using AI-assisted workflows to bridge the gap between Figma designs and frontend implementaRons, improving stakeholder engagement and feedback during usability tesRng.',
+          'Created custom agentic skills to validate UI component compliancy, reducing design QA bottlenecks and accelerating the design - to - development handoff.',
         ],
         skills: [
           { name: 'Figma', primary: true },
@@ -240,7 +240,7 @@ export const portfolioCards: PortfolioCard[] = [
           { name: 'Critical Thinking' },
           { name: 'Creativity' },
         ],
-        isRecent: true,
+        isRecent: false,
         logo: './UBS.svg',
         groupSubtitle: 'GOTO Technology Placement Program',
         groupDates: 'Jun 2025 - Present',
