@@ -40,8 +40,15 @@ const FOCUSABLE_SELECTOR =
  * rendered content so the modal hugs short bodies instead of always filling
  * its maximum bounds.
  */
+/**
+ * A section marks the element carrying the height the modal should hug with
+ * this attribute, when its own body is laid out in a way generic measurement
+ * can't read. See computeHeight.
+ */
+const MEASURE_SELECTOR = '[data-modal-measure]';
+
 export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
-  const { fillsHeight } = getModalSizing(card.type);
+  const { fillsBody } = getModalSizing(card.type);
   const titleId = useId();
 
   const [modalRect, setModalRect] = useState(() => getModalRect(card.type));
@@ -58,10 +65,28 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   /** Shrink the modal to its content, unless this type always fills its bounds. */
   const computeHeight = useCallback(
     (rect: ModalRect) => {
-      if (fillsHeight) {
-        setModalHeight(rect.height);
+      // A section whose body can't be measured generically — because what it
+      // renders is taken out of flow — nominates the one element that does
+      // carry the height the modal should hug. Projects is the only such
+      // section today: its deck stacks absolutely-positioned cards, so only
+      // its *index* grid has a real height to read.
+      //
+      // Absent from the DOM means hold the current height rather than
+      // collapse to nothing, which is what keeps the deck's footprint steady
+      // at whatever the index last measured while you deal through it.
+      const measureEl = bodyRef.current?.querySelector<HTMLElement>(MEASURE_SELECTOR);
+      if (measureEl?.parentElement) {
+        const { paddingTop, paddingBottom } = window.getComputedStyle(measureEl.parentElement);
+        const headerHeight = headerRef.current?.offsetHeight ?? 0;
+        const contentHeight =
+          headerHeight +
+          (parseFloat(paddingTop) || 0) +
+          measureEl.offsetHeight +
+          (parseFloat(paddingBottom) || 0);
+        setModalHeight(Math.min(rect.height, contentHeight));
         return;
       }
+      if (fillsBody) return;
 
       const headerHeight = headerRef.current?.offsetHeight ?? 0;
       let bodyHeight = 0;
@@ -84,7 +109,7 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
       const contentHeight = headerHeight + bodyHeight;
       setModalHeight(Math.min(rect.height, contentHeight || rect.height));
     },
-    [fillsHeight],
+    [fillsBody],
   );
 
   const measureModal = useCallback(() => {
@@ -105,8 +130,8 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     return () => window.removeEventListener('resize', measureModal);
   }, [measureModal]);
 
-  // Re-measure when the content itself changes size (accordions, hovers, the
-  // education timeline stepping between entries).
+  // Re-measure when the content itself changes size (hovers, the education
+  // and experience timelines stepping between entries).
   //
   // The body element itself is `flex: 1` inside a fixed-height modal, so its
   // own border box never changes when its contents grow or shrink — observing
@@ -123,6 +148,12 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
     if (bodyRef.current) {
       observer.observe(bodyRef.current);
       for (const child of Array.from(bodyRef.current.children)) observer.observe(child);
+      // A nominated measure element can sit deeper than a direct child, under
+      // a wrapper that's pinned to the modal's height and so never itself
+      // resizes (as Projects' .projects-view is). Observed directly so its
+      // own size changes still reach computeHeight.
+      const measureEl = bodyRef.current.querySelector(MEASURE_SELECTOR);
+      if (measureEl) observer.observe(measureEl);
     }
     if (headerRef.current) observer.observe(headerRef.current);
     return () => observer.disconnect();
@@ -245,7 +276,7 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
                 exit="hidden"
                 variants={modalBodyVariants}
                 ref={bodyRef}
-                style={fillsHeight ? { flex: 1, padding: 0, minHeight: 0 } : undefined}
+                style={fillsBody ? { flex: 1, padding: 0, minHeight: 0 } : undefined}
               >
                 <ModalBody card={card} />
               </motion.div>

@@ -19,7 +19,6 @@ export const FLIP_EASE = EASE_STANDARD;
 export const CONTENT_REVEAL_DELAY = 0.24; // starts during card expansion
 export const CONTENT_STAGGER = 0.08;
 export const SCRIM_DURATION = 0.22;
-export const COLLAPSE_DURATION = 0.3; // accordions, cert takeaway reveal
 
 export const flipTransition = { duration: FLIP_DURATION, ease: FLIP_EASE } as const;
 
@@ -94,19 +93,69 @@ export const timelineEntryVariants: Variants = {
   }),
 };
 
-/** Project detail pane, re-running on every project switch. */
-export const projectContainerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+/* ─── Projects deck ──────────────────────────────────────────────── */
 
-export const projectItemVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_STANDARD } },
-};
+/** One deck step. Matched to the timeline so both modals move at one pace. */
+export const DECK_STEP_DURATION = TIMELINE_STEP_DURATION;
 
-/** Height-collapse used by the accordions and the cert hover reveal. */
-export const collapseTransition = {
-  duration: COLLAPSE_DURATION,
+export const deckStepTransition = {
+  duration: DECK_STEP_DURATION,
   ease: EASE_STANDARD,
 } as const;
+
+/**
+ * Per-depth resting geometry for a card sitting `depth` places behind the
+ * face-up one (0 = face-up). `z` is a real push away from the viewer rather
+ * than a hand-tuned `scale` — `.project-deck-stack`'s `perspective: 1000px`
+ * (index.css) is what turns that into the size and edge-position change, so
+ * the foreshortening is the browser's own projection instead of a number
+ * chosen to look roughly right. `y` is a small lift on top of that: pure
+ * perspective shrinks every depth toward the same centre point as the
+ * face-up card and would hide each one completely behind it, so `y` is what
+ * actually leaves a sliver of the card behind peeking out above. Opacity
+ * fades on top of both as a cheap aerial-perspective cue (distant things
+ * wash out); index.css dulls the ghost's surface and shadow the same way.
+ */
+const DECK_DEPTH_Y_STEP = -14;
+const DECK_DEPTH_Z_STEP = -90;
+const DECK_DEPTH_OPACITY_STEP = 0.18;
+
+/** Off the deck entirely — the position a card is dealt to and from: full
+ *  width, no depth, with a little rotation for the kick of a card leaving. */
+const DECK_OFF_DECK = { x: '115%', y: 0, z: 0, rotate: 6 } as const;
+
+/**
+ * Where a card rests at `depth`, and where it enters from and leaves to.
+ *
+ * These are plain targets rather than a `variants` set read through `custom`,
+ * which matters here: a card advancing up the stack keeps the same variant
+ * name and changes only its depth, so anything keyed on a variant label has
+ * to notice a prop that isn't part of the target to re-resolve. Handing
+ * framer-motion the values themselves means a depth change is a target change
+ * — the cards mounted when the deck opens animate on exactly the same terms
+ * as ones that arrive later, instead of holding their first resting state
+ * until they cycle out.
+ *
+ * A card's own depth is the whole story, so neither takes a step direction.
+ * The face-up card is the one that gets dealt, so depth 0 arrives and leaves
+ * off the deck to the right; every card behind it arrives and leaves one
+ * depth further in, surfacing out of the stack or sinking back into it.
+ * Stepping back is then the exact mirror of stepping forward for free, and a
+ * jump that removes several cards at once animates each of them correctly.
+ */
+export function deckCardResting(depth: number) {
+  return {
+    x: 0,
+    y: depth * DECK_DEPTH_Y_STEP,
+    z: depth * DECK_DEPTH_Z_STEP,
+    rotate: 0,
+    opacity: Math.max(0, 1 - depth * DECK_DEPTH_OPACITY_STEP),
+    transition: deckStepTransition,
+  };
+}
+
+export function deckCardEdge(depth: number) {
+  return depth === 0
+    ? { ...DECK_OFF_DECK, opacity: 0, transition: deckStepTransition }
+    : { ...deckCardResting(depth + 1), opacity: 0, transition: deckStepTransition };
+}

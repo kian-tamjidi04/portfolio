@@ -50,8 +50,6 @@
      effect distinct from --shadow-card (2px spread, 0.5 alpha vs 0/0.2). */
   --shadow-panel-elevated: 0 0 16px 2px rgba(97, 54, 19, 0.5);
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
-  --shadow-accordion-idle: 0 4px 14px rgba(0, 0, 0, 0.08);
-  --shadow-accordion-hover: 0 10px 24px rgba(0, 0, 0, 0.12);
 
   /* Pure ascending scale; semantic names alias into it below. */
   --text-xs: 0.95rem;
@@ -189,10 +187,10 @@ option {
 .portfolio-card:focus-visible,
 .cert-card:focus-visible,
 .modal-close-cta:focus-visible,
-.accordion-header:focus-visible,
-.project-sidebar-btn:focus-visible,
-.project-sidebar-close-mobile:focus-visible,
-.project-list-hamburger:focus-visible,
+.project-index-card:focus-visible,
+.project-deck-back:focus-visible,
+.htimeline-dot:focus-visible,
+.deck-nav:focus-visible,
 .project-action-btn:focus-visible {
   outline: 2px solid var(--card-icon-color);
   outline-offset: 2px;
@@ -1084,7 +1082,8 @@ option {
   gap: var(--space-5);
 }
 
-.vtimeline-track-dot {
+.vtimeline-track-dot,
+.htimeline-dot {
   width: 15px;
   height: 15px;
   padding: 0;
@@ -1095,15 +1094,18 @@ option {
   transition: background var(--dur-fast) var(--ease-standard);
 }
 
-.vtimeline-track-dot:hover {
+.vtimeline-track-dot:hover,
+.htimeline-dot:hover {
   background: var(--text-muted);
 }
 
-.vtimeline-track-dot.is-active {
+.vtimeline-track-dot.is-active,
+.htimeline-dot.is-active {
   background: var(--accent);
 }
 
-.vtimeline-track-dot.is-active:hover {
+.vtimeline-track-dot.is-active:hover,
+.htimeline-dot.is-active:hover {
   background: var(--accent);
 }
 
@@ -1190,7 +1192,8 @@ option {
   flex: 0 0 auto;
 }
 
-.vtimeline-nav {
+.vtimeline-nav,
+.deck-nav {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1205,7 +1208,8 @@ option {
   transition: box-shadow var(--dur-fast) var(--ease-standard);
 }
 
-.vtimeline-nav:hover:not(:disabled) {
+.vtimeline-nav:hover:not(:disabled),
+.deck-nav:hover {
   box-shadow: var(--card-shadow-hover);
 }
 
@@ -1228,6 +1232,39 @@ option {
 
   .vtimeline-track-year {
     display: none;
+  }
+}
+
+/* The index grid answers to the modal's width, not the viewport's — a
+   container query, like the about layout and skills grid
+   (DESIGN_SYSTEM.md 8.2). */
+@container portfolio-modal (max-width: 900px) {
+  .project-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container portfolio-modal (max-width: 560px) {
+  .project-index {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-deck-card {
+    padding: var(--space-8);
+  }
+
+  /* Too narrow to flank the deck: the arrows wrap onto their own row beneath
+     it so the card keeps the full width. The stack is out of flow, so it
+     needs a stated height once it is no longer being stretched by the row. */
+  .project-deck-stage {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .project-deck-stack {
+    order: -1;
+    flex: 1 0 100%;
+    min-height: 320px;
   }
 }
 
@@ -1332,228 +1369,301 @@ option {
   letter-spacing: 0.03em;
 }
 
-/* ─── Projects Split View ────────────────────────────────────────── */
-.projects-split-view {
-  display: flex;
-  gap: var(--space-12);
-  height: 100%;
-  min-height: 0;
-  padding: var(--space-6) var(--space-9) var(--space-9) var(--space-9);
-  position: relative;
-}
-
-.projects-sidebar {
-  flex: 0 0 300px;
+/* ─── Projects: index grid + card deck ────────────────────── */
+/* Two views in one modal. The deck's cards are absolutely positioned so
+   dealing the next one can't resize the stage mid-swipe (.project-deck-stack
+   above) — which means the deck has no intrinsic height of its own and needs
+   this wrapper pinned to the modal's full height (`fillsHeight` in
+   modalRect.ts) to have anything to stretch into. The index grid has no such
+   need: it opts back out of that stretch below (.project-index) and hugs its
+   own content instead, capped at three rows (ProjectsSection). FlipCard's
+   computeHeight measures the grid directly for that reason, and simply
+   leaves the modal at its last-known height when the grid isn't mounted
+   (i.e. the deck is showing) — so switching views, or dealing through the
+   deck, never resizes the modal underneath you. */
+.projects-view {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  height: 100%;
+  min-height: 0;
+  /* `fillsHeight` types get `padding: 0` inlined onto `.portfolio-modal-body`
+     (FlipCard.tsx) instead of the shared --space-10 every other modal gets,
+     so it's this element's job to supply it — 24px per both Figma frames'
+     literal (unbound) `p-[24px]`, not the usual 20px token. */
+  padding: var(--space-12);
+  /* Projects is a design-language-v2 card (F25): IBM Plex Sans throughout,
+     not the site-wide Apple Garamond. Set once here so every descendant —
+     including .tag and .modal-row-title, which carry no family of their own —
+     inherits it, exactly as .vtimeline does. */
+  font-family: var(--font-card);
+}
+
+.projects-view > * {
+  flex: 1;
   min-height: 0;
 }
 
-.projects-sidebar-list-container {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
+/* ── Index grid ───────────────────────────────────── */
+.project-index {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
+  gap: var(--space-12);
+  /* Opts out of .projects-view > *'s flex:1 stretch (the deck, above, needs
+     that stretch to give its absolutely-positioned stack something to fill)
+     so the grid hugs its own content instead of always filling the modal —
+     FlipCard measures this element to size the modal, for exactly that reason.
+     Nothing here may constrain the grid to its parent's height — not
+     flex-shrink, not a percentage max-height. The modal's height is derived
+     from this box, so any rule sizing this box from the modal is circular,
+     and the flip resolves that circle at its smallest point: mid-flight the
+     parent is still tile-sized, the grid clamps to it, and the modal locks in
+     at whatever fraction of a row it measured there. It stays at its natural
+     three-row height instead, and the modal follows it. */
+  flex: 0 0 auto;
+  /* Own padding on top of .projects-view's 24px gutter, giving the cards'
+     --shadow-card (16px blur) room to render clear of the modal's edge. No
+     overflow of its own: the grid is sized to its content and the modal is
+     sized to the grid, so there is nothing here to scroll, and any overflow
+     value other than visible would clip the very shadows this padding is
+     making room for. */
+  padding: var(--space-8);
+  /* Capped at three rows — ProjectsSection sets max-height from the rendered
+     cards' own positions (row height is content-driven, and the column
+     count is itself responsive, see the container queries below), clearing
+     it entirely when the grid is three rows or shorter so it just hugs. */
 }
 
-.projects-sidebar-list {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.project-index-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-}
-
-.project-sidebar-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-  border: 1px solid transparent;
-  border-radius: var(--radius-xl);
-  background: var(--surface-subtle);
-  padding: var(--space-7) var(--space-8);
-  cursor: pointer;
-  transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
-}
-
-.project-sidebar-btn:hover {
-  background: var(--accent-dim);
-}
-
-.project-sidebar-btn.active {
-  background: var(--text-primary);
-  border-color: var(--text-primary);
-}
-
-.project-sidebar-btn-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.project-sidebar-title {
-  margin: 0;
-  font-size: var(--text-md);
-  color: var(--text-primary);
-  transition: color var(--dur-fast) ease;
-}
-
-.project-sidebar-btn.active .project-sidebar-title {
-  color: var(--bg);
-}
-
-.project-sidebar-icon {
-  color: var(--text-muted);
-  font-size: var(--text-xs);
-  opacity: 1;
-  transform: translateX(0);
-  transition: color var(--dur-fast) ease, transform var(--dur-fast) ease;
-}
-
-.project-sidebar-btn.active .project-sidebar-icon {
-  color: var(--bg);
-}
-
-.projects-detail-pane {
-  flex: 1;
-  background: var(--surface-subtle);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-14);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  min-height: 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-
-.projects-detail-pane::-webkit-scrollbar {
-  width: 6px;
-}
-
-.projects-detail-pane::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.projects-detail-pane::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--radius-lg);
-}
-
-.projects-detail-pane::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-.projects-detail-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
-  flex: 1;
-}
-
-.project-detail-header-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: flex-start;
-}
-
-.project-detail-header {
-  font-size: var(--font-modal-title);
-  font-weight: 400;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.project-detail-grade {
-  color: var(--accent-text);
-  font-weight: 700;
-  font-size: var(--text-lg);
-  line-height: 1.2;
-  white-space: nowrap;
-  padding-bottom: var(--space-2);
-}
-
-.project-detail-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-  margin-top: var(--space-12);
-}
-
-.accordion-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.accordion-header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: transparent;
+  padding: var(--space-7);
   border: none;
-  border-radius: var(--radius-xl);
-  padding: var(--space-8) 20px;
-  cursor: pointer;
-  box-shadow: var(--shadow-accordion-idle);
-  transition: background var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  background: var(--pill-surface);
+  box-shadow: var(--shadow-card);
   text-align: left;
+  cursor: pointer;
+  transition: box-shadow var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard);
 }
 
-.accordion-header .modal-row-title {
-  font-size: var(--text-md);
-  color: var(--text-secondary);
-  transition: color 0.25s ease;
+.project-index-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
-.accordion-header:hover {
-  background: var(--accent-dim);
-  box-shadow: var(--shadow-accordion-hover);
+.project-index-title {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
 }
 
-.accordion-header.active {
-  background: var(--text-primary);
-  box-shadow: var(--shadow-accordion-idle);
-}
-
-.accordion-header.active:hover {
-  transform: none;
-  box-shadow: var(--shadow-accordion-idle);
-}
-
-.accordion-header.active .modal-row-title {
-  color: var(--bg);
-}
-
-.accordion-chevron {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  transition: transform var(--dur-base) var(--ease-standard), color 0.25s ease;
-}
-
-.accordion-chevron.rotated {
-  transform: rotate(180deg);
-}
-
-.accordion-header.active .accordion-chevron {
-  color: var(--bg);
-}
-
-.accordion-content {
+/* Clamped in CSS rather than cut in JS, so the grid shows the same prose the
+   deck card does — just less of it — instead of a second copy that can drift. */
+.project-index-blurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  padding: 0 var(--space-10);
+  margin: 0;
+  font-weight: 300;
+  /* 12px/16.8 per Figma 168:4316 — below the bottom of the type scale, the
+     same literal .vtimeline-track-year uses for the same reason. */
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
 }
 
-.project-detail-actions {
+/* ── Deck ───────────────────────────────────────── */
+.project-deck {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  height: 100%;
+  min-height: 0;
+}
+
+/* Back button and track share one row above the deck, so returning to the
+   index and moving through it read as the same tier of control. */
+.project-deck-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+/* Ghost treatment: an outline only, so it stays clearly subordinate to the
+   card it sits above and never competes with the modal's close button. */
+.project-deck-back {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.project-deck-back:hover {
+  border-color: var(--text-primary);
+  background: var(--surface-subtle);
+  color: var(--text-primary);
+}
+
+/* The horizontal counterpart of .vtimeline-track: same dots, same rail, laid
+   along the row instead of down the column. Every project gets a stop, so the
+   deck's size and your position in it are legible without dealing through it. */
+.htimeline-track {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail behind the dots, at the dots' vertical centre (15px dot). */
+.htimeline-track::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 7px;
+  height: 1px;
+  background: var(--border);
+}
+
+.htimeline-stop {
+  position: relative;
+  display: flex;
+}
+
+.project-deck-stage {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-12);
+  /* Headroom for the card edges behind the front card, which sit above it and
+     would otherwise be clipped by the modal body. */
+  padding-top: var(--space-12);
+}
+
+/* Holds the deck's footprint steady. The front card is taken out of flow, so
+   dealing the next one cannot change the stage's size — a height that moved
+   mid-deal would fight the swipe it is supposed to be carrying. `perspective`
+   gives the stack its own 3D viewing context, separate from the modal flip's
+   (FlipCard.tsx uses `preserve-3d` further up the tree, but that's a finished,
+   flattened rotation by the time the deck is visible) — it's what turns the
+   `z` framer-motion sets on each card (`deckCardVariants`, motion.ts) into a
+   real size and position change instead of a flat, hand-tuned scale. */
+.project-deck-stack {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  perspective: 1000px;
+}
+
+.project-deck-card,
+.project-deck-ghost {
+  position: absolute;
+  inset: 0;
+}
+
+.project-deck-card {
+  display: flex;
+  flex-direction: column;
+  /* A flat 12px rhythm between every child — Figma 168:4564 measures 12px
+     between all six blocks, with no tighter sub-grouping of a heading and the
+     list under it. */
+  gap: var(--space-6);
+  padding: var(--space-10) var(--space-9);
+  /* The one thing that scrolls: a long project scrolls inside its card rather
+     than resizing the deck around it. */
+  overflow-y: auto;
+  background: var(--cert-card-surface);
+  box-shadow: var(--shadow-panel-elevated);
+}
+
+/* Ghosts recede behind the face-up card via a real `translateZ` (set inline
+   per depth by ProjectDeck; `.project-deck-stack`'s `perspective` above is
+   what projects that into a smaller, lifted silhouette) rather than a scale
+   chosen to look roughly right. Framer-motion owns that transform and the
+   opacity fade (`deckCardVariants`); this rule supplies what perspective
+   can't on its own — a duller, cooler surface than the warm near-white front
+   card, and a shadow that thins with depth instead of glowing at full
+   strength, so a ghost reads as further away rather than merely smaller.
+   `--deck-depth` is set per ghost in ProjectDeck (1 = the first one back, 2 =
+   the second) — this is a designed falloff, not a Figma measurement. */
+.project-deck-ghost {
+  background: var(--surface-subtle);
+  box-shadow: 0 0 calc(16px / var(--deck-depth)) rgba(97, 54, 19, 0.18);
+}
+
+/* Title/grade/body follow the Certifications card's three tiers
+   (.cert-title/.cert-date/.cert-takeaway, DESIGN_SYSTEM.md §9.8), the same
+   hierarchy Education and Experience land on — not a fourth parallel scale. */
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.project-card-title {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--text-primary);
+}
+
+.project-card-grade {
+  flex: 0 0 auto;
+  margin: 0;
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--accent-text);
+  white-space: nowrap;
+}
+
+/* Reads as a smaller subtitle introducing the tags and the challenges —
+   borrows .cert-date's weight/size/colour, as the timeline entries do, rather
+   than the heavier treatment .modal-row-title carries elsewhere. */
+.project-deck-card .modal-row-title {
+  font-weight: 300;
+  font-size: var(--font-card-label);
+  line-height: var(--leading-normal);
+  color: var(--text-muted);
+}
+
+.project-deck-card .interactive-bullet-list {
+  margin: 0;
+}
+
+.project-card-actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-8);
   margin-top: auto;
-  padding-top: var(--space-12);
 }
 
 .project-action-btn {
@@ -1608,11 +1718,6 @@ option {
   background: var(--text-primary);
   color: var(--bg);
   transform: none;
-}
-
-.project-sidebar-close-mobile,
-.project-list-hamburger {
-  display: none;
 }
 
 /* ─── Reduced motion ─────────────────────────────────────────────── */
@@ -1695,103 +1800,6 @@ option {
     padding-right: 0;
   }
 
-  .projects-split-view {
-    flex-direction: column;
-    padding: 0;
-  }
-
-  .projects-sidebar {
-    display: none;
-  }
-
-  .projects-sidebar.sidebar-open,
-  .sidebar-open .projects-sidebar {
-    display: flex;
-    position: absolute;
-    inset: 0;
-    z-index: 50;
-    background: var(--surface);
-    padding: var(--space-12);
-    flex: 1;
-    max-height: none;
-    border-radius: var(--radius-2xl);
-  }
-
-  .projects-sidebar.sidebar-open .projects-sidebar-list-container,
-  .sidebar-open .projects-sidebar .projects-sidebar-list-container {
-    margin-top: 48px;
-    overflow-y: auto;
-  }
-
-  .projects-sidebar.sidebar-open .projects-sidebar-list,
-  .sidebar-open .projects-sidebar .projects-sidebar-list {
-    position: relative;
-    height: auto;
-  }
-
-  /* Self-contained: this used to inherit the shared `.modal-close-cta` look,
-     which is now an icon-only button. */
-  .project-sidebar-close-mobile {
-    position: absolute;
-    top: var(--space-8);
-    right: var(--space-8);
-    z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: var(--space-4) var(--space-7);
-    background: var(--surface-subtle);
-    border: none;
-    border-radius: var(--radius-sm);
-    color: var(--text-secondary);
-    font-weight: 400;
-    font-size: var(--text-sm);
-    cursor: pointer;
-    transition: background var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
-  }
-
-  .project-sidebar-close-mobile-text {
-    letter-spacing: 0.02em;
-  }
-
-  .project-sidebar-close-mobile:hover {
-    background: var(--accent-dim);
-    color: var(--text-primary);
-  }
-
-  .project-sidebar-close-mobile:active {
-    transform: scale(0.96);
-  }
-
-  .project-list-hamburger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-5);
-    background: var(--text-primary);
-    border: none;
-    border-radius: var(--radius-xl);
-    padding: var(--space-5) var(--space-9);
-    color: var(--bg);
-    font-weight: 700;
-    font-size: var(--text-xs);
-    cursor: pointer;
-    margin-bottom: var(--space-8);
-    width: fit-content;
-    transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
-  }
-
-  .project-list-hamburger:hover {
-    background: var(--accent-dim);
-    color: var(--text-primary);
-  }
-
-  .projects-detail-pane {
-    padding: var(--space-12);
-    border-radius: var(--radius-2xl);
-    flex: 1;
-    margin: var(--space-5);
-  }
 }
 
 /* ─── Responsive: mobile (≤ 560px) ───────────────────────────────── */
@@ -1827,10 +1835,6 @@ option {
 
   .place-projects {
     grid-column: 1 / -1;
-  }
-
-  .projects-detail-pane {
-    padding: var(--space-12);
   }
 
   .card-hero {

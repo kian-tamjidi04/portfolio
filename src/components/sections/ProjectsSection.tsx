@@ -1,19 +1,12 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faArrowUpRightFromSquare,
-  faChevronRight,
-  faListUl,
-} from '@fortawesome/free-solid-svg-icons';
-import { faCircleXmark as faRegularCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import type { ExternalLink, ProjectsCard } from '../../content';
-import { projectContainerVariants, projectItemVariants } from '../../motion';
-import { AccordionSection } from '../AccordionSection';
+import { modalBodyVariants, modalItemVariants } from '../../motion';
 import { InteractiveList } from '../InteractiveList';
+import { ProjectDeck } from '../ProjectDeck';
 import { TagList } from '../TagList';
-
-type AccordionId = 'tech' | 'challenges';
 
 const CHALLENGES_PLACEHOLDER = ['Information coming soon...'];
 
@@ -23,136 +16,196 @@ function isSourceLink(link: ExternalLink) {
   return label.includes('github') || label.includes('source');
 }
 
+/**
+ * Two views in one modal. It opens on the index — every project as a card in a
+ * grid — and picking one deals that project to the front of a deck you can
+ * step through with the arrows or the track above it (see `ProjectDeck`).
+ *
+ * The front card follows the Certifications/Education type hierarchy via the
+ * shared `.modal-row-title` and `.tag` recipes, and shows its technologies and
+ * challenges outright. Both used to sit behind accordions, which hid the two
+ * things that actually distinguish one project from another behind a click.
+ */
 export function ProjectsSection({ card }: { card: ProjectsCard }) {
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-  const [activeAccordion, setActiveAccordion] = useState<AccordionId | null>('tech');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // The grid card the deck was opened from, so closing the deck puts focus
+  // back where it left rather than dropping it on the body — the modal is a
+  // focus trap, and a lost focus there strands the keyboard at its start.
+  const returnFocusIndex = useRef<number | null>(null);
+  const indexRef = useRef<HTMLDivElement>(null);
 
-  const activeProject = card.items.find((item) => item.id === selectedProjectId) || card.items[0];
+  useEffect(() => {
+    if (openIndex !== null || returnFocusIndex.current === null) return;
+    const cards = indexRef.current?.querySelectorAll<HTMLButtonElement>(
+      '.project-index-card',
+    );
+    cards?.[returnFocusIndex.current]?.focus();
+    returnFocusIndex.current = null;
+  }, [openIndex]);
 
-  const toggleAccordion = (id: AccordionId) =>
-    setActiveAccordion((current) => (current === id ? null : id));
+  const stops = card.items.map((item) => ({ id: item.id, label: item.title }));
+
+  // Caps the index grid at three rows, scrolling any more (FlipCard's
+  // computeHeight then measures the grid's own — capped — height directly,
+  // so the modal hugs 1-3 rows exactly and only grows a scrollbar past
+  // that). Row height is content-driven (a title can wrap to a second line)
+  // and the column count is itself responsive (the @container queries on
+  // .project-index below), so this is measured off the actual rendered
+  // cards rather than assumed uniform or hardcoded per breakpoint. Below
+  // three total rows it clears the cap entirely so the grid just hugs.
+  useLayoutEffect(() => {
+    const grid = indexRef.current;
+    if (!grid) return undefined;
+
+    const applyRowCap = () => {
+      const cards = Array.from(grid.querySelectorAll<HTMLElement>('.project-index-card'));
+      if (cards.length === 0) return;
+
+      const columns =
+        getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+      const rowCount = Math.ceil(cards.length / columns);
+      if (rowCount <= 3) {
+        grid.style.maxHeight = '';
+        return;
+      }
+
+      const lastVisibleCard = cards[3 * columns - 1];
+      const gridTop = grid.getBoundingClientRect().top;
+      const paddingBottom = parseFloat(getComputedStyle(grid).paddingBottom) || 0;
+      // Kept under the CSS `max-height: 100%` safety valve as well, so a
+      // viewport too short for three rows still scrolls rather than overflowing.
+      grid.style.maxHeight = `min(${
+        lastVisibleCard.getBoundingClientRect().bottom - gridTop + paddingBottom
+      }px, 100%)`;
+    };
+
+    applyRowCap();
+
+    // Observe the wrapper, not the grid: the cap is a write to the grid's own
+    // height, so watching the grid would have it retrigger itself. The wrapper
+    // is pinned to the modal's height and only ever changes width, which is
+    // exactly the change the cap needs to be recomputed for.
+    const wrapper = grid.parentElement;
+    if (!wrapper) return undefined;
+    const observer = new ResizeObserver(applyRowCap);
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, [openIndex]);
 
   return (
-    <div className={`projects-split-view ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      <div className="projects-sidebar">
-        <div className="projects-sidebar-list-container">
-          <div className="projects-sidebar-list">
-            {card.items.map((item) => (
-              <button
-                className={`project-sidebar-btn ${activeProject?.id === item.id ? 'active' : ''}`}
+    <div className="projects-view">
+      <AnimatePresence mode="wait" initial={false}>
+        {openIndex === null ? (
+          <motion.div
+            className="project-index"
+            key="index"
+            ref={indexRef}
+            // Nominates this grid as the element FlipCard measures the modal's
+            // height from — the deck that replaces it has no readable height
+            // of its own (see computeHeight, FlipCard.tsx).
+            data-modal-measure
+            variants={modalBodyVariants}
+            initial="hidden"
+            exit="hidden"
+          >
+            {card.items.map((item, index) => (
+              <motion.button
+                className="project-index-card"
                 key={item.id}
-                onClick={() => {
-                  setSelectedProjectId(item.id);
-                  setIsSidebarOpen(false);
-                }}
+                variants={modalItemVariants}
+                onClick={() => setOpenIndex(index)}
                 type="button"
               >
-                <div className="project-sidebar-btn-content">
-                  <h3 className="project-sidebar-title">{item.title}</h3>
-                </div>
-                <FontAwesomeIcon icon={faChevronRight} className="project-sidebar-icon" />
-              </button>
+                <h3 className="project-index-title">{item.title}</h3>
+                {/* The first summary bullet doubles as the card's blurb,
+                    clamped in CSS rather than cut here, so the grid stays a
+                    view of the same content instead of a second copy of it. */}
+                <p className="project-index-blurb">{item.summary[0]}</p>
+              </motion.button>
             ))}
-          </div>
-        </div>
-
-        {/* Mobile-only: dismiss the overlaid project list */}
-        <button
-          className="project-sidebar-close-mobile"
-          onClick={() => setIsSidebarOpen(false)}
-          aria-label="Close project list"
-          type="button"
-        >
-          <span className="project-sidebar-close-mobile-text">Close</span>
-          <FontAwesomeIcon icon={faRegularCircleXmark} />
-        </button>
-      </div>
-
-      <div className="projects-detail-pane">
-        <button
-          className="project-list-hamburger"
-          onClick={() => setIsSidebarOpen(true)}
-          aria-expanded={isSidebarOpen}
-          type="button"
-        >
-          <FontAwesomeIcon icon={faListUl} />
-          <span>Project List</span>
-        </button>
-        {activeProject && (
+          </motion.div>
+        ) : (
           <motion.div
-            key={activeProject.id}
+            key="deck"
+            variants={modalBodyVariants}
             initial="hidden"
-            animate="visible"
-            variants={projectContainerVariants}
-            className="projects-detail-content"
+            exit="hidden"
           >
-            <motion.div variants={projectItemVariants} className="project-detail-header-group">
-              <h2 className="project-detail-header">{activeProject.title}</h2>
-              {activeProject.grade && (
-                <div className="project-detail-grade">Grade Achieved: {activeProject.grade}</div>
-              )}
-            </motion.div>
-            <motion.div variants={projectItemVariants}>
-              <InteractiveList items={activeProject.summary} />
-            </motion.div>
+            <ProjectDeck
+              stops={stops}
+              initialIndex={openIndex}
+              backLabel="All projects"
+              prevLabel="Previous project"
+              nextLabel="Next project"
+              onBack={() => {
+                returnFocusIndex.current = openIndex;
+                setOpenIndex(null);
+              }}
+            >
+              {(activeIndex) => {
+                const project = card.items[activeIndex];
+                return (
+                  <>
+                    <div className="project-card-header">
+                      <h3 className="project-card-title">{project.title}</h3>
+                      {project.grade && (
+                        <p className="project-card-grade">
+                          Grade Achieved: {project.grade}
+                        </p>
+                      )}
+                    </div>
 
-            <motion.div variants={projectItemVariants} className="project-detail-accordion">
-              <AccordionSection
-                title="Technologies and Skills"
-                isOpen={activeAccordion === 'tech'}
-                onToggle={() => toggleAccordion('tech')}
-              >
-                <TagList
-                  items={activeProject.stack}
-                  className="d-flex flex-wrap gap-2 pt-3 pb-1"
-                />
-              </AccordionSection>
+                    <InteractiveList
+                      items={project.summary}
+                      className="interactive-bullet-list--plain"
+                    />
 
-              <AccordionSection
-                title="Challenges I faced and how I overcame them"
-                isOpen={activeAccordion === 'challenges'}
-                onToggle={() => toggleAccordion('challenges')}
-              >
-                <div className="pt-2">
-                  <InteractiveList
-                    items={activeProject.challenges ?? CHALLENGES_PLACEHOLDER}
-                  />
-                </div>
-              </AccordionSection>
-            </motion.div>
+                    <div className="modal-row-title">Technologies and Skills</div>
+                    <TagList items={project.stack} className="d-flex flex-wrap gap-2" />
 
-            <motion.div variants={projectItemVariants} className="project-detail-actions">
-              {activeProject.links?.map((link) => (
-                <a
-                  href={link.href}
-                  key={link.label}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`project-action-btn ${
-                    isSourceLink(link)
-                      ? 'project-action-btn-primary'
-                      : 'project-action-btn-secondary'
-                  }`}
-                >
-                  {isSourceLink(link) ? (
-                    <img src="./github.svg" alt="" className="project-action-icon-svg" />
-                  ) : (
-                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                  )}
-                  {link.label}
-                </a>
-              ))}
-              {activeProject.figmaComingSoon && (
-                <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
-                  <img src="./figma.svg" alt="" className="project-action-icon-svg" />
-                  Figma coming soon
-                </div>
-              )}
-            </motion.div>
+                    <div className="modal-row-title">Challenges Faced</div>
+                    <InteractiveList
+                      items={project.challenges ?? CHALLENGES_PLACEHOLDER}
+                      className="interactive-bullet-list--plain"
+                    />
+
+                    {(project.links?.length || project.figmaComingSoon) && (
+                      <div className="project-card-actions">
+                        {project.links?.map((link) => (
+                          <a
+                            href={link.href}
+                            key={link.label}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`project-action-btn ${
+                              isSourceLink(link)
+                                ? 'project-action-btn-primary'
+                                : 'project-action-btn-secondary'
+                            }`}
+                          >
+                            {isSourceLink(link) ? (
+                              <img src="./github.svg" alt="" className="project-action-icon-svg" />
+                            ) : (
+                              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                            )}
+                            {link.label}
+                          </a>
+                        ))}
+                        {project.figmaComingSoon && (
+                          <div className="project-action-btn project-action-btn-primary project-action-btn-coming-soon">
+                            <img src="./figma.svg" alt="" className="project-action-icon-svg" />
+                            Figma coming soon
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                );
+              }}
+            </ProjectDeck>
           </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
