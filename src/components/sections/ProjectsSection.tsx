@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -32,49 +32,53 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
   // back where it left rather than dropping it on the body — the modal is a
   // focus trap, and a lost focus there strands the keyboard at its start.
   const returnFocusIndex = useRef<number | null>(null);
-  const indexRef = useRef<HTMLDivElement>(null);
+  const indexRef = useRef<HTMLDivElement | null>(null);
+  const rowCapCleanupRef = useRef<(() => void) | null>(null);
 
-  useEffect(() => {
-    if (openIndex !== null || returnFocusIndex.current === null) return;
-    const cards = indexRef.current?.querySelectorAll<HTMLButtonElement>(
-      '.project-index-card',
-    );
-    cards?.[returnFocusIndex.current]?.focus();
-    returnFocusIndex.current = null;
-  }, [openIndex]);
+  // A callback ref, not a plain ref read from a `[openIndex]` effect: the
+  // index grid and the deck share one AnimatePresence in `mode="wait"`, so
+  // the grid doesn't remount until the deck's exit animation finishes on a
+  // later frame — an effect keyed on `openIndex` fires before that and reads
+  // a stale/null ref. A callback ref fires exactly when the node itself
+  // mounts, whichever frame that lands on.
+  const setIndexRef = useCallback((node: HTMLDivElement | null) => {
+    indexRef.current = node;
+    rowCapCleanupRef.current?.();
+    rowCapCleanupRef.current = null;
+    if (!node) return;
 
-  const stops = card.items.map((item) => ({ id: item.id, label: item.title }));
+    if (returnFocusIndex.current !== null) {
+      const cards = node.querySelectorAll<HTMLButtonElement>('.project-index-card');
+      cards[returnFocusIndex.current]?.focus();
+      returnFocusIndex.current = null;
+    }
 
-  // Caps the index grid at three rows, scrolling any more (FlipCard's
-  // computeHeight then measures the grid's own — capped — height directly,
-  // so the modal hugs 1-3 rows exactly and only grows a scrollbar past
-  // that). Row height is content-driven (a title can wrap to a second line)
-  // and the column count is itself responsive (the @container queries on
-  // .project-index below), so this is measured off the actual rendered
-  // cards rather than assumed uniform or hardcoded per breakpoint. Below
-  // three total rows it clears the cap entirely so the grid just hugs.
-  useLayoutEffect(() => {
-    const grid = indexRef.current;
-    if (!grid) return undefined;
-
+    // Caps the index grid at three rows, scrolling any more (FlipCard's
+    // computeHeight then measures the grid's own — capped — height directly,
+    // so the modal hugs 1-3 rows exactly and only grows a scrollbar past
+    // that). Row height is content-driven (a title can wrap to a second line)
+    // and the column count is itself responsive (the @container queries on
+    // .project-index below), so this is measured off the actual rendered
+    // cards rather than assumed uniform or hardcoded per breakpoint. Below
+    // three total rows it clears the cap entirely so the grid just hugs.
     const applyRowCap = () => {
-      const cards = Array.from(grid.querySelectorAll<HTMLElement>('.project-index-card'));
+      const cards = Array.from(node.querySelectorAll<HTMLElement>('.project-index-card'));
       if (cards.length === 0) return;
 
       const columns =
-        getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+        getComputedStyle(node).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
       const rowCount = Math.ceil(cards.length / columns);
       if (rowCount <= 3) {
-        grid.style.maxHeight = '';
+        node.style.maxHeight = '';
         return;
       }
 
       const lastVisibleCard = cards[3 * columns - 1];
-      const gridTop = grid.getBoundingClientRect().top;
-      const paddingBottom = parseFloat(getComputedStyle(grid).paddingBottom) || 0;
+      const gridTop = node.getBoundingClientRect().top;
+      const paddingBottom = parseFloat(getComputedStyle(node).paddingBottom) || 0;
       // Kept under the CSS `max-height: 100%` safety valve as well, so a
       // viewport too short for three rows still scrolls rather than overflowing.
-      grid.style.maxHeight = `min(${
+      node.style.maxHeight = `min(${
         lastVisibleCard.getBoundingClientRect().bottom - gridTop + paddingBottom
       }px, 100%)`;
     };
@@ -85,12 +89,14 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
     // height, so watching the grid would have it retrigger itself. The wrapper
     // is pinned to the modal's height and only ever changes width, which is
     // exactly the change the cap needs to be recomputed for.
-    const wrapper = grid.parentElement;
-    if (!wrapper) return undefined;
+    const wrapper = node.parentElement;
+    if (!wrapper) return;
     const observer = new ResizeObserver(applyRowCap);
     observer.observe(wrapper);
-    return () => observer.disconnect();
-  }, [openIndex]);
+    rowCapCleanupRef.current = () => observer.disconnect();
+  }, []);
+
+  const stops = card.items.map((item) => ({ id: item.id, label: item.title }));
 
   return (
     <div className="projects-view">
@@ -99,7 +105,7 @@ export function ProjectsSection({ card }: { card: ProjectsCard }) {
           <motion.div
             className="project-index"
             key="index"
-            ref={indexRef}
+            ref={setIndexRef}
             // Nominates this grid as the element FlipCard measures the modal's
             // height from — the deck that replaces it has no readable height
             // of its own (see computeHeight, FlipCard.tsx).
