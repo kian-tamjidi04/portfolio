@@ -101,29 +101,8 @@ Content is fully separated from presentation:
 
 ### Component layout
 
-```
-src/components/
-  CardInner.tsx          front face of a tile — shared by grid and flip card
-  FlipCard.tsx           the flying/rotating wrapper + modal chrome (dialog semantics,
-                         focus trap, focus restore)
-  ModalBody.tsx          switch on card.type → one section component
-  DotListSection.tsx     \  shared building blocks used by several sections
-  InteractiveList.tsx     | renders a string[] as bullets — no runtime splitting
-  TagList.tsx            /
-  ProjectDeck.tsx        the Projects deck: back button, horizontal dot track, wrapping
-                         nav arrows, and a fixed-footprint stack that deals one card at a
-                         time; the Projects modal supplies the card body via a render prop
-  VerticalTimeline.tsx   track + stepped entry + nav column, one entry on screen at
-                         a time; shared by the Education and Experience modals, which
-                         supply their own entry body via a render prop
-  sections/              one file per card type (About, Certifications, Education,
-                         Experience, Projects, Skills, Social, Vision)
-src/lib/modalRect.ts             per-type modal sizing/centring
-src/lib/groupExperienceRoles.ts  collapses consecutive roles at one company —
-                                 unused since Experience moved to VerticalTimeline
-src/lib/tileAnalytics.ts         GA4 labels per tile
-src/utils/analytics.ts           trackEvent() wrapper (no-ops when gtag is blocked)
-```
+`src/lib/groupExperienceRoles.ts` collapses consecutive roles at one company — unused
+since Experience moved to `VerticalTimeline`.
 
 Adding a card type means: extend `CardType` and the `PortfolioCard` union in
 `content.ts`, add a `sections/` component, and handle it in `ModalBody`. That switch is
