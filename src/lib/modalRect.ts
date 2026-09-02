@@ -35,7 +35,7 @@ const MODAL_SIZING: Partial<Record<CardType, ModalSizing>> = {
   // (DESIGN_SYSTEM.md F20). maxHeight is the ceiling, as it is for every
   // other type; the height Projects actually renders at comes from the index
   // grid's own (three-row-capped) content, via `data-modal-measure`.
-  projects: { maxWidth: 1023, maxHeight: 900, fillsBody: true },
+  projects: { maxWidth: 1023, maxHeight: 1350, fillsBody: true },
   about: { maxWidth: 1300, maxHeight: Infinity, fillsBody: false },
 };
 

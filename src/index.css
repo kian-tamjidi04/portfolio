@@ -1456,7 +1456,7 @@ option {
 .project-index-title {
   margin: 0;
   font-weight: 400;
-  font-size: var(--text-xs);
+  font-size: var(--text-md);
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
@@ -1464,11 +1464,6 @@ option {
 /* Clamped in CSS rather than cut in JS, so the grid shows the same prose the
    deck card does — just less of it — instead of a second copy that can drift. */
 .project-index-blurb {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
   margin: 0;
   font-weight: 300;
   /* 12px/16.8 per Figma 168:4316 — below the bottom of the type scale, the
