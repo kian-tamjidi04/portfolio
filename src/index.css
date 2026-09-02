@@ -1558,6 +1558,15 @@ option {
   /* Headroom for the card edges behind the front card, which sit above it and
      would otherwise be clipped by the modal body. */
   padding-top: var(--space-12);
+  /* The deck's frame. The dealt slot rests off the deck at `translateX(115%)
+     rotate(6deg)` (.project-deck-dealt) and a rotated card's bounding box is
+     taller than the card, so without this it hangs below the stage and gives
+     the modal body real scrollable overflow — a scrollbar on a modal that is
+     sized to never need one. `clip` rather than `hidden` because nothing in
+     here should be scrollable even programmatically. Clipping is at the
+     padding box, so the padding-top above still buys the ghosts their
+     headroom. */
+  overflow: clip;
 }
 
 /* Holds the deck's footprint steady. The front card is taken out of flow, so
