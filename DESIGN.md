@@ -17,6 +17,8 @@ colors:
   pill-text: "#000000"
   card-icon-color: "#613613"
   modal-close-idle-bg: "#e2e2e2"
+  social-github: "#000000"
+  social-linkedin: "#0a66c2"
 typography:
   display:
     fontFamily: "IBM Plex Sans, sans-serif"
@@ -45,6 +47,11 @@ typography:
     fontSize: "14px"
     fontWeight: 300
     lineHeight: 0.75
+  caption:
+    fontFamily: "IBM Plex Sans, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 400
+    lineHeight: 1.4
 rounded:
   xs: "4px"
   sm: "6px"
@@ -168,6 +175,11 @@ ember accent and the warm-brown shadow system feel deliberate rather than incide
 - **Saddle Brown** (`#613613`): certification icon color and the warm hue the whole
   shadow system is keyed off.
 - **Idle Grey** (`#e2e2e2`): the modal close CTA's idle fill.
+- **GitHub Black** (`#000000`) / **LinkedIn Blue** (`#0a66c2`): the one sanctioned
+  exception to the single-accent rule — each hero social pill keeps its own
+  platform brand color for its glow (GitHub, LinkedIn; the email pill reuses
+  Saddle Brown instead of a fourth brand color) rather than the shared warm
+  shadow, because brand recognition outranks the one-accent rule here.
 
 ### Named Rules
 **The Inversion Rule.** Active/primary states fill with `--text-primary` and set their
@@ -200,6 +212,9 @@ migration unchanged, just re-keyed to Plex's 300/400/500 weights instead of Gara
   bullets, cert takeaways.
 - **Label** (300→500 on hover, 14px, line-height 0.75): pills and tags; hover flips the
   one property the generic tag hover doesn't otherwise touch — font-weight, 300→500.
+- **Caption** (400, 0.75rem/12px, line-height 1.4): the below-the-ramp size for sub-
+  timeline badges, track year labels, and the project index blurb — small enough that
+  it sits under `--text-xs`, tokenized as `--text-2xs` rather than repeated as a literal.
 
 ### Named Rules
 **The Weight-Not-Size Rule.** Hierarchy comes from font-weight contrast (large set

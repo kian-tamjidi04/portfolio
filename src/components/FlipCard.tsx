@@ -57,6 +57,14 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   /** True once the opening flip has finished, so later height changes track
    *  their content instead of re-animating. */
   const [hasLanded, setHasLanded] = useState(false);
+  // Reset the reveal at render time when the card changes, rather than from
+  // inside an effect body — this is React's sanctioned "adjusting state when
+  // a prop changes" pattern, and it avoids a redundant extra commit.
+  const [revealedForCardId, setRevealedForCardId] = useState(card.id);
+  if (card.id !== revealedForCardId) {
+    setRevealedForCardId(card.id);
+    setIsContentRevealed(false);
+  }
   const headerRef = useRef<HTMLElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -119,7 +127,11 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
   }, [computeHeight, card.type]);
 
   // Measure synchronously, then again after paint once fonts/images have settled.
+  // Setting state directly from an effect body is the sanctioned escape hatch
+  // here: the height genuinely can't be known until the DOM has been laid
+  // out, so there is no render-time equivalent to fall back to.
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- synchronizing with a DOM measurement, not derivable at render time
     measureModal();
     const rafId = requestAnimationFrame(measureModal);
     return () => cancelAnimationFrame(rafId);
@@ -161,7 +173,6 @@ export function FlipCard({ card, fromRect, onClose }: FlipCardProps) {
 
   // Hold the body hidden until the flip is partway through.
   useEffect(() => {
-    setIsContentRevealed(false);
     const revealTimer = window.setTimeout(
       () => setIsContentRevealed(true),
       CONTENT_REVEAL_DELAY * 1000,

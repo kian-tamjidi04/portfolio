@@ -18,14 +18,17 @@
       "text-muted": { "role": "neutral", "displayName": "Muted Slate", "canonical": "#64697f", "tonalRamp": ["#1a1c22", "#2d303a", "#414553", "#575c6d", "#64697f", "#8a8fa3", "#bcbfcc", "#e5e6ec"] },
       "pill-text": { "role": "neutral", "displayName": "True Black", "canonical": "#000000" },
       "card-icon-color": { "role": "neutral", "displayName": "Saddle Brown", "canonical": "#613613", "tonalRamp": ["#180d05", "#2a1809", "#3d240d", "#4f2f10", "#613613", "#8a5a3a", "#bc9270", "#e3d2c0"] },
-      "modal-close-idle-bg": { "role": "neutral", "displayName": "Idle Grey", "canonical": "#e2e2e2" }
+      "modal-close-idle-bg": { "role": "neutral", "displayName": "Idle Grey", "canonical": "#e2e2e2" },
+      "social-github": { "role": "neutral", "displayName": "GitHub Black", "canonical": "#000000" },
+      "social-linkedin": { "role": "neutral", "displayName": "LinkedIn Blue", "canonical": "#0a66c2", "tonalRamp": ["#04121e", "#082236", "#0c3350", "#0a66c2", "#3480d0", "#6ba3de", "#a4c8ec", "#d6e6f7"] }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Hero name only, fluid via clamp()." },
       "headline": { "displayName": "Headline", "purpose": "Grid card title and modal title — one shared rule (Figma node 43:78)." },
       "title": { "displayName": "Title", "purpose": "Row titles, role/company names, project index titles." },
       "body": { "displayName": "Body", "purpose": "Body copy, tags, bullets, takeaways." },
-      "label": { "displayName": "Label", "purpose": "Pills and tags; weight flips 300→500 on hover." }
+      "label": { "displayName": "Label", "purpose": "Pills and tags; weight flips 300→500 on hover." },
+      "caption": { "displayName": "Caption", "purpose": "Below-the-ramp size (--text-2xs) for sub-timeline badges, track year labels, and the project index blurb." }
     },
     "shadows": [
       { "name": "card-rest", "value": "0 0 16px rgba(97,54,19,0.2)", "purpose": "Idle ambient warmth under any card-like surface (bento tile, cert card, modal close CTA)." },

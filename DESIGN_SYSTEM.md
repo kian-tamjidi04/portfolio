@@ -125,6 +125,7 @@ A pure ascending scale; semantic aliases point into it for the three display siz
 
 | Token | Value | px @16 | Used by |
 | --- | --- | --- | --- |
+| `--text-2xs` | `0.75rem` | 12 | Sub-timeline badges, track year labels, project index blurb |
 | `--text-xs` | `0.95rem` | 15.2 | Body copy, tags, bullets, takeaways |
 | `--text-sm` | `1rem` | 16 | `.modal-close-cta` only |
 | `--text-md` | `1.15rem` | 18.4 | Labels, dates, sub-roles, project index titles |
@@ -587,7 +588,7 @@ For Claude Design / any generator. Single theme (light only).
     "family": "Apple Garamond",
     "weights": { "light": 300, "regular": 400, "bold": 700 },
     "size": {
-      "xs": "0.95rem", "sm": "1rem", "md": "1.15rem", "lg": "1.4rem",
+      "2xs": "0.75rem", "xs": "0.95rem", "sm": "1rem", "md": "1.15rem", "lg": "1.4rem",
       "xl": "1.9rem", "2xl": "2.4rem", "3xl": "clamp(2.25rem, 9vw, 3.75rem)"
     },
     "leading": { "tight": 0.97, "snug": 1.3, "normal": 1.45, "relaxed": 1.5 },
