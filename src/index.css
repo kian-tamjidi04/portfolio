@@ -1,7 +1,7 @@
 /* ─── Design Tokens ──────────────────────────────────────────────── */
-@import '@fontsource/ibm-plex-sans/300.css';
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/latin-300.css';
+@import '@fontsource/ibm-plex-sans/latin-400.css';
+@import '@fontsource/ibm-plex-sans/latin-500.css';
 
 :root {
   --bg: #eeeeee;
@@ -52,6 +52,7 @@
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.18);
 
   /* Pure ascending scale; semantic names alias into it below. */
+  --text-2xs: 0.75rem;
   --text-xs: 0.95rem;
   --text-sm: 1rem;
   --text-md: 1.15rem;
@@ -225,7 +226,6 @@ option {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--space-3);
   align-items: stretch;
-  transition: grid-template-columns 0.4s ease, gap 0.4s ease;
 }
 
 /* ─── Grid Placement ─────────────────────────────────────────────── */
@@ -1110,7 +1110,7 @@ option {
 }
 
 .vtimeline-track-year {
-  font-size: 12px;
+  font-size: var(--text-2xs);
   line-height: var(--leading-relaxed);
   color: var(--text-muted);
   white-space: nowrap;
@@ -1197,8 +1197,8 @@ option {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: var(--radius-pill);
   background: var(--modal-close-idle-bg);
@@ -1291,7 +1291,7 @@ option {
 
 /* ─── Sub-timeline (Nested Roles) ────────────────────────────────── */
 .timeline-group-title-badge {
-  font-size: 0.75rem;
+  font-size: var(--text-2xs);
   padding: 3px var(--space-4);
   border-radius: var(--radius-xs);
   background: var(--accent-dim);
@@ -1358,7 +1358,7 @@ option {
 }
 
 .sub-timeline-badge {
-  font-size: 0.75rem;
+  font-size: var(--text-2xs);
   font-weight: 700;
   padding: var(--space-1) var(--space-4);
   border-radius: var(--radius-pill);
@@ -1466,9 +1466,9 @@ option {
 .project-index-blurb {
   margin: 0;
   font-weight: 300;
-  /* 12px/16.8 per Figma 168:4316 — below the bottom of the type scale, the
-     same literal .vtimeline-track-year uses for the same reason. */
-  font-size: 12px;
+  /* 12px/16.8 per Figma 168:4316 — same size .vtimeline-track-year uses for
+     the same reason, now tokenized as --text-2xs. */
+  font-size: var(--text-2xs);
   line-height: 1.4;
   color: var(--text-secondary);
 }
@@ -1558,6 +1558,15 @@ option {
   /* Headroom for the card edges behind the front card, which sit above it and
      would otherwise be clipped by the modal body. */
   padding-top: var(--space-12);
+  /* The deck's frame. The dealt slot rests off the deck at `translateX(115%)
+     rotate(6deg)` (.project-deck-dealt) and a rotated card's bounding box is
+     taller than the card, so without this it hangs below the stage and gives
+     the modal body real scrollable overflow — a scrollbar on a modal that is
+     sized to never need one. `clip` rather than `hidden` because nothing in
+     here should be scrollable even programmatically. Clipping is at the
+     padding box, so the padding-top above still buys the ghosts their
+     headroom. */
+  overflow: clip;
 }
 
 /* Holds the deck's footprint steady. The front card is taken out of flow, so
@@ -1566,20 +1575,46 @@ option {
    gives the stack its own 3D viewing context, separate from the modal flip's
    (FlipCard.tsx uses `preserve-3d` further up the tree, but that's a finished,
    flattened rotation by the time the deck is visible) — it's what turns the
-   `z` framer-motion sets on each card (`deckCardVariants`, motion.ts) into a
-   real size and position change instead of a flat, hand-tuned scale. */
+   `translateZ` each card derives from its depth below into a real size and
+   position change instead of a flat, hand-tuned scale.
+
+   The three geometry steps are the deck's whole depth language: each place
+   further back lifts the card a little (so a sliver peeks out above the one
+   in front — pure perspective would shrink every depth toward the same
+   centre point and hide it completely), pushes it away from the viewer, and
+   washes it out as a cheap aerial-perspective cue. A designed falloff, not a
+   Figma measurement. */
 .project-deck-stack {
   position: relative;
   flex: 1;
   min-width: 0;
   align-self: stretch;
   perspective: 1000px;
+  --deck-lift: -14px;
+  --deck-push: -90px;
+  --deck-fade: 0.18;
 }
 
+/* Every card's resting position is a pure function of `--deck-depth`, which
+   ProjectDeck sets inline (0 = face-up, 1 = the first edge behind it, …).
+   Depth living in a custom property rather than in a framer-motion target is
+   deliberate and load-bearing: a step re-labels the depth of cards that stay
+   mounted, and the shuffle is then the browser transitioning `transform` and
+   `opacity` to the substituted values. Framer-motion re-resolving an
+   `animate` target on an element that persists across the change is exactly
+   what used to strand the first `VISIBLE_STACK_DEPTH + 1` cards at the depth
+   they first mounted at. See the buffer-slot comment in ProjectDeck.tsx for
+   why nothing needs to animate on mount or unmount either. */
 .project-deck-card,
-.project-deck-ghost {
+.project-deck-ghost,
+.project-deck-dealt {
   position: absolute;
   inset: 0;
+  transform: translateY(calc(var(--deck-depth) * var(--deck-lift)))
+    translateZ(calc(var(--deck-depth) * var(--deck-push)));
+  opacity: calc(1 - var(--deck-depth) * var(--deck-fade));
+  transition: transform var(--dur-slow) var(--ease-standard),
+    opacity var(--dur-slow) var(--ease-standard);
 }
 
 .project-deck-card {
@@ -1597,19 +1632,34 @@ option {
   box-shadow: var(--shadow-panel-elevated);
 }
 
-/* Ghosts recede behind the face-up card via a real `translateZ` (set inline
-   per depth by ProjectDeck; `.project-deck-stack`'s `perspective` above is
-   what projects that into a smaller, lifted silhouette) rather than a scale
-   chosen to look roughly right. Framer-motion owns that transform and the
-   opacity fade (`deckCardVariants`); this rule supplies what perspective
-   can't on its own — a duller, cooler surface than the warm near-white front
-   card, and a shadow that thins with depth instead of glowing at full
-   strength, so a ghost reads as further away rather than merely smaller.
-   `--deck-depth` is set per ghost in ProjectDeck (1 = the first one back, 2 =
-   the second) — this is a designed falloff, not a Figma measurement. */
+/* Ghosts recede behind the face-up card on the shared depth geometry above;
+   this rule supplies what perspective can't on its own — a duller, cooler
+   surface than the warm near-white front card, and a shadow that thins with
+   depth instead of glowing at full strength, so a ghost reads as further away
+   rather than merely smaller. */
 .project-deck-ghost {
   background: var(--surface-subtle);
   box-shadow: 0 0 calc(16px / var(--deck-depth)) rgba(97, 54, 19, 0.18);
+}
+
+/* The back buffer sits one depth behind the deepest visible ghost at zero
+   opacity, so the card mounting or unmounting there is invisible either way.
+   Its depth still comes from the shared formula, so surfacing into the deck
+   is a fade and a step forward at once rather than a pop. */
+.project-deck-ghost.project-deck-ghost-buffer {
+  opacity: 0;
+}
+
+/* The front buffer: depth -1, the position a card is dealt to and from. Off
+   the deck to the right at full size with a little rotation for the kick of a
+   card leaving — the one slot whose geometry isn't the linear depth formula.
+   A step forward re-labels the face-up card to this depth and the browser
+   swipes it away; a step back re-labels the card sitting here to depth 0 and
+   it flies back in, so stepping back is the exact mirror for free. */
+.project-deck-dealt {
+  transform: translateX(115%) rotate(6deg);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Title/grade/body follow the Certifications card's three tiers

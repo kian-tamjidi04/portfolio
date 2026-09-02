@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T00:00:00.000Z",
+  "title": "Design System: Kian Tamjidi — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "accent": { "role": "primary", "displayName": "Ember Orange", "canonical": "#ea6508", "tonalRamp": ["#3a1a03", "#5c2a05", "#803a07", "#a34a09", "#c65a0a", "#ea6508", "#f39355", "#f9c6a3"] },
+      "accent-text": { "role": "primary", "displayName": "Baked Ember", "canonical": "#c2540a", "tonalRamp": ["#301503", "#4d2205", "#6b2f07", "#883c08", "#a5480a", "#c2540a", "#dc7c3f", "#eeae86"] },
+      "accent-dim": { "role": "primary", "displayName": "Ember Wash", "canonical": "rgba(234,101,8,0.10)" },
+      "bg": { "role": "neutral", "displayName": "Cool Fog", "canonical": "#eeeeee", "tonalRamp": ["#232323", "#3d3d3d", "#585858", "#767676", "#979797", "#c6c6c6", "#eeeeee", "#f8f8f8"] },
+      "surface": { "role": "neutral", "displayName": "Paper White", "canonical": "#ffffff", "tonalRamp": ["#242424", "#3f3f3f", "#5c5c5c", "#7a7a7a", "#9c9c9c", "#cccccc", "#f2f2f2", "#ffffff"] },
+      "surface-subtle": { "role": "neutral", "displayName": "Recessed Mist", "canonical": "#eef0f5", "tonalRamp": ["#22242b", "#3b3e49", "#565a68", "#737788", "#94989f", "#c2c6ce", "#e5e8ee", "#eef0f5"] },
+      "cert-card-surface": { "role": "neutral", "displayName": "Warm Off-White", "canonical": "#fafafa", "tonalRamp": ["#242424", "#3f3f3f", "#5c5c5c", "#7a7a7a", "#9c9c9c", "#cfcfcf", "#f5f5f5", "#fafafa"] },
+      "pill-surface": { "role": "neutral", "displayName": "Warm Off-White", "canonical": "#fafafa" },
+      "border": { "role": "neutral", "displayName": "Hairline Slate", "canonical": "#d8dce8", "tonalRamp": ["#1e2029", "#363a46", "#4f5464", "#6b7083", "#8b90a3", "#b6bacb", "#d8dce8", "#eef0f5"] },
+      "text-primary": { "role": "neutral", "displayName": "Near-Black Ink", "canonical": "#0d0e12", "tonalRamp": ["#0d0e12", "#1c1e26", "#2f323f", "#454859", "#5d6075", "#8a8da0", "#c3c5cf", "#ececef"] },
+      "text-secondary": { "role": "neutral", "displayName": "Slate Blue", "canonical": "#4a4f63", "tonalRamp": ["#131419", "#232631", "#343849", "#4a4f63", "#63687d", "#8a8fa3", "#bcbfcc", "#e5e6ec"] },
+      "text-muted": { "role": "neutral", "displayName": "Muted Slate", "canonical": "#64697f", "tonalRamp": ["#1a1c22", "#2d303a", "#414553", "#575c6d", "#64697f", "#8a8fa3", "#bcbfcc", "#e5e6ec"] },
+      "pill-text": { "role": "neutral", "displayName": "True Black", "canonical": "#000000" },
+      "card-icon-color": { "role": "neutral", "displayName": "Saddle Brown", "canonical": "#613613", "tonalRamp": ["#180d05", "#2a1809", "#3d240d", "#4f2f10", "#613613", "#8a5a3a", "#bc9270", "#e3d2c0"] },
+      "modal-close-idle-bg": { "role": "neutral", "displayName": "Idle Grey", "canonical": "#e2e2e2" },
+      "social-github": { "role": "neutral", "displayName": "GitHub Black", "canonical": "#000000" },
+      "social-linkedin": { "role": "neutral", "displayName": "LinkedIn Blue", "canonical": "#0a66c2", "tonalRamp": ["#04121e", "#082236", "#0c3350", "#0a66c2", "#3480d0", "#6ba3de", "#a4c8ec", "#d6e6f7"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero name only, fluid via clamp()." },
+      "headline": { "displayName": "Headline", "purpose": "Grid card title and modal title — one shared rule (Figma node 43:78)." },
+      "title": { "displayName": "Title", "purpose": "Row titles, role/company names, project index titles." },
+      "body": { "displayName": "Body", "purpose": "Body copy, tags, bullets, takeaways." },
+      "label": { "displayName": "Label", "purpose": "Pills and tags; weight flips 300→500 on hover." },
+      "caption": { "displayName": "Caption", "purpose": "Below-the-ramp size (--text-2xs) for sub-timeline badges, track year labels, and the project index blurb." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 0 16px rgba(97,54,19,0.2)", "purpose": "Idle ambient warmth under any card-like surface (bento tile, cert card, modal close CTA)." },
+      { "name": "card-hover", "value": "0 4px 24px 4px rgba(97,54,19,0.75)", "purpose": "Hover/focus-visible intensification — the primary interactivity signal for cards and pills." },
+      { "name": "panel-elevated", "value": "0 0 16px 2px rgba(97,54,19,0.5)", "purpose": "Projects deck card — a step between rest and hover intensity." },
+      { "name": "modal", "value": "0 24px 64px rgba(0,0,0,0.18)", "purpose": "The one neutral-black shadow, reserved for the modal sheet lifting off the page." }
+    ],
+    "motion": [
+      { "name": "dur-fast", "value": "0.2s", "purpose": "Hover feedback." },
+      { "name": "dur-base", "value": "0.3s", "purpose": "Reveal / state transitions." },
+      { "name": "dur-slow", "value": "0.45s", "purpose": "Larger content transitions (timeline steps)." },
+      { "name": "dur-flip", "value": "0.58s", "purpose": "The 3D card-to-modal flip." },
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "The one easing curve used everywhere, in both CSS and framer-motion." },
+      { "name": "ease-emphasized", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Emphasized transitions where standard reads too linear." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "900px" },
+      { "name": "sm", "value": "560px" },
+      { "name": "xs", "value": "380px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The inversion-pattern primary action button (project detail actions).",
+      "html": "<button class=\"ds-btn-primary\">View project</button>",
+      "css": ".ds-btn-primary { background: #0d0e12; color: #eeeeee; padding: 12px 24px; border-radius: 12px; border: none; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.95rem; transition: background 0.2s cubic-bezier(0.4,0,0.2,1), color 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover, .ds-btn-primary:focus-visible { background: rgba(234,101,8,0.10); color: #0d0e12; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ghost secondary action button.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { background: transparent; color: #0d0e12; padding: 12px 24px; border-radius: 12px; border: none; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.95rem; transition: background 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary:hover, .ds-btn-secondary:focus-visible { background: #eef0f5; }"
+    },
+    {
+      "name": "Tag / Pill",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "v2 tag/pill — 12px rounded rect on a warm off-white surface, shadow raises on hover.",
+      "html": "<span class=\"ds-tag\">React</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; background: #fafafa; color: #000000; padding: 10px 12px; border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; font-size: 14px; box-shadow: 0 0 16px rgba(97,54,19,0.2); transition: box-shadow 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-tag:hover, .ds-tag:focus-visible { box-shadow: 0 4px 24px 4px rgba(97,54,19,0.75); }"
+    },
+    {
+      "name": "Tag / Pill — Primary",
+      "kind": "chip",
+      "refersTo": "tag-primary",
+      "description": "Accent variant of the tag/pill, used for the primary/selected technology tag.",
+      "html": "<span class=\"ds-tag-primary\">TypeScript</span>",
+      "css": ".ds-tag-primary { display: inline-flex; align-items: center; background: rgba(234,101,8,0.10); color: #c2540a; padding: 10px 12px; border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; font-size: 14px; }"
+    },
+    {
+      "name": "Bento Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The grid tile / opened-modal card face — bottom-aligned content, icon pinned top-right, warm ambient shadow raising on hover.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-card-icon\">&#9733;</span><h2 class=\"ds-card-title\">Projects</h2></div>",
+      "css": ".ds-card { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 6px; min-height: 125px; padding: 6px 6px 8px 10px; background: #ffffff; border-radius: 4px; box-shadow: 0 0 16px rgba(97,54,19,0.2); transition: box-shadow 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-card:hover, .ds-card:focus-visible { box-shadow: 0 4px 24px 4px rgba(97,54,19,0.75); } .ds-card-icon { position: absolute; top: 6px; right: 6px; color: #613613; font-size: 1.4rem; line-height: 1; } .ds-card-title { margin: 0; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-size: 34px; line-height: 0.97; color: #0d0e12; }"
+    },
+    {
+      "name": "Certification Card",
+      "kind": "card",
+      "refersTo": "cert-card",
+      "description": "v2 signature component — square corners by design, always-visible takeaway line (no hover-to-reveal).",
+      "html": "<div class=\"ds-cert-card\"><div class=\"ds-cert-header\"><div class=\"ds-cert-icon\"></div><div class=\"ds-cert-info\"><div class=\"ds-cert-title\">AWS Certified</div><div class=\"ds-cert-date\">2024</div></div></div><p class=\"ds-cert-takeaway\">Deepened hands-on cloud architecture experience.</p></div>",
+      "css": ".ds-cert-card { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: #fafafa; box-shadow: 0 0 16px rgba(97,54,19,0.2); transition: box-shadow 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-cert-card:hover, .ds-cert-card:focus-visible { box-shadow: 0 4px 24px 4px rgba(97,54,19,0.75); } .ds-cert-header { display: flex; align-items: center; gap: 16px; } .ds-cert-icon { width: 64px; height: 64px; border-radius: 6px; background: #eef0f5; } .ds-cert-info { display: flex; flex-direction: column; } .ds-cert-title { font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-size: 1.4rem; line-height: 1.3; color: #0d0e12; } .ds-cert-date { font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; font-size: 18px; line-height: 1.45; color: #64697f; } .ds-cert-takeaway { margin: 0; font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; font-size: 1rem; line-height: 1.4; color: #4a4f63; }"
+    },
+    {
+      "name": "Modal Close CTA",
+      "kind": "button",
+      "refersTo": "modal-close-cta",
+      "description": "The pill-shaped close action in a modal header, sharing the card shadow language.",
+      "html": "<button class=\"ds-close-cta\">Close</button>",
+      "css": ".ds-close-cta { background: #e2e2e2; color: #4a4f63; padding: 8px 14px; border-radius: 12px; border: none; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 1rem; box-shadow: 0 0 16px rgba(97,54,19,0.2); transition: box-shadow 0.2s cubic-bezier(0.4,0,0.2,1); } .ds-close-cta:hover, .ds-close-cta:focus-visible { box-shadow: 0 4px 24px 4px rgba(97,54,19,0.75); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Warm Plex Grid",
+    "overview": "A single non-scrolling bento grid where every tile flips in 3D into a modal. The system is mid-transition: the original identity was Apple Garamond (a display serif used even at body sizes) over a near-neutral grey-blue palette, with one warm ember accent used sparingly. That serif identity is being retired card-by-card in favor of IBM Plex Sans — the forward direction for all new and touched surfaces — paired with warm-brown ambient card shadows and a sharper 4px card/modal radius. Certification cards were the first fully migrated; card faces and modal headers (.card-title / .modal-title) already read in IBM Plex Sans everywhere, and any remaining body copy still in Apple Garamond is legacy, not a pattern to extend. Across both eras the same structural habits hold: hierarchy comes from weight contrast, not size contrast; separation between surfaces comes from elevation, never a border; and the ember-orange accent is spent on small shapes almost never as a large flat area. Layout stays dense (6px outer grid gap, 14px interior rhythm), light-mode only.",
+    "keyCharacteristics": [
+      "Weight-as-hierarchy: large + light vs. small + bold/medium, not size escalation.",
+      "One ember-orange accent, spent sparingly, never as a large flat fill.",
+      "No borders for separation — surfaces stack via elevation (--surface on --bg, --surface-subtle inside --surface).",
+      "IBM Plex Sans is the system's forward identity; Apple Garamond is legacy and shrinking.",
+      "Warm-brown ambient shadows (rgba(97,54,19,…)), not neutral black — depth reads warm."
+    ],
+    "rules": [
+      { "name": "The Inversion Rule", "body": "Active/primary states fill with --text-primary and set their own text to --bg — a single theme means no second token pair is needed.", "section": "colors" },
+      { "name": "The One Voice Rule", "body": "The ember accent is spent on shapes, not surfaces: dots, bullets, icon fills, a single word in a title row. Never a large area at full strength.", "section": "colors" },
+      { "name": "The Weight-Not-Size Rule", "body": "Hierarchy comes from font-weight contrast (large set light, small set bold/medium), not from an aggressive size ladder.", "section": "typography" },
+      { "name": "The Warm Shadow Rule", "body": "Every card-level shadow is keyed off Saddle Brown (rgba(97,54,19,…)), never neutral black — black is reserved for the single modal elevation shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do build new or touched UI in IBM Plex Sans (--font-card) at weights 300/400/500 — this is the system's forward identity.",
+      "Do use Card/rest (warm-brown ambient) at idle and Card/hover on hover/focus-visible for any card-like surface.",
+      "Do fill active/primary UI with --text-primary and set its text to --bg (the Inversion Rule) rather than inventing a second accent-fill treatment.",
+      "Do spend the ember accent on shapes — dots, bullets, icon fills, one word in a title row — never as a large flat area.",
+      "Do bottom-align card content with the preview icon pinned top-right.",
+      "Do use var(--ease-standard) as the one easing curve; reach for --dur-fast (hover), --dur-base (reveal), --dur-flip (the 3D flip)."
+    ],
+    "donts": [
+      "Don't introduce new Apple Garamond usage. It is the outgoing identity — extend --font-card (IBM Plex Sans) into any card or component still on the legacy family instead of adding more serif.",
+      "Don't add borders for visual separation. Reach for --surface-on-bg or --surface-subtle-inside-surface instead; --border is reserved for hairlines, rails, and inactive dots only.",
+      "Don't use a neutral-black shadow on a card-level surface — the warm-brown shadow keyed off Saddle Brown is the system's depth signal; neutral black is reserved for the single modal-lift shadow.",
+      "Don't size a modal wider than the grid's own 1320px max-width — a flipped card never exceeds the grid it flew out of."
+    ]
+  }
+}

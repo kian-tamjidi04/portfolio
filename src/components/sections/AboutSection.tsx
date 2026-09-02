@@ -4,7 +4,7 @@ import type { AboutCard } from '../../content';
 import { modalItemVariants } from '../../motion';
 import { DotListSection } from '../DotListSection';
 
-/** Intrinsic aspect ratio of Pic.svg. */
+/** Intrinsic aspect ratio of Pic.jpg. */
 const PORTRAIT_ASPECT = 1537 / 2730;
 
 export function AboutSection({ card }: { card: AboutCard }) {
@@ -41,7 +41,7 @@ export function AboutSection({ card }: { card: AboutCard }) {
             : { flex: '0 0 0px', overflow: 'hidden' }
         }
       >
-        <img src="./Pic.svg" alt="Profile" className="about-image" />
+        <img src="./Pic.jpg" alt="Profile" className="about-image" />
       </motion.div>
       <div className="about-text-col" ref={textColRef}>
         {card.bio.map((paragraph) => (
