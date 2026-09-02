@@ -224,11 +224,15 @@ side — one curve, one spelling, both layers. Near-miss durations that don't ex
 tokens above (`0.22s`, `0.25s`, `0.34s`, `0.35s`, `0.4s`, `0.42s`) stay literal rather than being
 snapped onto the nearest token and silently changing timing.
 
-The projects deck (`deckCardResting`) steps at `TIMELINE_STEP_DURATION`, so it moves at the
-same pace as the education/experience timelines. Forward and back are exact mirrors — forward
-swipes the front card off to the right (`x: 115%`, `rotate: 6`) while the next is pushed forward
-out of the stack (`y: -18`, `scale: 0.95`); back plays the same two positions the other way
-round, which is what makes it read as an undo rather than as a second animation.
+The projects deck steps at `--dur-slow` (0.45s), the CSS twin of
+`TIMELINE_STEP_DURATION`, so it moves at the same pace as the education/experience timelines.
+It is the one piece of stepped motion authored in CSS rather than framer-motion: each card's
+resting position is a function of its `--deck-depth`, and a step just re-labels the depths, so
+forward and back are exact mirrors for free. Forward re-labels the front card to depth −1 and
+the browser swipes it off to the right (`translateX(115%)`, `rotate(6deg)`) while every card
+behind advances one depth toward the viewer; back re-labels the same card to depth 0 and it
+flies back in along the identical path, which is what makes it read as an undo rather than as a
+second animation.
 
 `transition: all` has been replaced with explicit property lists everywhere it appeared
 (`.modal-close-cta`, `.project-sidebar-btn`, `.project-sidebar-icon`, `.accordion-header`,
@@ -416,15 +420,20 @@ project to the front of a deck.
                      padding var(--space-10) var(--space-9) · flat gap var(--space-6)
 ```
 
-Depth is a real `translateZ` (−90px per step) read through the stack's own `perspective`, with a
-−14px `y` lift so each card behind still peeks out and an opacity step washing it back — see
-`deckCardResting` in `motion.ts`. The foreshortening is therefore the browser's projection, not a
-scale chosen to look about right; the y/z/opacity steps themselves are designed values, not
-measured off Figma.
+Depth is a real `translateZ` (−90px per step, `--deck-push`) read through the stack's own
+`perspective`, with a −14px `y` lift (`--deck-lift`) so each card behind still peeks out and a
+0.18 opacity step (`--deck-fade`) washing it back — all three live on `.project-deck-stack` in
+`index.css`, next to the rules that consume them. The foreshortening is therefore the browser's
+projection, not a scale chosen to look about right; the lift/push/fade steps themselves are
+designed values, not measured off Figma.
 
 Every card in the visible window is a real element keyed by its project id, not an anonymous
-depth slot, so a step retargets the whole stack's depths at once and the ghosts advance with the
-deal instead of sitting frozen behind it.
+depth slot, so a step re-labels the whole stack's depths at once and the ghosts advance with the
+deal instead of sitting frozen behind it. Two extra slots render at zero opacity either end of
+that window — depth −1 off the deck in front, `stackDepth + 1` behind the deepest ghost — so a
+card only ever mounts or unmounts where it can't be seen, and everything visible is an element
+that persists through the step. That is what keeps the shuffle expressible as a CSS transition
+with no enter/exit animation at all.
 
 The stack is deliberately a fixed footprint: the cards are out of flow, so dealing the next one
 cannot resize the stage. A height that moved mid-deal would fight the swipe it is carrying. This

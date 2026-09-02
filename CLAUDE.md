@@ -85,11 +85,13 @@ Content is fully separated from presentation:
 - **`src/motion.ts`** — the whole motion system: easings, durations, and the
   framer-motion `variants` objects. Don't inline transitions in components; add them here.
   `timelineEntryVariants` reads the step direction off framer-motion's `custom` prop
-  (`+1` forward, `-1` back). The projects deck needs no direction at all: a card's own
-  depth determines how it enters and leaves, so `deckCardResting`/`deckCardEdge` are
-  functions of depth returning plain targets, not a `variants` set read through
-  `custom` — a card advancing up the stack keeps its variant name and changes only its
-  depth, which a label-keyed variant would not reliably re-resolve.
+  (`+1` forward, `-1` back). The projects deck is deliberately **not** here: its cards
+  move by depth, and depth is a CSS custom property (`--deck-depth`) that a step
+  re-labels on cards which stay mounted, so the shuffle is a plain CSS transition.
+  Framer-motion owned this once via per-depth `animate` targets and would not reliably
+  re-resolve a target on an element that persisted through the change — the first
+  `VISIBLE_STACK_DEPTH + 1` cards stayed stranded at the depth they mounted at. Don't
+  move it back.
 - **`src/index.css`** — all styling (~1300 lines), single light theme, fully tokenized
   (`--space-*`, `--radius-*`, `--text-*`, `--dur-*`, `--ease-*`). No CSS modules or
   utility framework beyond Bootstrap's stylesheet, imported in `main.tsx` *before*
