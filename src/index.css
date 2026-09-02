@@ -1373,7 +1373,7 @@ option {
 /* Two views in one modal. The deck's cards are absolutely positioned so
    dealing the next one can't resize the stage mid-swipe (.project-deck-stack
    above) — which means the deck has no intrinsic height of its own and needs
-   this wrapper pinned to the modal's full height (`fillsHeight` in
+   this wrapper pinned to the modal's full height (`fillsBody` in
    modalRect.ts) to have anything to stretch into. The index grid has no such
    need: it opts back out of that stretch below (.project-index) and hugs its
    own content instead, capped at three rows (ProjectsSection). FlipCard's
@@ -1386,7 +1386,7 @@ option {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  /* `fillsHeight` types get `padding: 0` inlined onto `.portfolio-modal-body`
+  /* `fillsBody` types get `padding: 0` inlined onto `.portfolio-modal-body`
      (FlipCard.tsx) instead of the shared --space-10 every other modal gets,
      so it's this element's job to supply it — 24px per both Figma frames'
      literal (unbound) `p-[24px]`, not the usual 20px token. */
