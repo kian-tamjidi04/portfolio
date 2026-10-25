@@ -220,6 +220,30 @@ export const portfolioCards: PortfolioCard[] = [
     summary: 'Teams where I shipped measurable improvements across product and UX.',
     roles: [
       {
+        role: 'Code for Good Hackathon Participant',
+        company: 'JPMorganChase',
+        dates: 'Oct 2026',
+        impact: [
+          "Led frontend design and development with React, Claude Code and Figma MCP in a team of 3, building a full-stack platform in 24 hours to save coordinators at the Glasgow Children's Hospital Charity an estimated 8 hours weekly.",
+          'Developed an LLM pipeline that converts unstructured NHS data into journey records, cutting data entry time by 95%.',
+          'Interviewed charity coordinators to uncover pain points and shape user-centered design decisions, presenting the final solution to both technical and non-technical panels.',
+        ],
+        skills: [
+          { name: 'React', primary: true },
+          { name: 'Figma', primary: true },
+          { name: 'Claude Code', primary: true },
+          { name: 'TypeScript', primary: true },
+          { name: 'Supabase', primary: true },
+          { name: 'Communication' },
+          { name: 'Time Management' },
+          { name: 'Resilience' },
+          { name: 'Presentation' },
+          { name: 'User Interviews' },
+        ],
+        isRecent: false,
+        logo: './JPMC.svg',
+      },
+      {
         role: 'UX Designer and Creative Technologist',
         company: 'UBS',
         dates: 'Jun 2026 - Aug 2026',
@@ -243,7 +267,7 @@ export const portfolioCards: PortfolioCard[] = [
         isRecent: false,
         logo: './UBS.svg',
         groupSubtitle: 'GOTO Technology Placement Program',
-        groupDates: 'Jun 2025 - Present',
+        groupDates: 'Jun 2025 - Aug 2026',
         division: 'Group Finance Technology',
       },
       {
