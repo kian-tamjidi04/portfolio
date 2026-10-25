@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "apple garamond",
+        "createdAt": "2026-09-04T15:28:21.978Z",
+        "reason": "documented in DESIGN.md line 121/3 as the site's intentional pre-existing serif identity, unrelated to this change"
+      }
+    ]
+  }
+}

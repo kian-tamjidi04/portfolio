@@ -124,20 +124,29 @@ export function ProjectDeck({
   return (
     <div className="project-deck">
       <motion.div className="project-deck-bar" variants={modalItemVariants}>
-        <button type="button" className="project-deck-back" onClick={onBack} ref={backRef}>
+        <button
+          type="button"
+          className="project-deck-back"
+          onClick={onBack}
+          ref={backRef}
+          aria-label={backLabel}
+        >
           <FontAwesomeIcon icon={faArrowLeft} />
-          {backLabel}
+          <span>{backLabel}</span>
         </button>
 
+        {/* Progress indicator only, not a jump control — each dot marks a
+            project's position in the deck, but stepping between them is the
+            arrows' job (see the module comment: a deck has no ends, so a
+            clickable dot would let you skip the wrap entirely). */}
         <ol className="htimeline-track">
           {stops.map((stop, index) => (
             <li className="htimeline-stop" key={stop.id}>
-              <button
-                type="button"
+              <span
                 className={`htimeline-dot ${index === activeIndex ? 'is-active' : ''}`}
-                onClick={() => setActiveIndex(index)}
                 aria-current={index === activeIndex ? 'step' : undefined}
                 aria-label={stop.label}
+                role="img"
               />
             </li>
           ))}

@@ -1084,18 +1084,21 @@ option {
 
 .vtimeline-track-dot,
 .htimeline-dot {
+  display: inline-block;
   width: 15px;
   height: 15px;
   padding: 0;
   border: none;
   border-radius: var(--radius-pill);
   background: var(--border);
-  cursor: pointer;
   transition: background var(--dur-fast) var(--ease-standard);
 }
 
-.vtimeline-track-dot:hover,
-.htimeline-dot:hover {
+.vtimeline-track-dot {
+  cursor: pointer;
+}
+
+.vtimeline-track-dot:hover {
   background: var(--text-muted);
 }
 
@@ -1104,8 +1107,7 @@ option {
   background: var(--accent);
 }
 
-.vtimeline-track-dot.is-active:hover,
-.htimeline-dot.is-active:hover {
+.vtimeline-track-dot.is-active:hover {
   background: var(--accent);
 }
 
@@ -1232,39 +1234,6 @@ option {
 
   .vtimeline-track-year {
     display: none;
-  }
-}
-
-/* The index grid answers to the modal's width, not the viewport's — a
-   container query, like the about layout and skills grid
-   (DESIGN_SYSTEM.md 8.2). */
-@container portfolio-modal (max-width: 900px) {
-  .project-index {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@container portfolio-modal (max-width: 560px) {
-  .project-index {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .project-deck-card {
-    padding: var(--space-8);
-  }
-
-  /* Too narrow to flank the deck: the arrows wrap onto their own row beneath
-     it so the card keeps the full width. The stack is out of flow, so it
-     needs a stated height once it is no longer being stretched by the row. */
-  .project-deck-stage {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .project-deck-stack {
-    order: -1;
-    flex: 1 0 100%;
-    min-height: 320px;
   }
 }
 
@@ -1491,27 +1460,30 @@ option {
   gap: var(--space-10);
 }
 
-/* Ghost treatment: an outline only, so it stays clearly subordinate to the
-   card it sits above and never competes with the modal's close button. */
+/* Tertiary tier of the button set documented in DESIGN_SYSTEM.md §9.6
+   (primary/secondary live on .project-action-btn): same rectangular geometry
+   and weight as those, one notch quieter than secondary — no border, no fill
+   until hover, --text-secondary at rest — so it stays clearly subordinate to
+   the card it sits above without borrowing the Pill component's fully-round
+   radius, which nothing else in the button set uses. */
 .project-deck-back {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-7);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  padding: var(--space-6) var(--space-12);
+  border: none;
+  border-radius: var(--radius-xl);
   background: transparent;
   color: var(--text-secondary);
+  font-weight: 700;
   font-size: var(--text-xs);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-standard),
-    border-color var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard);
 }
 
 .project-deck-back:hover {
-  border-color: var(--text-primary);
   background: var(--surface-subtle);
   color: var(--text-primary);
 }
@@ -1763,6 +1735,81 @@ option {
   background: var(--text-primary);
   color: var(--bg);
   transform: none;
+}
+
+/* The index grid and deck answer to the modal's width, not the viewport's —
+   a container query, like the about layout and skills grid
+   (DESIGN_SYSTEM.md 8.2). Placed after every base rule above so the cascade
+   can't fall back to the unconditional 3-column/44px-padding declarations at
+   equal specificity (see DESIGN_SYSTEM.md §11 for the F19-era about/skills
+   version of the same ordering rule — projects had drifted ahead of its own
+   base rules and the override silently never applied). */
+@container portfolio-modal (max-width: 900px) {
+  .project-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container portfolio-modal (max-width: 560px) {
+  .project-index {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-deck-back {
+    /* "All projects" plus its icon, unabbreviated, no longer fits beside a
+       seven-dot track at this width — shrink to an icon-only ghost button
+       rather than truncating the label or letting it collide with the track. */
+    gap: 0;
+    padding: var(--space-4);
+  }
+
+  .project-deck-back span {
+    display: none;
+  }
+
+  .project-deck-card {
+    padding: var(--space-8);
+  }
+
+  .project-card-header {
+    /* Grade's white-space: nowrap otherwise fights the title for the same
+       row at this width; stack instead of squeezing either one. */
+    flex-wrap: wrap;
+  }
+
+  /* Too narrow to flank the deck: the arrows wrap onto their own row beneath
+     it so the card keeps the full width. The stack is out of flow, so it
+     needs a stated height once it is no longer being stretched by the row. */
+  .project-deck-stage {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .project-deck-stack {
+    order: -1;
+    flex: 1 0 100%;
+    min-height: 320px;
+  }
+}
+
+/* Below this, even a single-column index card and a stacked deck nav are
+   tight: the ghost peek behind the face-up card is a legibility cost with no
+   room to pay for it, and the stack's fixed headroom (.project-deck-stage's
+   padding-top) is space the front card needs more than the scenery behind it
+   does. Container query, not viewport — the deck must have shed its ghosts
+   inside a modal this narrow regardless of window width. */
+@container portfolio-modal (max-width: 380px) {
+  .project-deck-stage {
+    padding-top: 0;
+  }
+
+  .project-deck-ghost {
+    display: none;
+  }
+
+  .project-deck-stack {
+    min-height: 360px;
+  }
 }
 
 /* ─── Reduced motion ─────────────────────────────────────────────── */

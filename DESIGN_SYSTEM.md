@@ -409,10 +409,13 @@ project to the front of a deck.
 
 ```
 .project-deck-bar    back button + track, one row
-.project-deck-back   ghost: 1px --border outline, transparent fill, --text-secondary
+.project-deck-back   tertiary (§9.6): transparent fill, --text-secondary, --radius-xl
                      hover → --surface-subtle fill, --text-primary
 .htimeline-track     dots spread space-between over a 1px --border rail at top 7px
-.htimeline-dot       shares .vtimeline-track-dot's recipe (15px, --border, --accent when active)
+.htimeline-dot       shares .vtimeline-track-dot's visual recipe (15px, --border, --accent
+                     when active) but is a non-interactive <span>: a pure position
+                     indicator, not a jump control — stepping is the arrows' job only,
+                     since the deck wraps and a clickable dot would let you skip that.
 .deck-nav            shares .vtimeline-nav's recipe (36px pill, --modal-close-idle-bg)
 .project-deck-stack  position:relative, perspective:1000px; every card absolute inset:0
 .project-deck-ghost  --surface-subtle fill · shadow thinning with --deck-depth
@@ -453,12 +456,16 @@ that you are at the first or last entry.
 | --- | --- | --- |
 | `.project-action-btn-primary` | `--text-primary` | `--bg` |
 | `.project-action-btn-secondary` | transparent | `--text-primary` |
+| `.project-deck-back` (tertiary) | transparent, `--surface-subtle` on hover | `--text-secondary`, `--text-primary` on hover |
 | `.modal-close-cta` | `--surface-subtle` | `--text-secondary` |
 
 All `radius --radius-xl`, weight 700, `--text-xs`, `padding var(--space-6) var(--space-12)`
 (close CTA: `var(--space-4) var(--space-7)`). Primary-button hover lightens to `--accent-dim` and
 flips text back to `--text-primary` — the same wash strength the card hover uses (see F21 in the
-resolution log for why these were unified).
+resolution log for why these were unified). Tertiary (`.project-deck-back`) is one notch quieter
+than secondary: no border, no fill until hover, `--text-secondary` at rest instead of
+`--text-primary` — it used to be a pill-radius outline button, which borrowed the Pill
+component's fully-round radius that nothing else in this button set uses.
 
 ### 9.7 Bullet list (`InteractiveList`)
 
